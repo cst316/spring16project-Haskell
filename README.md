@@ -15,4 +15,3 @@ Enjoy!
 Dr. Gary
 
 Chris read this
-Duncan McQuarrie has approved this message
