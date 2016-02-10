@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="memoranda" default="package" basedir=".">
+<!--- some exml comment -->
+<project name="Memoranda" default="package" basedir=".">
 	<!-- Build.xml file initially created by Kenneth J. Pouncey              -->
 	<!-- on 5 september 2003.                                                -->
 	<!-- Kenneth is the project-leader of the tn5250j-project on SourceForge -->
@@ -63,7 +64,7 @@
 		<copy file="${source.dir}/net/sf/memoranda/ui/~~App.java" tofile="${source.dir}/net/sf/memoranda/ui/App.java"/>
 		<replace file="${source.dir}/net/sf/memoranda/ui/App.java" token="@VERSION@" value="${version}"/>
 		<replace file="${source.dir}/net/sf/memoranda/ui/App.java" token="@BUILD@" value="${DSTAMP}.${build.number}"/>
-		<javac srcdir="${source.dir}" destdir="${build.classes.dir}" excludes="**/Cvs/**,**/*.ini,**/~*" debug="${debug}" debuglevel="${debuglevel}" optimize="${optimize}" deprecation="${deprecation}" failonerror="false" source="1.8" target="1.8">
+		<javac srcdir="${source.dir}" destdir="${build.classes.dir}" excludes="**/Cvs/**,**/*.ini,**/~*" debug="${debug}" debuglevel="${debuglevel}" optimize="${optimize}" deprecation="${deprecation}" failonerror="false" source="1.8" target="1.8" encoding="utf-8">
 			<!-- <compilerarg value="-Xlint:unchecked"/> -->
 			<classpath>
 				<path refid="classpath"/>
