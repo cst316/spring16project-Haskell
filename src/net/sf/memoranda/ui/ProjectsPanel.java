@@ -344,7 +344,9 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 	}
 
 	void ppNewProject_actionPerformed(ActionEvent e) {
-		ProjectDialog.newProject();
+		//ProjectDialog.newProject();
+		//hahaha PCP...//
+		ProjectCreationPanel PCP = new ProjectCreationPanel();
 		prjTablePanel.updateUI();
 	}
 
