@@ -24,21 +24,30 @@ import net.sf.memoranda.util.Local;
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
  */
 
-/*$Id: WorkPanel.java,v 1.9 2004/04/05 10:05:44 alexeya Exp $*/
+/*$Id: WorkPanel.java,v 1.9 2004/04/05 10:05:44 alexeya Exp $
+ * 
+ * 
+ * Panel on the left that has "Agenda, Tasks, Events, Notes, Files(Resources)
+ * */
 public class WorkPanel extends JPanel {
 	BorderLayout borderLayout1 = new BorderLayout();
 	JToolBar toolBar = new JToolBar();
 	JPanel panel = new JPanel();
 	CardLayout cardLayout1 = new CardLayout();
 
-	public JButton notesB = new JButton();
+	
 	public DailyItemsPanel dailyItemsPanel = new DailyItemsPanel(this);
 	public ResourcesPanel filesPanel = new ResourcesPanel();
+	
+	public JButton notesB = new JButton();
 	public JButton agendaB = new JButton();
 	public JButton tasksB = new JButton();
 	public JButton eventsB = new JButton();
 	public JButton filesB = new JButton();
+	
+	//Current Selection in the toolBar//
 	JButton currentB = null;
+	
 	Border border1;
 
 	public WorkPanel() {
