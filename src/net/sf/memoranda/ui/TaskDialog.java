@@ -39,12 +39,14 @@ import javax.swing.JCheckBox;
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
+import javax.swing.JTabbedPane;
+import javax.swing.JFormattedTextField;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
     JPanel mPanel = new JPanel(new BorderLayout());
     JPanel areaPanel = new JPanel(new BorderLayout());
-    JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton cancelB = new JButton();
     JButton okB = new JButton();
     Border border1;
@@ -106,6 +108,35 @@ public class TaskDialog extends JDialog {
 	CalendarDate startDateMax = CurrentProject.get().getEndDate();
 	CalendarDate endDateMin = startDateMin;
 	CalendarDate endDateMax = startDateMax;
+	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	private final JPanel estimationTab = new JPanel();
+	private final JPanel designEst = new JPanel();
+	private final JLabel lblDesign = new JLabel("Design");
+	private final JSpinner designSpinner = new JSpinner();
+	private final JPanel planningEst = new JPanel();
+	private final JLabel lblPlanning = new JLabel("Planning");
+	private final JSpinner planningSpinner = new JSpinner();
+	private final JPanel designRevEsT = new JPanel();
+	private final JLabel lblDesignReview = new JLabel("Design Review");
+	private final JSpinner designReviewSpinner = new JSpinner();
+	private final JPanel codeEst = new JPanel();
+	private final JLabel lblCode = new JLabel("Code");
+	private final JSpinner codeSpinner = new JSpinner();
+	private final JPanel codeReviewEst = new JPanel();
+	private final JLabel lblCodeReview = new JLabel("Code Review");
+	private final JSpinner codeReviewSpinner = new JSpinner();
+	private final JPanel compileEst = new JPanel();
+	private final JLabel lblCompile = new JLabel("Compile");
+	private final JSpinner compileSPinner = new JSpinner();
+	private final JPanel testEst = new JPanel();
+	private final JLabel lblTest = new JLabel("Test");
+	private final JSpinner testSpinner = new JSpinner();
+	private final JPanel postmortemEst = new JPanel();
+	private final JLabel lblPostmortem = new JLabel("Postmortem");
+	private final JSpinner postmortemSpinner = new JSpinner();
+	private final JPanel totalEst = new JPanel();
+	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
+	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
     
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -134,6 +165,38 @@ public class TaskDialog extends JDialog {
 //        border7 = BorderFactory.createLineBorder(Color.white, 2);
         border8 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(178, 178, 178));
+		chkEndDate_actionPerformed(null);
+        mPanel.setBorder(border1);
+        dialogTitlePanel.setBackground(Color.WHITE);
+        dialogTitlePanel.setBorder(border4);
+        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
+        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
+        header.setFont(new java.awt.Font("Dialog", 0, 20));
+        header.setForeground(new Color(0, 0, 124));
+        header.setText(Local.getString("To do"));
+        header.setIcon(new ImageIcon(net.sf.memoranda.ui.TaskDialog.class.getResource(
+            "resources/icons/task48.png")));
+        GridBagConstraints gbCon = new GridBagConstraints();
+        gbCon.gridwidth = GridBagConstraints.REMAINDER;
+        gbCon.weighty = 1;
+        gbCon = new GridBagConstraints();
+        gbCon.gridwidth = GridBagConstraints.REMAINDER;
+        gbCon.weighty = 1;
+        gbCon.anchor = GridBagConstraints.WEST;
+        gbCon = new GridBagConstraints();
+        gbCon.gridwidth = GridBagConstraints.REMAINDER;
+        gbCon.weighty = 3;
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
+        getContentPane().add(mPanel);
+        
+                startDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
+                endDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
+        chkEndDate.addActionListener(new java.awt.event.ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		chkEndDate_actionPerformed(e);
+        	}
+        });
         cancelB.setMaximumSize(new Dimension(100, 26));
         cancelB.setMinimumSize(new Dimension(100, 26));
         cancelB.setPreferredSize(new Dimension(100, 26));
@@ -143,17 +206,6 @@ public class TaskDialog extends JDialog {
                 cancelB_actionPerformed(e);
             }
         });
-
-        startDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
-        endDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
-		
-        chkEndDate.setSelected(false);
-		chkEndDate_actionPerformed(null);
-		chkEndDate.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				chkEndDate_actionPerformed(e);
-			}
-		});
         okB.setMaximumSize(new Dimension(100, 26));
         okB.setMinimumSize(new Dimension(100, 26));
         okB.setPreferredSize(new Dimension(100, 26));
@@ -165,109 +217,92 @@ public class TaskDialog extends JDialog {
         });
         
         this.getRootPane().setDefaultButton(okB);
-        mPanel.setBorder(border1);
+        mPanel.add(buttonsPanel, BorderLayout.NORTH);
+        buttonsPanel.add(okB, null);
+        buttonsPanel.add(cancelB, null);
+        mPanel.add(tabbedPane, BorderLayout.SOUTH);
+        tabbedPane.addTab("New tab", null, areaPanel, null);
         areaPanel.setBorder(border2);
-        dialogTitlePanel.setBackground(Color.WHITE);
-        dialogTitlePanel.setBorder(border4);
-        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
-        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
-        header.setFont(new java.awt.Font("Dialog", 0, 20));
-        header.setForeground(new Color(0, 0, 124));
-        header.setText(Local.getString("To do"));
-        header.setIcon(new ImageIcon(net.sf.memoranda.ui.TaskDialog.class.getResource(
-            "resources/icons/task48.png")));
         
         GridBagLayout gbLayout = (GridBagLayout) jPanel8.getLayout();
         jPanel8.setBorder(border3);
-				
+        
         todoField.setBorder(border8);
         todoField.setPreferredSize(new Dimension(375, 24));
-        GridBagConstraints gbCon = new GridBagConstraints();
-        gbCon.gridwidth = GridBagConstraints.REMAINDER;
-        gbCon.weighty = 1;
         gbLayout.setConstraints(todoField,gbCon);
         
         jLabelDescription.setMaximumSize(new Dimension(100, 16));
         jLabelDescription.setMinimumSize(new Dimension(60, 16));
         jLabelDescription.setText(Local.getString("Description"));
-        gbCon = new GridBagConstraints();
-        gbCon.gridwidth = GridBagConstraints.REMAINDER;
-        gbCon.weighty = 1;
-        gbCon.anchor = GridBagConstraints.WEST;
         gbLayout.setConstraints(jLabelDescription,gbCon);
-
-        descriptionField.setBorder(border8);
-        descriptionField.setPreferredSize(new Dimension(375, 387)); // 3 additional pixels from 384 so that the last line is not cut off
-        descriptionField.setLineWrap(true);
-        descriptionField.setWrapStyleWord(true);
-        gbCon = new GridBagConstraints();
-        gbCon.gridwidth = GridBagConstraints.REMAINDER;
-        gbCon.weighty = 3;
-        descriptionScrollPane.setPreferredSize(new Dimension(375,96));
-        gbLayout.setConstraints(descriptionScrollPane,gbCon);
-
-        jLabelEffort.setMaximumSize(new Dimension(100, 16));
-        jLabelEffort.setMinimumSize(new Dimension(60, 16));
-        jLabelEffort.setText(Local.getString("Est Effort(hrs)"));
-        effortField.setBorder(border8);
-        effortField.setPreferredSize(new Dimension(30, 24));
-
-        startDate.setBorder(border8);
-        startDate.setPreferredSize(new Dimension(80, 24));                
-		SimpleDateFormat sdf = new SimpleDateFormat();
-		sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
-		// //Added by (jcscoobyrs) on 14-Nov-2003 at 10:45:16 PM
-		startDate.setEditor(new JSpinner.DateEditor(startDate, sdf.toPattern()));
-
-        startDate.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-            	// it's an ugly hack so that the spinner can increase day by day
-            	SpinnerDateModel sdm = new SpinnerDateModel((Date)startDate.getModel().getValue(),null,null,Calendar.DAY_OF_WEEK);
-            	startDate.setModel(sdm);
-
-                if (ignoreStartChanged)
-                    return;
-                ignoreStartChanged = true;
-                Date sd = (Date) startDate.getModel().getValue();
-                Date ed = (Date) endDate.getModel().getValue();
-                if (sd.after(ed) && chkEndDate.isSelected()) {
-                    startDate.getModel().setValue(ed);
-                    sd = ed;
-                }
-				if ((startDateMax != null) && sd.after(startDateMax.getDate())) {
-					startDate.getModel().setValue(startDateMax.getDate());
-                    sd = startDateMax.getDate();
-				}
-                if ((startDateMin != null) && sd.before(startDateMin.getDate())) {
-                    startDate.getModel().setValue(startDateMin.getDate());
-                    sd = startDateMin.getDate();
-                }
-                startCalFrame.cal.set(new CalendarDate(sd));
-                ignoreStartChanged = false;
-            }
-        });
-
-        jLabel6.setText(Local.getString("Start date"));
-        //jLabel6.setPreferredSize(new Dimension(60, 16));
-        jLabel6.setMinimumSize(new Dimension(60, 16));
-        jLabel6.setMaximumSize(new Dimension(100, 16));
-        setStartDateB.setMinimumSize(new Dimension(24, 24));
-        setStartDateB.setPreferredSize(new Dimension(24, 24));
-        setStartDateB.setText("");
-        setStartDateB.setIcon(
-            new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/calendar.png")));
-        setStartDateB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setStartDateB_actionPerformed(e);
-            }
-        });
-        jLabel2.setMaximumSize(new Dimension(270, 16));
-        //jLabel2.setPreferredSize(new Dimension(60, 16));
-        jLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabel2.setText(Local.getString("End date"));
-        endDate.setBorder(border8);
-        endDate.setPreferredSize(new Dimension(80, 24));
         
+                descriptionField.setBorder(border8);
+                descriptionField.setPreferredSize(new Dimension(375, 387)); // 3 additional pixels from 384 so that the last line is not cut off
+                descriptionField.setLineWrap(true);
+                descriptionField.setWrapStyleWord(true);
+                descriptionScrollPane.setPreferredSize(new Dimension(375,96));
+                gbLayout.setConstraints(descriptionScrollPane,gbCon);
+                
+                        jLabelEffort.setMaximumSize(new Dimension(100, 16));
+                        jLabelEffort.setMinimumSize(new Dimension(60, 16));
+                        jLabelEffort.setText(Local.getString("Est Effort(hrs)"));
+                        effortField.setBorder(border8);
+                        effortField.setPreferredSize(new Dimension(30, 24));
+                        
+                                startDate.setBorder(border8);
+                                startDate.setPreferredSize(new Dimension(80, 24));                
+                                // //Added by (jcscoobyrs) on 14-Nov-2003 at 10:45:16 PM
+                                startDate.setEditor(new JSpinner.DateEditor(startDate, sdf.toPattern()));
+                                
+                                        startDate.addChangeListener(new ChangeListener() {
+                                            public void stateChanged(ChangeEvent e) {
+                                            	// it's an ugly hack so that the spinner can increase day by day
+                                            	SpinnerDateModel sdm = new SpinnerDateModel((Date)startDate.getModel().getValue(),null,null,Calendar.DAY_OF_WEEK);
+                                            	startDate.setModel(sdm);
+                                
+                                                if (ignoreStartChanged)
+                                                    return;
+                                                ignoreStartChanged = true;
+                                                Date sd = (Date) startDate.getModel().getValue();
+                                                Date ed = (Date) endDate.getModel().getValue();
+                                                if (sd.after(ed) && chkEndDate.isSelected()) {
+                                                    startDate.getModel().setValue(ed);
+                                                    sd = ed;
+                                                }
+                                				if ((startDateMax != null) && sd.after(startDateMax.getDate())) {
+                                					startDate.getModel().setValue(startDateMax.getDate());
+                                                    sd = startDateMax.getDate();
+                                				}
+                                                if ((startDateMin != null) && sd.before(startDateMin.getDate())) {
+                                                    startDate.getModel().setValue(startDateMin.getDate());
+                                                    sd = startDateMin.getDate();
+                                                }
+                                                startCalFrame.cal.set(new CalendarDate(sd));
+                                                ignoreStartChanged = false;
+                                            }
+                                        });
+                                        
+                                                jLabel6.setText(Local.getString("Start date"));
+                                                //jLabel6.setPreferredSize(new Dimension(60, 16));
+                                                jLabel6.setMinimumSize(new Dimension(60, 16));
+                                                jLabel6.setMaximumSize(new Dimension(100, 16));
+                                                setStartDateB.setMinimumSize(new Dimension(24, 24));
+                                                setStartDateB.setPreferredSize(new Dimension(24, 24));
+                                                setStartDateB.setText("");
+                                                setStartDateB.setIcon(
+                                                    new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/calendar.png")));
+                                                setStartDateB.addActionListener(new java.awt.event.ActionListener() {
+                                                    public void actionPerformed(ActionEvent e) {
+                                                        setStartDateB_actionPerformed(e);
+                                                    }
+                                                });
+                                                jLabel2.setMaximumSize(new Dimension(270, 16));
+                                                //jLabel2.setPreferredSize(new Dimension(60, 16));
+                                                jLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
+                                                jLabel2.setText(Local.getString("End date"));
+                                                endDate.setBorder(border8);
+                                                endDate.setPreferredSize(new Dimension(80, 24));
+                                                
 		endDate.setEditor(new JSpinner.DateEditor(endDate, sdf.toPattern())); //Added by (jcscoobyrs) on
 		//14-Nov-2003 at 10:45:16PM
         
@@ -321,47 +356,164 @@ public class TaskDialog extends JDialog {
         jLabel7.setMinimumSize(new Dimension(60, 16));
         //jLabel7.setPreferredSize(new Dimension(60, 16));
         jLabel7.setText(Local.getString("Priority"));
-
-        priorityCB.setFont(new java.awt.Font("Dialog", 0, 11));
-        jPanel4.add(jLabel7, null);
-        getContentPane().add(mPanel);
-        mPanel.add(areaPanel, BorderLayout.CENTER);
-        mPanel.add(buttonsPanel, BorderLayout.SOUTH);
-        buttonsPanel.add(okB, null);
-        buttonsPanel.add(cancelB, null);
+        
+                priorityCB.setFont(new java.awt.Font("Dialog", 0, 11));
+                jPanel4.add(jLabel7, null);
+                areaPanel.add(jPanel8, BorderLayout.NORTH);
+                jPanel8.add(todoField, null);
+                jPanel8.add(jLabelDescription);
+                jPanel8.add(descriptionScrollPane, null);
+                areaPanel.add(jPanel2, BorderLayout.CENTER);
+                jPanel2.add(jPanel6, null);
+                jPanel6.add(jLabel6, null);
+                jPanel6.add(startDate, null);
+                jPanel6.add(setStartDateB, null);
+                jPanel2.add(jPanel1, null);
+                jPanel1.add(chkEndDate, null);
+                jPanel1.add(jLabel2, null);
+                jPanel1.add(endDate, null);
+                jPanel1.add(setEndDateB, null);
+                // added by rawsushi
+                jPanel2.add(jPanelEffort, null);
+                jPanelEffort.add(jLabelEffort, null);
+                jPanelEffort.add(effortField, null);
+                
+                        jPanel2.add(jPanel4, null);
+                        jPanel4.add(priorityCB, null);
+                        jPanel2.add(jPanel3, null);
+                        
+                        jPanel3.add(setNotifB, null);
+                        
+                        jLabelProgress.setText(Local.getString("Progress"));
+                        jPanelProgress.add(jLabelProgress, null);
+                        jPanelProgress.add(progress, null);
+                        jPanel2.add(jPanelProgress);
+                        
+                        priorityCB.setSelectedItem(Local.getString("Normal"));
+                        estimationTab.setLayout(null);
+                        
+                        tabbedPane.addTab("Phase Estimation", null, estimationTab, null);
+                        designEst.setBounds(150, 0, 150, 35);
+                        
+                        estimationTab.add(designEst);
+                        designEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        designEst.add(lblDesign);
+                        designEst.add(designSpinner);
+                        designSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst(); 
+                        	}
+                        });
+                        
+                        planningEst.setBounds(0, 0, 150, 35);
+                        
+                        estimationTab.add(planningEst);
+                        planningEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblPlanning.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        planningEst.add(lblPlanning);                        
+                        planningEst.add(planningSpinner);
+                        planningSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst();
+                        	}
+                       	});
+                        
+                        designRevEsT.setBounds(0, 35, 150, 35);
+                        
+                        estimationTab.add(designRevEsT);
+                        designRevEsT.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblDesignReview.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        designRevEsT.add(lblDesignReview);
+                        designRevEsT.add(designReviewSpinner);
+                        designReviewSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst(); 
+                        	}
+                        });
+                        
+                        codeEst.setBounds(150, 35, 150, 35);
+                        
+                        estimationTab.add(codeEst);
+                        codeEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblCode.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        codeEst.add(lblCode);
+                        codeEst.add(codeSpinner);
+                        codeSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst(); 
+                        	}
+                        });
+                        
+                        codeReviewEst.setBounds(0, 70, 150, 35);
+                        
+                        estimationTab.add(codeReviewEst);
+                        codeReviewEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblCodeReview.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        codeReviewEst.add(lblCodeReview);                        
+                        codeReviewEst.add(codeReviewSpinner);
+                        codeReviewSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst(); 
+                        	}
+                        });
+                        compileEst.setBounds(150, 70, 150, 35);
+                        
+                        estimationTab.add(compileEst);
+                        compileEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblCompile.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        compileEst.add(lblCompile);                        
+                        compileEst.add(compileSPinner);
+                        compileSPinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst();
+                        	}
+                        });
+                        testEst.setBounds(0, 105, 150, 35);
+                        
+                        estimationTab.add(testEst);
+                        testEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblTest.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        testEst.add(lblTest);                        
+                        testEst.add(testSpinner);
+                        testSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst();
+                        	}
+                        });
+                        
+                        postmortemEst.setBounds(150, 105, 150, 35);
+                        
+                        estimationTab.add(postmortemEst);
+                        postmortemEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblPostmortem.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        postmortemEst.add(lblPostmortem);                        
+                        postmortemEst.add(postmortemSpinner);
+                        postmortemSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) {
+                        		updateTotalEst();
+                        	}
+                        });
+                        totalEst.setBounds(0, 139, 300, 31);
+                        
+                        estimationTab.add(totalEst);
+                        totalEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        totalEst.add(lblTotal);
+                        totalEstTextField.setEditable(false);
+                        
+                        totalEst.add(totalEstTextField);
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
-        areaPanel.add(jPanel8, BorderLayout.NORTH);
-        jPanel8.add(todoField, null);
-        jPanel8.add(jLabelDescription);
-        jPanel8.add(descriptionScrollPane, null);
-        areaPanel.add(jPanel2, BorderLayout.CENTER);
-        jPanel2.add(jPanel6, null);
-        jPanel6.add(jLabel6, null);
-        jPanel6.add(startDate, null);
-        jPanel6.add(setStartDateB, null);
-        jPanel2.add(jPanel1, null);
-		jPanel1.add(chkEndDate, null);
-        jPanel1.add(jLabel2, null);
-        jPanel1.add(endDate, null);
-        jPanel1.add(setEndDateB, null);
-        // added by rawsushi
-        jPanel2.add(jPanelEffort, null);
-        jPanelEffort.add(jLabelEffort, null);
-        jPanelEffort.add(effortField, null);
-
-        jPanel2.add(jPanel4, null);
-        jPanel4.add(priorityCB, null);
-        jPanel2.add(jPanel3, null);
-        
-        jPanel3.add(setNotifB, null);
-        
-        jLabelProgress.setText(Local.getString("Progress"));
-        jPanelProgress.add(jLabelProgress, null);
-        jPanelProgress.add(progress, null);
-        jPanel2.add(jPanelProgress);
-        
-        priorityCB.setSelectedItem(Local.getString("Normal"));
         startCalFrame.cal.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (ignoreStartChanged)
@@ -378,6 +530,12 @@ public class TaskDialog extends JDialog {
             }
         });
     }
+    
+    public void updateTotalEst(){
+        		totalEstTextField.setText("" + ((int)planningSpinner.getValue() + (int)designSpinner.getValue() + 
+        		(int)designReviewSpinner.getValue() + (int)codeSpinner.getValue() + (int)codeReviewSpinner.getValue() +
+        		(int)compileSPinner.getValue() + (int)testSpinner.getValue() + (int)postmortemSpinner.getValue())); 
+        	}
 
 	public void setStartDate(CalendarDate d) {
 		this.startDate.getModel().setValue(d.getDate());
@@ -408,7 +566,7 @@ public class TaskDialog extends JDialog {
     }
 	
 	void chkEndDate_actionPerformed(ActionEvent e) {
-		endDate.setEnabled(chkEndDate.isSelected());
+		//endDate.setEnabled(chkEndDate.isSelected());
 		setEndDateB.setEnabled(chkEndDate.isSelected());
 		jLabel2.setEnabled(chkEndDate.isSelected());
 		if(chkEndDate.isSelected()) {
