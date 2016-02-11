@@ -55,8 +55,13 @@ public class DailyItemsPanel extends JPanel {
     JPanel controlPanel = new JPanel(); /* Contains the calendar */
     JPanel mainPanel = new JPanel();
     BorderLayout borderLayout2 = new BorderLayout();
+    
+    //Bar Across top//
     JPanel statusPanel = new JPanel();
+    
+    
     BorderLayout borderLayout3 = new BorderLayout();
+    
     JPanel editorsPanel = new JPanel();
     CardLayout cardLayout1 = new CardLayout();
     public EditorPanel editorPanel = new EditorPanel(this);
@@ -122,7 +127,7 @@ public class DailyItemsPanel extends JPanel {
         //calendar.setMinimumSize(new Dimension(200, 170));
         mainPanel.setLayout(borderLayout3);
         editorsPanel.setLayout(cardLayout1);
-        statusPanel.setBackground(Color.black);
+        statusPanel.setBackground(Color.gray.darker());
         statusPanel.setForeground(Color.white);
         statusPanel.setMinimumSize(new Dimension(14, 24));
         statusPanel.setPreferredSize(new Dimension(14, 24));

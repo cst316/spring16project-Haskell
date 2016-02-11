@@ -20,6 +20,7 @@ import nu.xom.Element;
 public class ProjectImpl implements Project {
 
     private Element _root = null;
+    
 
     /**
      * Constructor for ProjectImpl.
@@ -27,7 +28,17 @@ public class ProjectImpl implements Project {
     public ProjectImpl(Element root) {        
         _root = root;
     }
-
+    
+    /*
+    public String getFilename(){
+    	return filename;
+    }
+    
+    public void setFilename(String f){
+    	filename = f;
+    }
+    */
+    
     /**
      * @see net.sf.memoranda.Project#getID()
      */

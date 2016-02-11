@@ -27,8 +27,16 @@ public interface Project {
     
     public static final int FAILED = 5;
     
+    
+    
+    
     String getID();
-       
+    
+    /*
+    public String getFilename();
+    public void setFilename();
+    */
+    
     CalendarDate getStartDate();
     void setStartDate(CalendarDate date);
     
