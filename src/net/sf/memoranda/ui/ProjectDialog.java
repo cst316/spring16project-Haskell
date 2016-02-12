@@ -528,9 +528,11 @@ public class ProjectDialog extends JDialog {
         bottomPanel.add(okButton);
         bottomPanel.add(cancelButton);
         
+        /*
         buildTopPanel();
         buildCenterPanel();
         buildBottomPanel();
+        */
         
         /*
         gbc = new GridBagConstraints();
@@ -552,9 +554,9 @@ public class ProjectDialog extends JDialog {
         getContentPane().add(bottomPanel, gbc);
         */
         
-        container.add(tPanel);
-        container.add(cPanel);
-        container.add(bPanel);
+        container.add(topPanel);
+        container.add(centerPanel);
+        container.add(bottomPanel);
     
         startCalFrame.cal.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

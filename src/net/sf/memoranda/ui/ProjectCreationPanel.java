@@ -45,8 +45,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 
-public class ProjectCreationPanel extends JFrame implements ActionListener, ListSelectionListener{
-	
+public class ProjectCreationPanel extends JFrame implements ActionListener, ChangeListener, ListSelectionListener{
 	//Container for content pane//
 	private Container c = null;
 	
@@ -70,36 +69,33 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 	boolean ignoreEndChanged = false;
 	CalendarFrame endCalFrame = new CalendarFrame();
     CalendarFrame startCalFrame = new CalendarFrame();
+    	//Description Label and Text Area//
+    private JLabel descLabel;
+    private JTextArea description;
     	//Priority and Stage//
     private JLabel statusLabel;
     private JComboBox statusComboBox;
     private JLabel stageLabel;
     private JComboBox stageComboBox;
-    
     	//Customer Label, Field, and Checkbox//
     private JLabel customerLabel;
     private JTextField customerField;
     private JCheckBox customerChB;
-    
 		//Team Member Adding//
     private DefaultListModel listModel = new DefaultListModel();
     private JList list = new JList(listModel);
 	private JScrollPane teamScrollPane;
+	private JLabel teamLabel;
 	private JLabel addMemberLabel;
 	private JTextField addMemberField;
 	private JButton addButton;
 	private JButton removeButton;
 	private String selected;
-	
     	//Base Lines of Code//
 	private JLabel LOClabel;
 	private JRadioButton LOCdefault;
 	private JRadioButton LOCanother;
 	private JTextField LOCField;
-	
-	
-		//File Location//
-	private JFileChooser fileChooser;
 	
 	//Bottom Panel and its components//
 	private JPanel bottomPanel;
@@ -108,14 +104,9 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 	private JButton clearButton;
 	
 	public ProjectCreationPanel() {
-		
-		
-		
 		this.setBounds(400, 100, 500, 650);
-		
 		c = this.getContentPane();
-		getContentPane().setLayout(null);
-		
+		c.setLayout(null);
 		
 		//Build Each Panel
 		buildTopPanel();
@@ -125,25 +116,12 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		//Add them all to the container//
 		c.add(topPanel);
 		c.add(centerPanel);
-		
-		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(21, 78, 70, 14);
-		centerPanel.add(lblDescription);
-		
-		JTextArea txtrTextBox = new JTextArea();
-		txtrTextBox.setBounds(21, 92, 414, 74);
-		txtrTextBox.setBorder(BorderFactory.createLineBorder(Color.gray));
-		centerPanel.add(txtrTextBox);
 		c.add(bottomPanel);
-		
-		
-		
 		
 		//Visibility and Close Operation//
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
-	
 	
 	public void buildTopPanel(){
 		topPanel = new JPanel();
@@ -152,7 +130,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		topPanel.setBounds(10, 11, 464, 53);
 		header.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		
 		header.setBounds(10, 0, 350, 41);
     	header.setFont(new java.awt.Font("Dialog", 0, 20));
         header.setForeground(new Color(0, 0, 124));
@@ -160,8 +137,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
         header.setIcon(new ImageIcon(net.sf.memoranda.ui.ProjectDialog.class.getResource(
             "resources/icons/project48.png")));
         topPanel.add(header);
-        
-        
 	}
 	
 	public void buildCenterPanel(){
@@ -171,6 +146,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		getContentPane().add(centerPanel);
 		centerPanel.setLayout(null);
 		
+		//Project Name Label and Field//
 		titleLabel = new JLabel("Name");
 		titleLabel.setBounds(21, 22, 39, 14);
 		centerPanel.add(titleLabel);
@@ -180,11 +156,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		centerPanel.add(prTitleField);
 		prTitleField.setColumns(10);
 		
+		//Start Date Components//
 		sdLabel = new JLabel("Start Date");
 		sdLabel.setBounds(21, 53, 59, 14);
 		centerPanel.add(sdLabel);
 		
-		//Start Date Spinner//
     	startDate = new JSpinner(new SpinnerDateModel());
     	startDate.setBounds(82, 50, 85, 20);
         startDate.setLocale(Local.getCurrentLocale());
@@ -194,26 +170,10 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
 		startDate.setEditor(new JSpinner.DateEditor(startDate, sdf.toPattern()));
 		//---------------------------------------------------
-        startDate.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                if (ignoreStartChanged) return;
-                ignoreStartChanged = true;
-                Date sd = (Date) startDate.getModel().getValue();
-                if (endDate.isEnabled()) {
-                  Date ed = (Date) endDate.getModel().getValue();
-                  if (sd.after(ed)) {
-                    startDate.getModel().setValue(ed);
-                    sd = ed;
-                  }
-                }
-                startCalFrame.cal.set(new CalendarDate(sd));
-                ignoreStartChanged = false;
-            }
-        });
-        
+        startDate.addChangeListener(this);
         centerPanel.add(startDate);
 		
-		//End Date JSpinner//
+		//End Date Components//
         endDate = new JSpinner(new SpinnerDateModel());
         endDate.setEnabled(false);
         endDate.setBounds(308, 53, 85, 20);
@@ -223,24 +183,9 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		endDate.setEditor(new JSpinner.DateEditor(endDate, 
 			sdf.toPattern()));
 		//---------------------------------------------------
-        endDate.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                if (ignoreEndChanged) return;
-                ignoreEndChanged = true;
-                Date sd = (Date) startDate.getModel().getValue();
-                Date ed = (Date) endDate.getModel().getValue();
-                if (sd.after(ed)) {
-                    endDate.getModel().setValue(sd);
-                    ed = sd;
-                }
-                endCalFrame.cal.set(new CalendarDate(ed));
-                ignoreEndChanged = false;
-            }
-        });
+		endDate.addChangeListener(this);
         centerPanel.add(endDate);
         
-        
-        //End Date Check Box//
         endDateChB = new JCheckBox();
         endDateChB.setBounds(224, 53, 20, 20);
         endDateChB.setForeground(Color.gray);
@@ -259,12 +204,22 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		endLabel.setBounds(250, 56, 59, 14);
 		centerPanel.add(endLabel);
 		
+		//Description Components//
+		descLabel = new JLabel("Description");
+		descLabel.setBounds(21, 78, 70, 14);
+		centerPanel.add(descLabel);
+		
+		description = new JTextArea();
+		description.setBounds(21, 92, 414, 74);
+		description.setBorder(BorderFactory.createLineBorder(Color.gray));
+		centerPanel.add(description);
+		
+		//Customer Components//
 		customerLabel = new JLabel("Customer");
 		customerLabel.setBounds(265,235,70,25);
 		customerLabel.setForeground(Color.gray);
 		centerPanel.add(customerLabel);
-		
-
+	
         customerChB = new JCheckBox();
         customerChB.setBounds(240, 237, 20, 20);
         customerChB.addActionListener(this);
@@ -275,17 +230,18 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
         customerField.setForeground(Color.gray);
         centerPanel.add(customerField);
         
+        //Status Components//
 		statusLabel = new JLabel("Priority");
 		statusLabel.setBounds(35, 235, 49, 25);
 		centerPanel.add(statusLabel);
 		
 		statusComboBox = new JComboBox(new DefaultComboBoxModel(new String[] {"Very Low", "Low", "Medium", "High", "Very High"}));
 		statusComboBox.setBackground(new Color(255, 255, 255));
-		//statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"Very Low", "Low", "Medium", "High", "Very High"}));
 		statusComboBox.setSelectedIndex(2);
 		statusComboBox.setBounds(82, 237, 109, 20);
 		centerPanel.add(statusComboBox);
 		
+		//Stage Components//
 		stageLabel = new JLabel("Stage");
 		stageLabel.setBounds(271, 22, 47, 14);
 		centerPanel.add(stageLabel);
@@ -296,22 +252,17 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		stageComboBox.setBounds(308, 19, 127, 20);
 		centerPanel.add(stageComboBox);
 		
+		//Team Components//
 		teamScrollPane = new JScrollPane();
 		teamScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		teamScrollPane.setBounds(21, 307, 198, 107);
-		centerPanel.add(teamScrollPane);
-		
-		
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(this);
-		
-		
-		
 		teamScrollPane.setViewportView(list);
-		
-		JLabel lblTeamMembers = new JLabel("Team Members:");
-		lblTeamMembers.setHorizontalAlignment(SwingConstants.CENTER);
-		teamScrollPane.setColumnHeaderView(lblTeamMembers);
+		teamLabel = new JLabel("Team Members:");
+		teamLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		teamScrollPane.setColumnHeaderView(teamLabel);
+		centerPanel.add(teamScrollPane);
 		
 		addButton = new JButton("Add");
 		addButton.addActionListener(this);
@@ -319,19 +270,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		centerPanel.add(addButton);
 		
 		removeButton = new JButton("Remove Selected");
-		
-		removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				//int index = list.getSelectedIndex();
-				
-				//listModel.remove(index);
-				listModel.removeElement(list.getSelectedValue());
-				System.out.println(list.getSelectedValue());
-				list = new JList(listModel);
-				
-			}
-		});
+		removeButton.addActionListener(this);
 		removeButton.setBounds(244, 391, 191, 23);
 		centerPanel.add(removeButton);
 		
@@ -344,6 +283,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		addMemberField.setColumns(10);
 		centerPanel.add(addMemberField);
 		
+		//Lines of Code of Project Components//
 		LOClabel = new JLabel("Size of Current Code");
 		LOClabel.setBounds(21, 175, 120, 14);
 		centerPanel.add(LOClabel);
@@ -355,7 +295,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		LOCanother.setFocusable(false);
 	    centerPanel.add(LOCanother);
 		
-	        
 	    LOCdefault = new JRadioButton("(Default) 0");
 	    LOCdefault.setSelected(true);
 	    LOCdefault.setBounds(147, 173, 85, 19);
@@ -368,13 +307,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		LOCField.setColumns(10);
 		LOCField.disable();
 		centerPanel.add(LOCField);
-		
-		/*
-		fileChooser = new JFileChooser();
-		fileChooser.setBounds(x, y, width, height);
-		*/
 	}
-
 
 	public void buildBottomPanel(){
 		bottomPanel = new JPanel();
@@ -382,6 +315,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		bottomPanel.setBounds(10, 527, 464, 73);
 		bottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
+		//Bottom Buttons//
 		okButton = new JButton("Ok");
 		okButton.setBounds(327, 26, 112, 23);
 		okButton.addActionListener(this);
@@ -392,36 +326,37 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 		cancelButton.addActionListener(this);
 		bottomPanel.add(cancelButton);
 		
+		/*
 		clearButton = new JButton("Clear");
 		clearButton.setBounds(25, 26, 112, 23);
 		clearButton.addActionListener(this);
 		bottomPanel.add(clearButton);
+		*/
 	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		//selected = e.getSource().getSelectedValue();
-		//System.out.println(e);
-		
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		
-		if(o == customerChB && customerChB.isSelected() == true){
-			customerLabel.setForeground(Color.BLACK);
-			customerField.setText("");
-			customerField.setForeground(Color.BLACK);
+		//Customer Check Box//
+		if(o == customerChB){
+			if(customerChB.isSelected()){
+				customerLabel.setForeground(Color.BLACK);
+				customerField.setText("");
+				customerField.setForeground(Color.BLACK);
+			}
+			else{
+				customerLabel.setForeground(Color.gray);
+				customerField.setText(" Optional");
+				customerField.setForeground(Color.gray);
+			}
 		}
 		
-		if(o == customerChB && customerChB.isSelected() == false){
-			customerLabel.setForeground(Color.gray);
-			customerField.setText(" Optional");
-			customerField.setForeground(Color.gray);
-		}
-		
+		//End Date Check Box//
 		if(o == endDateChB){
 			endDate.setEnabled(endDateChB.isSelected());
 	        edButton.setEnabled(endDateChB.isSelected());
@@ -436,6 +371,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 	        }
 		}
 		
+		//Calendar Button for End Date//
 		if(o == edButton){
 			endCalFrame.setLocation((this.getContentPane().getWidth() / 2),0);
 	        endCalFrame.setSize((this.getContentPane().getWidth() / 2), 
@@ -445,11 +381,14 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 	        endCalFrame.show();
 		}
 		
+		//Default Lines of Code Radio Button//
 		if(o == LOCdefault){
 			//Blacken the text//
 			LOCdefault.setForeground(Color.black);
 			
+			//deselect and gray other//
 			LOCanother.setSelected(false);
+			LOCanother.setForeground(Color.gray);
 			
 			//Disable the Field//
 			LOCField.setForeground(Color.gray);
@@ -457,13 +396,12 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 			
 		}
 		
+		//Alternate Lines Of Code Radio Button//
 		if(o == LOCanother){
 			LOCanother.setForeground(Color.black);
 			
-			//Gray the default//
+			//deselect and Gray the default//
 			LOCdefault.setForeground(Color.gray);
-			
-			//Deselect it//
 			LOCdefault.setSelected(false);
 			
 			//Enable the Field//
@@ -472,24 +410,24 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 			
 		}
 		
+		//Add Team Member Button//
 		if (o == addButton  && addMemberField.getText() != ""){
         	listModel.addElement(addMemberField.getText());
         	list = new JList(listModel);
         	addMemberField.setText("");
         }
 		
+		//Remove Team Member Button//
 		if(o == removeButton){
-			//int index = list.getSelectedIndex();
-			
-			//listModel.remove(index);
 			listModel.removeElement(list.getSelectedValue());
 			System.out.println(list.getSelectedValue());
 			list = new JList(listModel);
 		}
 		
+		//OK Button//
 		if(o == okButton){
 			String title = prTitleField.getText();
-			String stage = (String) stageComboBox.getSelectedItem();
+			//String stage = (String) stageComboBox.getSelectedItem();
 			
 			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
 	        CalendarDate endD = null;
@@ -498,20 +436,55 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, List
 	        }
 			Project prj = ProjectManager.createProject(title, startD, endD);
 	        CurrentStorage.get().storeProjectManager();
+	        
+	        this.setVisible(false);
+	        this.dispose();
 		}
 		
+		//Cancel Button//
 		if(o == cancelButton){
 			this.setVisible(false);
 			this.dispose();
 		}
 		
+		//Clear button (unimplemented)//
 		if(o == clearButton){
-			buildCenterPanel();
-			c.add(centerPanel);
-			
-			c.revalidate();
-			c.repaint();
+		
 		}
 		
+	}
+
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		Object o = e.getSource();
+		
+		if(o == startDate){
+			if (ignoreStartChanged) return;
+            ignoreStartChanged = true;
+            Date sd = (Date) startDate.getModel().getValue();
+            if (endDate.isEnabled()) {
+              Date ed = (Date) endDate.getModel().getValue();
+              if (sd.after(ed)) {
+                startDate.getModel().setValue(ed);
+                sd = ed;
+              }
+            }
+            startCalFrame.cal.set(new CalendarDate(sd));
+            ignoreStartChanged = false;
+		}
+		
+		if(o == endDate){
+			if (ignoreEndChanged) return;
+            ignoreEndChanged = true;
+            Date sd = (Date) startDate.getModel().getValue();
+            Date ed = (Date) endDate.getModel().getValue();
+            if (sd.after(ed)) {
+                endDate.getModel().setValue(sd);
+                ed = sd;
+            }
+            endCalFrame.cal.set(new CalendarDate(ed));
+            ignoreEndChanged = false;
+		}
 	}
 }
