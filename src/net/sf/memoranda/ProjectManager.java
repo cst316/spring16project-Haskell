@@ -110,8 +110,26 @@ public class ProjectManager {
         return prj;
     }
 
+
+    public static Project createProject(String id, String title, String description, CalendarDate startDate, CalendarDate endDate) {
+        Element el = new Element("project");
+        el.addAttribute(new Attribute("id", id));
+        el.addAttribute(new Attribute("description",description));
+        _root.appendChild(el);
+        Project prj = new ProjectImpl(el);
+        prj.setTitle(title);
+        prj.setStartDate(startDate);
+        prj.setEndDate(endDate);
+        CurrentStorage.get().createProjectStorage(prj);
+        return prj;
+    }
+
     public static Project createProject(String title, CalendarDate startDate, CalendarDate endDate) {
         return createProject(Util.generateId(), title, startDate, endDate);
+    }
+
+    public static Project createProject(String title, CalendarDate startDate, CalendarDate endDate,String descrption) {
+        return createProject(Util.generateId(), title, descrption, startDate, endDate);
     }
     
     public static void removeProject(String id) {
