@@ -120,6 +120,7 @@ public class ProjectManager {
         prj.setTitle(title);
         prj.setStartDate(startDate);
         prj.setEndDate(endDate);
+        prj.setDescription(description);
         CurrentStorage.get().createProjectStorage(prj);
         return prj;
     }

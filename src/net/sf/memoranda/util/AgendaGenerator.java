@@ -275,6 +275,12 @@ public class AgendaGenerator {
 				+ "</a></h2>\n"
 				+ "<table border=\"0\" width=\"100%\" cellpadding=\"2\" bgcolor=\"#EFEFEF\"><tr><td>" 
 				+ Local.getString("Start date")+": <i>"+p.getStartDate().getMediumDateString()+"</i>\n";
+		if(p.getDescription() != null){
+			s+="<p>Description: ";
+			s+=p.getDescription();
+			s+="</p>";
+		}
+		
 		if (p.getEndDate() != null)
 			s += "<br>" + Local.getString("End date")+": <i>"+p.getEndDate().getMediumDateString()
 			+"</i>\n";        
