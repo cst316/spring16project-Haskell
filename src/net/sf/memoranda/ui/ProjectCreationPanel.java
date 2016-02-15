@@ -24,12 +24,14 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -81,6 +83,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
     private JLabel customerLabel;
     private JTextField customerField;
     private JCheckBox customerChB;
+    	//File Selection//
+    private JButton fileButton;
+    private JTextField fileField;
+    	//Import PSP//
+    private JButton importButton;
 		//Team Member Adding//
     private DefaultListModel listModel = new DefaultListModel();
     private JList list = new JList(listModel);
@@ -95,7 +102,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JLabel LOClabel;
 	private JRadioButton LOCdefault;
 	private JRadioButton LOCanother;
-	private JTextField LOCField;
+	private JSpinner LOCspinner;
 	
 	//Bottom Panel and its components//
 	private JPanel bottomPanel;
@@ -241,6 +248,20 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		statusComboBox.setBounds(82, 237, 109, 20);
 		centerPanel.add(statusComboBox);
 		
+		fileButton = new JButton("Choose Project File");
+		fileButton.setBounds(21, 275, 145, 20);
+		centerPanel.add(fileButton);
+		
+		fileField = new JTextField();
+		fileField.setBounds(170, 275, 267, 20);
+		centerPanel.add(fileField);
+		
+		/*
+		importButton = new JButton("Import PSP Files");
+		importButton.setBounds(360, 275,125, 20);
+		centerPanel.add(importButton);
+		*/
+		
 		//Stage Components//
 		stageLabel = new JLabel("Stage");
 		stageLabel.setBounds(271, 22, 47, 14);
@@ -255,7 +276,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		//Team Components//
 		teamScrollPane = new JScrollPane();
 		teamScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		teamScrollPane.setBounds(21, 307, 198, 107);
+		teamScrollPane.setBounds(21, 317, 198, 107);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(this);
 		teamScrollPane.setViewportView(list);
@@ -266,20 +287,20 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		addButton = new JButton("Add");
 		addButton.addActionListener(this);
-		addButton.setBounds(244, 357, 191, 23);
+		addButton.setBounds(244, 367, 191, 23);
 		centerPanel.add(addButton);
 		
 		removeButton = new JButton("Remove Selected");
 		removeButton.addActionListener(this);
-		removeButton.setBounds(244, 391, 191, 23);
+		removeButton.setBounds(244, 401, 191, 23);
 		centerPanel.add(removeButton);
 		
 		addMemberLabel = new JLabel("Team Member Name");
-		addMemberLabel.setBounds(244, 301, 138, 14);
+		addMemberLabel.setBounds(244, 311, 138, 14);
 		centerPanel.add(addMemberLabel);
 		
 		addMemberField = new JTextField();
-		addMemberField.setBounds(244, 326, 191, 20);
+		addMemberField.setBounds(244, 336, 191, 20);
 		addMemberField.setColumns(10);
 		centerPanel.add(addMemberField);
 		
@@ -301,12 +322,15 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	    LOCdefault.addActionListener(this);
 	    LOCdefault.setFocusable(false);
 		centerPanel.add(LOCdefault);
-	        
-		LOCField = new JTextField();
-		LOCField.setBounds(271, 195, 107, 20);
-		LOCField.setColumns(10);
-		LOCField.disable();
-		centerPanel.add(LOCField);
+	    
+		SpinnerNumberModel LOCspinnermodel = new SpinnerNumberModel();
+		LOCspinnermodel.setMinimum(0);
+		LOCspinnermodel.setStepSize(500);
+		
+		LOCspinner = new JSpinner(LOCspinnermodel);
+		LOCspinner.setBounds(271, 195, 107, 20);
+		LOCspinner.disable();
+		centerPanel.add(LOCspinner);
 	}
 
 	public void buildBottomPanel(){
@@ -316,7 +340,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		bottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		//Bottom Buttons//
-		okButton = new JButton("Ok");
+		okButton = new JButton("Continue");
 		okButton.setBounds(327, 26, 112, 23);
 		okButton.addActionListener(this);
 		bottomPanel.add(okButton);
@@ -326,12 +350,12 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		cancelButton.addActionListener(this);
 		bottomPanel.add(cancelButton);
 		
-		/*
+		
 		clearButton = new JButton("Clear");
 		clearButton.setBounds(25, 26, 112, 23);
 		clearButton.addActionListener(this);
 		bottomPanel.add(clearButton);
-		*/
+	
 	}
 	
 	@Override
@@ -391,8 +415,8 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			LOCanother.setForeground(Color.gray);
 			
 			//Disable the Field//
-			LOCField.setForeground(Color.gray);
-			LOCField.disable();
+			LOCspinner.setForeground(Color.gray);
+			LOCspinner.disable();
 			
 		}
 		
@@ -405,8 +429,8 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			LOCdefault.setSelected(false);
 			
 			//Enable the Field//
-			LOCField.setText("");
-			LOCField.enable();
+			LOCspinner.setValue(0);
+			LOCspinner.enable();
 			
 		}
 		
@@ -426,14 +450,43 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//OK Button//
 		if(o == okButton){
+			//Get title and stage//
 			String title = prTitleField.getText();
-			//String stage = (String) stageComboBox.getSelectedItem();
+			String stage = (String) stageComboBox.getSelectedItem();
 			
+			//Get start and end dates//
 			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
 	        CalendarDate endD = null;
 	        if (endDateChB.isSelected()){
 	            endD = new CalendarDate((Date) endDate.getModel().getValue());
 	        }
+	        
+	        //Get Description//
+	        String desc = description.getText();
+	        
+	        //Get Project Size//
+	        int currentProjectSize = 0;
+	        if(LOCdefault.isSelected() == false){
+		        currentProjectSize = (int)LOCspinner.getValue();
+	        }
+	       
+	        //Get Priority//
+	        String priority = (String)statusComboBox.getSelectedItem();
+	        
+	        //Get Customer//
+	        String customer = null;
+	        if(customerChB.isSelected() == true){
+	        	customer = customerField.getText();
+	        }
+	        
+	        String projectFileLocation = fileField.getText();
+	        
+	        //Add all team members//
+	        String[] teammembers = new String[list.getModel().getSize()];
+	        for(int i = 0; i < list.getModel().getSize(); i++){
+	        	teammembers[i] = (String)list.getModel().getElementAt(i);
+	        }
+	        
 			Project prj = ProjectManager.createProject(title, startD, endD);
 	        CurrentStorage.get().storeProjectManager();
 	        
@@ -447,9 +500,13 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			this.dispose();
 		}
 		
-		//Clear button (unimplemented)//
+		//Clear button//
 		if(o == clearButton){
-		
+			//Make new Panel//
+			ProjectCreationPanel pcp = new ProjectCreationPanel();
+			
+			this.setVisible(false);
+			this.dispose();
 		}
 		
 	}
