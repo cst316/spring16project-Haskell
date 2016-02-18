@@ -10,6 +10,7 @@ package net.sf.memoranda.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.Calendar;
 import java.util.Vector;
 
@@ -19,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
@@ -37,7 +39,7 @@ public class Calendar2 extends JTable {
 	CalendarDate startPeriod = null;
 	CalendarDate endPeriod = null;
 	public JNCalendarCellRenderer renderer = new JNCalendarCellRenderer();
-
+	
 	public Calendar2() {
 		this(CurrentDate.get());
 	}
@@ -47,10 +49,11 @@ public class Calendar2 extends JTable {
 	public Calendar2(CalendarDate date) {
 		super();
 		 //table properties 
+		this.setRowHeight(81);
 		setCellSelectionEnabled(true);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		getTableHeader().setReorderingAllowed(false);
-		getTableHeader().setResizingAllowed(false);
+		/*getTableHeader().setReorderingAllowed(false);
+		getTableHeader().setResizingAllowed(false);*/
 		set(date);
 
 		 //selection listeners 
@@ -133,10 +136,10 @@ public class Calendar2 extends JTable {
 	public TableCellRenderer getCellRenderer(int row, int column) {
 		Object d = this.getModel().getValueAt(row, column);
 		
-		 * if (d != null) return new JNCalendarCellRenderer( new
-		 * CalendarDate(new Integer(d.toString()).intValue(), _date.getMonth(),
-		 * _date.getYear()));
-		 
+		/*  if (d != null) return new JNCalendarCellRenderer( new
+		  CalendarDate(new Integer(d.toString()).intValue(), _date.getMonth(),
+		  _date.getYear()));*/
+				
 		if (d != null)
 			renderer.setDate(
 				new CalendarDate(
@@ -147,6 +150,7 @@ public class Calendar2 extends JTable {
 			renderer.setDate(null);
 		return renderer;
 	}
+	
 
 	void doSelection() {
 		ignoreChange = true;
@@ -158,13 +162,15 @@ public class Calendar2 extends JTable {
 	}
 
 	int getRow(int day) {
-		return ((day - 1) + firstDay) / 7;
+		//return ((day - 1) + firstDay) / 7;
+		return day - today;
 	}
 
 	int getCol(int day) {
-		return ((day - 1) + firstDay) % 7;
+		//return ((day - 1) + firstDay) % 7;
+		return 1;
 	}
-
+	int today;
 	int firstDay;
 	int daysInMonth;
 
@@ -179,11 +185,13 @@ public class Calendar2 extends JTable {
 		} else
 			cal.setFirstDayOfWeek(Calendar.SUNDAY);
 
-		cal.set(Calendar.DAY_OF_MONTH, 1);
+		
 		cal.getTime();
 		firstDay = cal.get(Calendar.DAY_OF_WEEK) - d;
 		if (firstDay == -1)
 			firstDay = 6;
+		today = cal.get(Calendar.DAY_OF_MONTH);
+		cal.set(Calendar.DAY_OF_MONTH, today);
 		daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 	}
 
@@ -197,26 +205,32 @@ public class CalendarModel2 extends AbstractTableModel {
 		}
 
 		public int getColumnCount() {
-			return 1;
+			return 2;
 		}
 
 		public Object getValueAt(int row, int col) {
-			//int pos = (row * 7 + col) - firstDay + 1;
-			int pos = (row * 7 + (col + 1)) - firstDay;
-			if ((pos > 0) && (pos <= daysInMonth))
-				return new Integer(pos);
-			else
-				return null;
-
+			Calendar c = _date.getCalendar();
+			int pos = row + today;
+			String[][] data = new String[7][2];
+			int dayOfWeek = (today + firstDay - 1) % 7;
+			for (int i = 0; i < 7; i++){
+				data[i][1] = new Integer((today + i) % daysInMonth).toString();
+				//data[i][0] = new Integer((today + i) % daysInMonth).toString();
+				data[i][0] = dayNames[row];
+			}
+			
+			return data[row][col];
+				//return new Integer(pos);
 		}
 
 		public int getRowCount() {
 			return 7;
 		}
-
-		public String getColumnName(int col) {
+		
+		
+		/*public String getColumnName(int col) {
 			return dayNames[col];
-		}
+		}*/
 
 	}
 

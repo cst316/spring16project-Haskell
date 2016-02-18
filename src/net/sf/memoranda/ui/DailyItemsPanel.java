@@ -77,6 +77,8 @@ public class DailyItemsPanel extends JPanel {
     boolean dateChangedByCalendar = false;
     boolean changedByHistory = false;
     JPanel cmainPanel = new JPanel();
+    
+    CalendarPanel2 calendarPanel2 = new CalendarPanel2();
     JNCalendarPanel calendar = new JNCalendarPanel();
     JToolBar toggleToolBar = new JToolBar();
     BorderLayout borderLayout5 = new BorderLayout();
@@ -297,10 +299,17 @@ public class DailyItemsPanel extends JPanel {
         editorPanel.setDocument(currentNote);
         History.add(new HistoryItem(CurrentDate.get(), CurrentProject.get()));
         cmainPanel.add(mainTabsPanel, BorderLayout.CENTER);
-        mainTabsPanel.add(eventsTabbedPane, "EVENTSTAB");
-        mainTabsPanel.add(tasksTabbedPane, "TASKSTAB");
+        //mainTabsPanel.add(eventsTabbedPane, "EVENTSTAB");
+        CalendarPanel2 CP2a = new CalendarPanel2();
+        mainTabsPanel.add(CP2a, "EVENTSTAB");
+        
+        //mainTabsPanel.add(tasksTabbedPane, "TASKSTAB");
+        mainTabsPanel.add(new CalendarPanel2(), "TASKSTAB");     
         mainTabsPanel.add(notesControlPane, "NOTESTAB");
-		mainTabsPanel.add(agendaTabbedPane, "AGENDATAB");
+		//mainTabsPanel.add(agendaTabbedPane, "AGENDATAB");
+        mainTabsPanel.add(new CalendarPanel2(), "AGENDATAB");
+		
+        
         updateIndicators(CurrentDate.get(), CurrentProject.getTaskList());
         mainPanel.setBorder(null);
     }
