@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -141,15 +142,19 @@ public class TaskDialog extends JDialog {
 	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
 	//components added 2/17/16
 	private final JPanel timerTab = new JPanel();
-	private final JLabel lblStartTime = new JLabel("StartTime");
+	private final JLabel lblStartTime = new JLabel("Start Time");
 	private final JButton btnStart = new JButton("Start");
 	private final JFormattedTextField startTextField = new JFormattedTextField(); ;
 	private final JLabel lblEndTime = new JLabel("End Time");
 	private final JButton btnEnd = new JButton("End");
 	private final JFormattedTextField endTextField = new JFormattedTextField();
 	private final JLabel lblSession = new JLabel("Session Time");
-	private final JFormattedTextField formattedTextField = new JFormattedTextField();
-
+	private final JFormattedTextField sessionTextField = new JFormattedTextField();
+	private final JFormattedTextField testField = new JFormattedTextField();
+	private long startTime;
+	private long endTime;
+	private long initialTime;
+	private long finalTime;
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -504,9 +509,6 @@ public class TaskDialog extends JDialog {
                         	}
                         });
                         
-                        //estimationTab.add(label);
-                        
-                        //estimationTab.add(label_1);
                         
                         estimationTab.add(totalEst);
                         totalEst.setLayout(new GridLayout(0, 2, 0, 0));
@@ -531,7 +533,10 @@ public class TaskDialog extends JDialog {
                         btnStart.addMouseListener(new MouseAdapter() {
                         	@Override
                         	public void mousePressed(MouseEvent e) {
-                        		//startTextField.set;
+                        		startTime = System.currentTimeMillis();
+                        		initialTime= System.nanoTime(); 
+                        		
+                        		startTextField.setText(convertMillitoHMS(startTime));
                         	}
                         });
                         
@@ -545,7 +550,24 @@ public class TaskDialog extends JDialog {
                         
                         btnEnd.setBounds(10, 134, 89, 23);
                         timerTab.add(btnEnd);
+                        btnEnd.addMouseListener(new MouseAdapter() {
+                        	@Override
+                        	public void mousePressed(MouseEvent e) {
+                        		endTime = System.currentTimeMillis();
+                        		
+                        		endTextField.setText(convertMillitoHMS(endTime));;
+                        		
+                        		long sessionTime = System.nanoTime() - initialTime;
+                        		sessionTime = (long) (sessionTime / 1000000.0);				//converts nanoseconds to milliseconds
+                        		//long difference = (long) ((1.8 * Math.pow(10, 7))/2);
+                        		String sessionString = convertMillitoHMS(sessionTime);
+                        		
+                        		sessionTextField.setText(sessionString);
+              
+                        	}
+                        });
                         
+                       
                         
                         endTextField.setEditable(false);
                         endTextField.setBounds(106, 106, 90, 20);
@@ -553,10 +575,14 @@ public class TaskDialog extends JDialog {
                         lblSession.setBounds(10, 181, 80, 14);
                         
                         timerTab.add(lblSession);
-                        formattedTextField.setEditable(false);
-                        formattedTextField.setBounds(10, 206, 90, 20);
+                        sessionTextField.setEditable(false);
+                        sessionTextField.setBounds(10, 206, 90, 20);
                         
-                        timerTab.add(formattedTextField);
+                        timerTab.add(sessionTextField);
+                        
+                        testField.setBounds(145, 206, 75, 20);
+                        timerTab.add(testField);
+                        
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
         startCalFrame.cal.addSelectionListener(new ActionListener() {
@@ -576,7 +602,16 @@ public class TaskDialog extends JDialog {
         });
     }
     
-    public void updateTotalEst(){
+    protected String convertMillitoHMS(long time) {
+		Date timeInFormat = new Date(time);
+		SimpleDateFormat formatDef = new SimpleDateFormat("h:mm:s");
+		String formattedTime = formatDef.format(timeInFormat);
+		return formattedTime;
+		
+		
+	}
+
+	public void updateTotalEst(){
         		totalEstTextField.setText("" + ((int)planningSpinner.getValue() + (int)designSpinner.getValue() + 
         		(int)designReviewSpinner.getValue() + (int)codeSpinner.getValue() + (int)codeReviewSpinner.getValue() +
         		(int)compileSPinner.getValue() + (int)testSpinner.getValue() + (int)postmortemSpinner.getValue())); 
