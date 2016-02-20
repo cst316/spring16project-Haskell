@@ -219,7 +219,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		centerPanel.add(descLabel);
 		
 		description = new JTextArea();
-		description.setBounds(21, 92, 414, 74);
+		description.setBounds(21, 92, 416, 74);
 		description.setBorder(BorderFactory.createLineBorder(Color.gray));
 		centerPanel.add(description);
 		
@@ -235,7 +235,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
         centerPanel.add(customerChB);
 		
         customerField = new JTextField(" Optional");
-        customerField.setBounds(330, 237, 100, 20);
+        customerField.setBounds(330, 237, 107, 20);
         customerField.setForeground(Color.gray);
         centerPanel.add(customerField);
         
@@ -256,11 +256,13 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		centerPanel.add(fileButton);
 		
 		fileField = new JTextField();
-		fileField.setBounds(170, 275, 267, 20);
+		fileField.setBounds(176, 275, 261, 20);
+		fileField.setBackground(Color.white);
 		fileField.setEditable(false);
 		centerPanel.add(fileField);
 		
 		fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		/*
 		importButton = new JButton("Import PSP Files");
@@ -276,7 +278,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		stageComboBox = new JComboBox();
 		stageComboBox.setBackground(new Color(255, 255, 255));
 		stageComboBox.setModel(new DefaultComboBoxModel(new String[] {"Planning", "Design", "Design Review", "Code", "Code Review", "Compile", "Test", "Postmortem"}));
-		stageComboBox.setBounds(308, 19, 127, 20);
+		stageComboBox.setBounds(308, 19, 129, 20);
 		centerPanel.add(stageComboBox);
 		
 		//Team Components//
@@ -502,6 +504,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        	customer = customerField.getText();
 	        }
 	        
+	        //Get file location//
 	        String projectFileLocation = fileField.getText();
 	        
 	        //Add all team members//
