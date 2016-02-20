@@ -3,6 +3,7 @@ package net.sf.memoranda.ui;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Insets;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -74,7 +75,8 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
     CalendarFrame startCalFrame = new CalendarFrame();
     	//Description Label and Text Area//
     private JLabel descLabel;
-    private JTextArea description;
+    private JTextArea description;	
+    private JScrollPane descScrollPane;
     	//Priority and Stage//
     private JLabel statusLabel;
     private JComboBox statusComboBox;
@@ -89,7 +91,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
     private JTextField fileField;
     private JFileChooser fileChooser;
     	//Import PSP//
-    private JButton importButton;
+    //private JButton importButton;
 		//Team Member Adding//
     private DefaultListModel listModel = new DefaultListModel();
     private JList list = new JList(listModel);
@@ -99,7 +101,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JTextField addMemberField;
 	private JButton addButton;
 	private JButton removeButton;
-	private String selected;
+	private int selected;
     	//Base Lines of Code//
 	private JLabel LOClabel;
 	private JRadioButton LOCdefault;
@@ -111,6 +113,8 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton okButton;
 	private JButton cancelButton;
 	private JButton clearButton;
+	private JLabel errorLabel;
+	private JScrollPane scrollPane;
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -218,10 +222,19 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		descLabel.setBounds(21, 78, 70, 14);
 		centerPanel.add(descLabel);
 		
+		descScrollPane = new JScrollPane();
+		descScrollPane.setBounds(21, 92, 416, 74);
+		descScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		centerPanel.add(descScrollPane);
+		
 		description = new JTextArea();
-		description.setBounds(21, 92, 416, 74);
-		description.setBorder(BorderFactory.createLineBorder(Color.gray));
-		centerPanel.add(description);
+		descScrollPane.setViewportView(description);
+		description.setLineWrap(true);
+		description.setWrapStyleWord(true);
+		description.setBorder(BorderFactory.createCompoundBorder(
+					(BorderFactory.createLineBorder(Color.gray)), 
+					(BorderFactory.createEmptyBorder(0,5,0,5))));
+		
 		
 		//Customer Components//
 		customerLabel = new JLabel("Customer");
@@ -250,6 +263,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		statusComboBox.setBounds(82, 237, 109, 20);
 		centerPanel.add(statusComboBox);
 		
+		//File (Directory) Chooser Components//
 		fileButton = new JButton("Choose Project File");
 		fileButton.setBounds(21, 275, 145, 20);
 		fileButton.addActionListener(this);
@@ -362,6 +376,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		cancelButton.addActionListener(this);
 		bottomPanel.add(cancelButton);
 		
+		errorLabel = new JLabel("Required Information Not Given, Cannot Continue!");
+    	errorLabel.setBounds(175, 53, 280, 20);
+    	errorLabel.setForeground(Color.red);
+    	errorLabel.setVisible(false);
+    	bottomPanel.add(errorLabel);
 		
 		clearButton = new JButton("Clear");
 		clearButton.setBounds(25, 26, 112, 23);
@@ -370,8 +389,37 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	
 	}
 	
+	public boolean dataIsValid(){
+		boolean result = true;
+		
+		/*
+		 * For some reason 
+		 * 		someField.getText() == ""; 
+		 * returns false when the field is empty, but
+		 * 		someField.getText().length() == 0;
+		 * works just fine. Thanks Java...
+		 */
+		
+		//if the title is empty...//
+		if(prTitleField.getText().length() == 0){
+			//return false//
+			result = false;
+		}
+		
+		//if the file field is empty...//
+		if(fileField.getText().length() == 0){
+			//return false//
+			result = false;
+		}
+		
+		//Return whatever the result is//
+		return result;
+	}
+	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
+		JList l = (JList)e.getSource();
+		selected = l.getSelectedIndex();
 	}
 
 	@Override
@@ -380,7 +428,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//File Chooser Button//
 		if(o == fileButton){
-			
 			int returnValue = fileChooser.showOpenDialog(this);
 			
 			if(returnValue == JFileChooser.APPROVE_OPTION){
@@ -436,7 +483,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			LOCdefault.setForeground(Color.black);
 			
 			//deselect and gray other//
-			//LOCanother.setSelected(false);
 			LOCanother.setForeground(Color.gray);
 			
 			//Disable the Field//
@@ -451,7 +497,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			
 			//deselect and Gray the default//
 			LOCdefault.setForeground(Color.gray);
-			//LOCdefault.setSelected(false);
 			
 			//Enable the Field//
 			LOCspinner.setValue(0);
@@ -468,8 +513,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//Remove Team Member Button//
 		if(o == removeButton){
-			listModel.removeElement(list.getSelectedValue());
-			System.out.println(list.getSelectedValue());
+			listModel.remove(selected);
 			list = new JList(listModel);
 		}
 		
@@ -513,11 +557,29 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        	teammembers[i] = (String)list.getModel().getElementAt(i);
 	        }
 	        
-			Project prj = ProjectManager.createProject(title, startD, endD);
-	        CurrentStorage.get().storeProjectManager();
 	        
-	        this.setVisible(false);
-	        this.dispose();
+	        //If the data given is invalid...//
+	        if(dataIsValid() == false){
+	        	//Show the user an error//
+	        	errorLabel.setVisible(true);
+	        }
+	        else{
+	        	Project prj = ProjectManager.createProject(title, startD, endD);
+		        CurrentStorage.get().storeProjectManager();
+		        
+				
+				/* Clears the Frame so Duncan can add to it, replace with lines above 
+				c.remove(topPanel);
+				c.remove(centerPanel);
+				c.remove(bottomPanel);
+				
+				c.repaint();
+				*/
+				
+		        this.setVisible(false);
+		        this.dispose();
+	        }
+			
 		}
 		
 		//Cancel Button//
@@ -531,6 +593,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			//Make new Panel//
 			ProjectCreationPanel pcp = new ProjectCreationPanel();
 			
+			//Dispose of the old one//
 			this.setVisible(false);
 			this.dispose();
 		}
