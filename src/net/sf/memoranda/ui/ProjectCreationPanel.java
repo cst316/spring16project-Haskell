@@ -24,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
@@ -35,11 +34,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -86,6 +87,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
     	//File Selection//
     private JButton fileButton;
     private JTextField fileField;
+    private JFileChooser fileChooser;
     	//Import PSP//
     private JButton importButton;
 		//Team Member Adding//
@@ -250,11 +252,15 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		fileButton = new JButton("Choose Project File");
 		fileButton.setBounds(21, 275, 145, 20);
+		fileButton.addActionListener(this);
 		centerPanel.add(fileButton);
 		
 		fileField = new JTextField();
 		fileField.setBounds(170, 275, 267, 20);
+		fileField.setEditable(false);
 		centerPanel.add(fileField);
+		
+		fileChooser = new JFileChooser();
 		
 		/*
 		importButton = new JButton("Import PSP Files");
@@ -329,8 +335,12 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		LOCspinner = new JSpinner(LOCspinnermodel);
 		LOCspinner.setBounds(271, 195, 107, 20);
-		LOCspinner.disable();
+		LOCspinner.setEnabled(false);
 		centerPanel.add(LOCspinner);
+		
+		ButtonGroup radioButtons = new ButtonGroup();
+		radioButtons.add(LOCdefault);
+		radioButtons.add(LOCanother);
 	}
 
 	public void buildBottomPanel(){
@@ -365,6 +375,18 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
+		
+		//File Chooser Button//
+		if(o == fileButton){
+			
+			int returnValue = fileChooser.showOpenDialog(this);
+			
+			if(returnValue == JFileChooser.APPROVE_OPTION){
+				File file = fileChooser.getSelectedFile();
+				fileField.setText(file.getPath());
+			}
+			
+		}
 		
 		//Customer Check Box//
 		if(o == customerChB){
@@ -405,18 +427,19 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        endCalFrame.show();
 		}
 		
+		
 		//Default Lines of Code Radio Button//
 		if(o == LOCdefault){
 			//Blacken the text//
 			LOCdefault.setForeground(Color.black);
 			
 			//deselect and gray other//
-			LOCanother.setSelected(false);
+			//LOCanother.setSelected(false);
 			LOCanother.setForeground(Color.gray);
 			
 			//Disable the Field//
 			LOCspinner.setForeground(Color.gray);
-			LOCspinner.disable();
+			LOCspinner.setEnabled(false);
 			
 		}
 		
@@ -426,11 +449,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			
 			//deselect and Gray the default//
 			LOCdefault.setForeground(Color.gray);
-			LOCdefault.setSelected(false);
+			//LOCdefault.setSelected(false);
 			
 			//Enable the Field//
 			LOCspinner.setValue(0);
-			LOCspinner.enable();
+			LOCspinner.setEnabled(true);
 			
 		}
 		
