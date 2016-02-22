@@ -27,6 +27,7 @@ import net.sf.memoranda.date.CurrentDate;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.Configuration;
 
+
 /**
  *  
  */
@@ -69,6 +70,9 @@ public class Calendar2 extends JTable {
 				int row = getSelRow();
 				int col = getSelCol();
 				Object val = getModel().getValueAt(row, col);
+				if (val != null && col == 0){
+					return ;
+				}
 				if (val != null) {
 					if (val
 						.toString()
@@ -139,7 +143,10 @@ public class Calendar2 extends JTable {
 		/*  if (d != null) return new JNCalendarCellRenderer( new
 		  CalendarDate(new Integer(d.toString()).intValue(), _date.getMonth(),
 		  _date.getYear()));*/
-				
+		if (d != null && column == 0){
+			renderer.setName((String)d);
+			return renderer;
+		}
 		if (d != null)
 			renderer.setDate(
 				new CalendarDate(
@@ -215,8 +222,8 @@ public class CalendarModel2 extends AbstractTableModel {
 			int dayOfWeek = (today + firstDay - 1) % 7;
 			for (int i = 0; i < 7; i++){
 				data[i][1] = new Integer((today + i) % daysInMonth).toString();
-				//data[i][0] = new Integer((today + i) % daysInMonth).toString();
-				data[i][0] = dayNames[row];
+				data[i][0] = new Integer((today + i) % daysInMonth).toString();
+				//data[i][0] = "sun";
 			}
 			
 			return data[row][col];
