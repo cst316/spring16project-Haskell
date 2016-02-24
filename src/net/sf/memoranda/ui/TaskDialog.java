@@ -14,8 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -47,7 +45,11 @@ import java.awt.event.MouseEvent;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
-    JPanel mPanel = new JPanel(new BorderLayout());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -62365071932024344L;
+	JPanel mPanel = new JPanel(new BorderLayout());
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton cancelB = new JButton();
     JButton okB = new JButton();
@@ -94,7 +96,7 @@ public class TaskDialog extends JDialog {
 //    JPanel jPanelNotes = new JPanel(new FlowLayout(FlowLayout.LEFT));
     
     JButton setNotifB = new JButton();
-    JComboBox priorityCB = new JComboBox(priority);
+    JComboBox<?> priorityCB = new JComboBox<Object>(priority);
     JLabel jLabel7 = new JLabel();
     // added by rawsushi
     JLabel jLabelEffort = new JLabel();
@@ -154,7 +156,7 @@ public class TaskDialog extends JDialog {
 	private long startTime;
 	private long endTime;
 	private long initialTime;
-	private long finalTime;
+	//private long finalTime;
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
