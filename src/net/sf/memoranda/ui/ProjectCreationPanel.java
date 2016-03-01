@@ -3,6 +3,8 @@ package net.sf.memoranda.ui;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.awt.Insets;
 
 import javax.swing.ImageIcon;
@@ -25,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
@@ -107,6 +110,8 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JRadioButton LOCdefault;
 	private JRadioButton LOCanother;
 	private JSpinner LOCspinner;
+	private SpinnerNumberModel LOCspinnermodel;
+	private ButtonGroup radioButtons;
 	
 	//Bottom Panel and its components//
 	private JPanel bottomPanel;
@@ -114,7 +119,8 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton cancelButton;
 	private JButton clearButton;
 	private JLabel errorLabel;
-	private JScrollPane scrollPane;
+	private JLabel requirementLabel;
+	
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -156,12 +162,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		centerPanel = new JPanel();
 		centerPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		centerPanel.setBounds(10, 75, 464, 441);
-		getContentPane().add(centerPanel);
 		centerPanel.setLayout(null);
 		
 		//Project Name Label and Field//
-		titleLabel = new JLabel("Name");
-		titleLabel.setBounds(21, 22, 39, 14);
+		titleLabel = new JLabel("*Name");
+		titleLabel.setBounds(18, 22, 39, 14);
 		centerPanel.add(titleLabel);
 		
 		prTitleField = new JTextField();
@@ -264,13 +269,13 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		centerPanel.add(statusComboBox);
 		
 		//File (Directory) Chooser Components//
-		fileButton = new JButton("Choose Project File");
-		fileButton.setBounds(21, 275, 145, 20);
+		fileButton = new JButton("*Choose Project File");
+		fileButton.setBounds(21, 275, 148, 20);
 		fileButton.addActionListener(this);
 		centerPanel.add(fileButton);
 		
 		fileField = new JTextField();
-		fileField.setBounds(176, 275, 261, 20);
+		fileField.setBounds(173, 275, 261, 20);
 		fileField.setBackground(Color.white);
 		fileField.setEditable(false);
 		centerPanel.add(fileField);
@@ -317,7 +322,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		removeButton.setBounds(244, 401, 191, 23);
 		centerPanel.add(removeButton);
 		
-		addMemberLabel = new JLabel("Team Member Name");
+		addMemberLabel = new JLabel("*Team Member Name");
 		addMemberLabel.setBounds(244, 311, 138, 14);
 		centerPanel.add(addMemberLabel);
 		
@@ -345,7 +350,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	    LOCdefault.setFocusable(false);
 		centerPanel.add(LOCdefault);
 	    
-		SpinnerNumberModel LOCspinnermodel = new SpinnerNumberModel();
+		LOCspinnermodel = new SpinnerNumberModel();
 		LOCspinnermodel.setMinimum(0);
 		LOCspinnermodel.setStepSize(500);
 		
@@ -354,7 +359,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		LOCspinner.setEnabled(false);
 		centerPanel.add(LOCspinner);
 		
-		ButtonGroup radioButtons = new ButtonGroup();
+		radioButtons = new ButtonGroup();
 		radioButtons.add(LOCdefault);
 		radioButtons.add(LOCanother);
 	}
@@ -376,11 +381,16 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		cancelButton.addActionListener(this);
 		bottomPanel.add(cancelButton);
 		
-		errorLabel = new JLabel("Required Information Not Given, Cannot Continue!");
+		errorLabel = new JLabel();
     	errorLabel.setBounds(175, 53, 280, 20);
     	errorLabel.setForeground(Color.red);
     	errorLabel.setVisible(false);
     	bottomPanel.add(errorLabel);
+    	
+    	requirementLabel = new JLabel("* indicates required field");
+    	requirementLabel.setBounds(15, 53, 280, 20);
+    	requirementLabel.setVisible(true);
+    	bottomPanel.add(requirementLabel);
 		
 		clearButton = new JButton("Clear");
 		clearButton.setBounds(25, 26, 112, 23);
@@ -388,29 +398,19 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		bottomPanel.add(clearButton);
 	
 	}
+
+	
 	
 	public boolean dataIsValid(){
 		boolean result = true;
 		
-		/*
-		 * For some reason 
-		 * 		someField.getText() == ""; 
-		 * returns false when the field is empty, but
-		 * 		someField.getText().length() == 0;
-		 * works just fine. Thanks Java...
-		 */
 		
 		//if the title is empty...//
-		if(prTitleField.getText().length() == 0){
+		if(prTitleField.getText().length() == 0 || fileField.getText().length() == 0){
 			//return false//
 			result = false;
 		}
 		
-		//if the file field is empty...//
-		if(fileField.getText().length() == 0){
-			//return false//
-			result = false;
-		}
 		
 		//Return whatever the result is//
 		return result;
@@ -521,7 +521,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		if(o == okButton){
 			//Get title and stage//
 			String title = prTitleField.getText();
-			String stage = (String) stageComboBox.getSelectedItem();
 			
 			//Get start and end dates//
 			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
@@ -530,54 +529,30 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	            endD = new CalendarDate((Date) endDate.getModel().getValue());
 	        }
 	        
-	        //Get Description//
-	        String desc = description.getText();
-	        
-	        //Get Project Size//
-	        int currentProjectSize = 0;
-	        if(LOCdefault.isSelected() == false){
-		        currentProjectSize = (int)LOCspinner.getValue();
-	        }
-	       
-	        //Get Priority//
-	        String priority = (String)statusComboBox.getSelectedItem();
-	        
-	        //Get Customer//
-	        String customer = null;
-	        if(customerChB.isSelected() == true){
-	        	customer = customerField.getText();
-	        }
-	        
-	        //Get file location//
-	        String projectFileLocation = fileField.getText();
-	        
 	        //Add all team members//
 	        String[] teammembers = new String[list.getModel().getSize()];
 	        for(int i = 0; i < list.getModel().getSize(); i++){
 	        	teammembers[i] = (String)list.getModel().getElementAt(i);
 	        }
 	        
-	        
 	        //If the data given is invalid...//
 	        if(dataIsValid() == false){
 	        	//Show the user an error//
+	        	errorLabel.setText("Required Information Not Given, Cannot Continue!");
+	        	errorLabel.setVisible(true);
+	        }
+	        else if(teammembers.length == 0){
+	        	errorLabel.setText("               Must have at least 1 team member!");
 	        	errorLabel.setVisible(true);
 	        }
 	        else{
 	        	Project prj = ProjectManager.createProject(title, startD, endD);
 		        CurrentStorage.get().storeProjectManager();
 		        
-				
-				/* Clears the Frame so Duncan can add to it, replace with lines above 
-				c.remove(topPanel);
-				c.remove(centerPanel);
-				c.remove(bottomPanel);
-				
-				c.repaint();
-				*/
-				
+		        
 		        this.setVisible(false);
 		        this.dispose();
+	
 	        }
 			
 		}
