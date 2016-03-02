@@ -562,7 +562,7 @@ public class TaskDialog extends JDialog {
                         		long sessionTime = System.nanoTime() - initialTime;
                         		sessionTime = (long) (sessionTime / 1000000.0);				//converts nanoseconds to milliseconds
                         		//long difference = (long) ((1.8 * Math.pow(10, 7))/2);
-                        		String sessionString = convertMillitoHMS(sessionTime);
+                        		String sessionString = convertTimertoHMS(sessionTime);
                         		
                         		sessionTextField.setText(sessionString);
               
@@ -611,6 +611,13 @@ public class TaskDialog extends JDialog {
 		return formattedTime;
 		
 		
+	}
+    // This is the easiest way to fix the 5 hour error
+    protected String convertTimertoHMS(long time) {
+    	int seconds = (int) (time / 1000) % 60 ;
+    	int minutes = (int) ((time / (1000*60)) % 60);
+    	int hours   = (int) ((time / (1000*60*60)) % 24);
+    	return (hours + ":" + minutes + ":" + seconds);
 	}
 
 	public void updateTotalEst(){
