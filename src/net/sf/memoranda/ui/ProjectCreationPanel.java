@@ -434,8 +434,13 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        if (endDateChB.isSelected()){
 	            endD = new CalendarDate((Date) endDate.getModel().getValue());
 	        }
-			Project prj = ProjectManager.createProject(title, startD, endD);
+			Project prj = ProjectManager.createProject (title, 
+														startD, 
+														endD,
+														description.getText());
 	        CurrentStorage.get().storeProjectManager();
+	        
+	        
 	        
 	        this.setVisible(false);
 	        this.dispose();
