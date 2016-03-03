@@ -2,16 +2,10 @@ package net.sf.memoranda.ui;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.Insets;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import net.sf.memoranda.Project;
 import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.date.CalendarDate;
@@ -24,10 +18,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
@@ -36,13 +28,11 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DateFormat;
@@ -401,21 +391,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 
 	
 	
-	public boolean dataIsValid(){
-		boolean result = true;
-		
-		
-		//if the title is empty...//
-		if(prTitleField.getText().length() == 0 || fileField.getText().length() == 0){
-			//return false//
-			result = false;
-		}
-		
-		
-		//Return whatever the result is//
-		return result;
-	}
-	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		JList l = (JList)e.getSource();
@@ -536,7 +511,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        }
 	        
 	        //If the data given is invalid...//
-	        if(dataIsValid() == false){
+	        if(prTitleField.getText().length() == 0 || fileField.getText().length() == 0){
 	        	//Show the user an error//
 	        	errorLabel.setText("Required Information Not Given, Cannot Continue!");
 	        	errorLabel.setVisible(true);
