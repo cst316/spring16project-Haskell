@@ -28,6 +28,8 @@ public class ProjectManager {
 
     public static Document _doc = null;
     static Element _root = null;
+    static Element el = new Element("project");
+    static Project prj;
     
     static {
     	init();
@@ -98,31 +100,60 @@ public class ProjectManager {
         return count;
     }
 
-    public static Project createProject(String id, String title, CalendarDate startDate, CalendarDate endDate) {
-        Element el = new Element("project");
-        el.addAttribute(new Attribute("id", id));
+    
+    public static void setTitle(String title){
+    	prj.setTitle(title);
+    }
+    
+    public static void setStartDate(CalendarDate date){
+    	prj.setStartDate(date);
+    }
+    
+    public static void setEndDate(CalendarDate date){
+    	prj.setEndDate(date);
+    }
+    
+    public static void setDescription(String description){
+        el.addAttribute(new Attribute("description",description));
+    	prj.setDescription(description);
+    }
+    
+    public static void createProject(){
+    	el.addAttribute(new Attribute("id",Util.generateId()));
         _root.appendChild(el);
-        Project prj = new ProjectImpl(el);
-        prj.setTitle(title);
-        prj.setStartDate(startDate);
-        prj.setEndDate(endDate);
-        CurrentStorage.get().createProjectStorage(prj);
-        return prj;
+        prj = new ProjectImpl(el);
+    }
+    
+    public static void createProject(String id){
+    	el.addAttribute(new Attribute("id", id));
+        _root.appendChild(el);
+        prj = new ProjectImpl(el);
+    }
+    
+    public static Project build(){
+    	return prj;
+    }
+
+    //Example how it is used.
+    public static Project createProject(String id, String title, CalendarDate startDate, CalendarDate endDate) {
+    	//Create Project must be called first
+		createProject();
+		//After wards you can call these in any order
+		setTitle(title);
+		setEndDate(endDate);
+		setStartDate(startDate);
+		//But Build must be the last one. This returns the object.
+		return build();
     }
 
 
     public static Project createProject(String id, String title, String description, CalendarDate startDate, CalendarDate endDate) {
-        Element el = new Element("project");
-        el.addAttribute(new Attribute("id", id));
-        el.addAttribute(new Attribute("description",description));
-        _root.appendChild(el);
-        Project prj = new ProjectImpl(el);
-        prj.setTitle(title);
-        prj.setStartDate(startDate);
-        prj.setEndDate(endDate);
-        prj.setDescription(description);
-        CurrentStorage.get().createProjectStorage(prj);
-        return prj;
+		createProject(id);
+		setEndDate(endDate);
+		setStartDate(startDate);
+		setDescription(description);
+		setTitle(title);
+		return build();
     }
 
     public static Project createProject(String title, CalendarDate startDate, CalendarDate endDate) {
