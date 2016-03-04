@@ -503,32 +503,16 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        if (endDateChB.isSelected()){
 	            endD = new CalendarDate((Date) endDate.getModel().getValue());
 	        }
+			Project prj = ProjectManager.createProject (title, 
+														startD, 
+														endD,
+														description.getText());
+	        CurrentStorage.get().storeProjectManager();
 	        
-	        //Add all team members//
-	        String[] teammembers = new String[list.getModel().getSize()];
-	        for(int i = 0; i < list.getModel().getSize(); i++){
-	        	teammembers[i] = (String)list.getModel().getElementAt(i);
-	        }
 	        
-	        //If the data given is invalid...//
-	        if(prTitleField.getText().length() == 0 || fileField.getText().length() == 0){
-	        	//Show the user an error//
-	        	errorLabel.setText("Required Information Not Given, Cannot Continue!");
-	        	errorLabel.setVisible(true);
-	        }
-	        else if(teammembers.length == 0){
-	        	errorLabel.setText("               Must have at least 1 team member!");
-	        	errorLabel.setVisible(true);
-	        }
-	        else{
-	        	Project prj = ProjectManager.createProject(title, startD, endD);
-		        CurrentStorage.get().storeProjectManager();
-		        
-		        
-		        this.setVisible(false);
-		        this.dispose();
-	
-	        }
+	        
+	        this.setVisible(false);
+	        this.dispose();
 		}
 		
 		//Cancel Button//
