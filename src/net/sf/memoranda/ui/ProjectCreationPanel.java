@@ -529,7 +529,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		        this.dispose();
 	
 	        }
-			
 		}
 		
 		//Cancel Button//
