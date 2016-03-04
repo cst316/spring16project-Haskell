@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -39,13 +40,20 @@ import javax.swing.JCheckBox;
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.Util;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JFormattedTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
     JPanel mPanel = new JPanel(new BorderLayout());
-    JPanel areaPanel = new JPanel(new BorderLayout());
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton cancelB = new JButton();
     JButton okB = new JButton();
@@ -109,6 +117,7 @@ public class TaskDialog extends JDialog {
 	CalendarDate endDateMin = startDateMin;
 	CalendarDate endDateMax = startDateMax;
 	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	private final JPanel generalTab = new JPanel();
 	private final JPanel estimationTab = new JPanel();
 	private final JPanel designEst = new JPanel();
 	private final JLabel lblDesign = new JLabel("Design");
@@ -137,7 +146,23 @@ public class TaskDialog extends JDialog {
 	private final JPanel totalEst = new JPanel();
 	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
 	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
-    
+	//components added 2/17/16
+	private final JPanel timerTab = new JPanel();
+	private final JLabel lblStartTime = new JLabel("Start Time");
+	private final JButton btnStart = new JButton("Start");
+	private final JFormattedTextField startTextField = new JFormattedTextField(); ;
+	private final JLabel lblEndTime = new JLabel("End Time");
+	private final JButton btnEnd = new JButton("End");
+	private final JFormattedTextField endTextField = new JFormattedTextField();
+	private final JLabel lblSession = new JLabel("Session Time");
+	private final JFormattedTextField sessionTextField = new JFormattedTextField();
+	private final JFormattedTextField testField = new JFormattedTextField();
+	private long startTime;
+	private long endTime;
+	private long initialTime;
+	private long finalTime;
+	private String fileLocation = Util.getEnvDir();
+	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
         try {
@@ -151,12 +176,12 @@ public class TaskDialog extends JDialog {
     
     void jbInit() throws Exception {
 	this.setResizable(false);
-	this.setSize(new Dimension(430,300));
+	this.setSize(new Dimension(370, 200));
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
         border3 = new TitledBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0), 
-        Local.getString("To Do"), TitledBorder.LEFT, TitledBorder.BELOW_TOP);
+        Local.getString("Task Name"), TitledBorder.LEFT, TitledBorder.BELOW_TOP);
         border4 = BorderFactory.createEmptyBorder(0, 5, 0, 5);
 //        border5 = BorderFactory.createEmptyBorder();
 //        border6 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,
@@ -221,8 +246,8 @@ public class TaskDialog extends JDialog {
         buttonsPanel.add(okB, null);
         buttonsPanel.add(cancelB, null);
         mPanel.add(tabbedPane, BorderLayout.SOUTH);
-        tabbedPane.addTab("New tab", null, areaPanel, null);
-        areaPanel.setBorder(border2);
+        tabbedPane.addTab("General", null, generalTab, null);
+        generalTab.setBorder(border2);
         
         GridBagLayout gbLayout = (GridBagLayout) jPanel8.getLayout();
         jPanel8.setBorder(border3);
@@ -359,11 +384,12 @@ public class TaskDialog extends JDialog {
         
                 priorityCB.setFont(new java.awt.Font("Dialog", 0, 11));
                 jPanel4.add(jLabel7, null);
-                areaPanel.add(jPanel8, BorderLayout.NORTH);
+                generalTab.setLayout(new GridLayout(0, 1, 0, 0));
+                generalTab.add(jPanel8);
                 jPanel8.add(todoField, null);
                 jPanel8.add(jLabelDescription);
                 jPanel8.add(descriptionScrollPane, null);
-                areaPanel.add(jPanel2, BorderLayout.CENTER);
+                generalTab.add(jPanel2);
                 jPanel2.add(jPanel6, null);
                 jPanel6.add(jLabel6, null);
                 jPanel6.add(startDate, null);
@@ -390,24 +416,9 @@ public class TaskDialog extends JDialog {
                         jPanel2.add(jPanelProgress);
                         
                         priorityCB.setSelectedItem(Local.getString("Normal"));
-                        estimationTab.setLayout(null);
                         
                         tabbedPane.addTab("Phase Estimation", null, estimationTab, null);
-                        designEst.setBounds(150, 0, 150, 35);
-                        
-                        estimationTab.add(designEst);
-                        designEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        designEst.add(lblDesign);
-                        designEst.add(designSpinner);
-                        designSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst(); 
-                        	}
-                        });
-                        
-                        planningEst.setBounds(0, 0, 150, 35);
+                        estimationTab.setLayout(new GridLayout(0, 2, 0, 0));
                         
                         estimationTab.add(planningEst);
                         planningEst.setLayout(new GridLayout(0, 2, 0, 0));
@@ -421,7 +432,17 @@ public class TaskDialog extends JDialog {
                         	}
                        	});
                         
-                        designRevEsT.setBounds(0, 35, 150, 35);
+                        estimationTab.add(designEst);
+                        designEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
+                        
+                        designEst.add(lblDesign);
+                        designEst.add(designSpinner);
+                        designSpinner.addChangeListener(new ChangeListener() {
+                        	public void stateChanged(ChangeEvent e) { 
+                        		updateTotalEst(); 
+                        	}
+                        });
                         
                         estimationTab.add(designRevEsT);
                         designRevEsT.setLayout(new GridLayout(0, 2, 0, 0));
@@ -435,8 +456,6 @@ public class TaskDialog extends JDialog {
                         	}
                         });
                         
-                        codeEst.setBounds(150, 35, 150, 35);
-                        
                         estimationTab.add(codeEst);
                         codeEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblCode.setHorizontalAlignment(SwingConstants.CENTER);
@@ -449,8 +468,6 @@ public class TaskDialog extends JDialog {
                         	}
                         });
                         
-                        codeReviewEst.setBounds(0, 70, 150, 35);
-                        
                         estimationTab.add(codeReviewEst);
                         codeReviewEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblCodeReview.setHorizontalAlignment(SwingConstants.CENTER);
@@ -462,7 +479,6 @@ public class TaskDialog extends JDialog {
                         		updateTotalEst(); 
                         	}
                         });
-                        compileEst.setBounds(150, 70, 150, 35);
                         
                         estimationTab.add(compileEst);
                         compileEst.setLayout(new GridLayout(0, 2, 0, 0));
@@ -475,7 +491,6 @@ public class TaskDialog extends JDialog {
                         		updateTotalEst();
                         	}
                         });
-                        testEst.setBounds(0, 105, 150, 35);
                         
                         estimationTab.add(testEst);
                         testEst.setLayout(new GridLayout(0, 2, 0, 0));
@@ -489,8 +504,6 @@ public class TaskDialog extends JDialog {
                         	}
                         });
                         
-                        postmortemEst.setBounds(150, 105, 150, 35);
-                        
                         estimationTab.add(postmortemEst);
                         postmortemEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblPostmortem.setHorizontalAlignment(SwingConstants.CENTER);
@@ -502,7 +515,7 @@ public class TaskDialog extends JDialog {
                         		updateTotalEst();
                         	}
                         });
-                        totalEst.setBounds(0, 139, 300, 31);
+                        
                         
                         estimationTab.add(totalEst);
                         totalEst.setLayout(new GridLayout(0, 2, 0, 0));
@@ -512,6 +525,81 @@ public class TaskDialog extends JDialog {
                         totalEstTextField.setEditable(false);
                         
                         totalEst.add(totalEstTextField);
+                        
+                        
+                        tabbedPane.addTab("Timer", null, timerTab, null);
+                        timerTab.setLayout(null);
+                        
+                        
+                        lblStartTime.setBounds(10, 23, 60, 14);
+                        timerTab.add(lblStartTime);
+                        startTextField.setEditable(false);
+                        
+                        startTextField.setBounds(106, 20, 90, 20);
+                        timerTab.add(startTextField);
+                        btnStart.addMouseListener(new MouseAdapter() {
+                        	@Override
+                        	public void mousePressed(MouseEvent e) {
+                        		startTime = System.currentTimeMillis();
+                        		initialTime= System.nanoTime(); 
+                        		
+                        		startTextField.setText(convertMillitoHMS(startTime));
+                        	}
+                        });
+                        
+                        
+                        btnStart.setBounds(10, 48, 89, 23);
+                        timerTab.add(btnStart);
+                        
+                        
+                        lblEndTime.setBounds(10, 109, 55, 14);
+                        timerTab.add(lblEndTime);
+                        
+                        btnEnd.setBounds(10, 134, 89, 23);
+                        timerTab.add(btnEnd);
+                        btnEnd.addMouseListener(new MouseAdapter() {
+                        	@Override
+                        	public void mousePressed(MouseEvent e) {
+                        		endTime = System.currentTimeMillis();
+                        		
+                        		endTextField.setText(convertMillitoHMS(endTime));;
+                        		
+                        		long sessionTime = System.nanoTime() - initialTime;
+                        		sessionTime = (long) (sessionTime / 1000000.0);				//converts nanoseconds to milliseconds
+                        		//long difference = (long) ((1.8 * Math.pow(10, 7))/2);
+                        		String sessionString = convertTimertoHMS(sessionTime);
+                        		
+                        		try {
+                        			Writer output = new BufferedWriter(new FileWriter(fileLocation + "times.txt", true));
+                            		output.append("Date: " + new SimpleDateFormat("MM-dd-yy").format(new Date()) + " Start Time: " + convertMillitoHMS(startTime)
+                            				+ " End Time: " + convertMillitoHMS(endTime) + " Time Passed: " + sessionString + "\n");
+                            		output.close();
+                            		
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								} 
+                        		
+                        		sessionTextField.setText(sessionString);
+              
+                        	}
+                        });
+                        
+                       
+                        
+                        endTextField.setEditable(false);
+                        endTextField.setBounds(106, 106, 90, 20);
+                        timerTab.add(endTextField);
+                        lblSession.setBounds(10, 181, 80, 14);
+                        
+                        timerTab.add(lblSession);
+                        sessionTextField.setEditable(false);
+                        sessionTextField.setBounds(10, 206, 90, 20);
+                        
+                        timerTab.add(sessionTextField);
+                        
+                        testField.setBounds(145, 206, 75, 20);
+                        timerTab.add(testField);
+                        
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
         startCalFrame.cal.addSelectionListener(new ActionListener() {
@@ -531,7 +619,23 @@ public class TaskDialog extends JDialog {
         });
     }
     
-    public void updateTotalEst(){
+    protected String convertMillitoHMS(long time) {
+		Date timeInFormat = new Date(time);
+		SimpleDateFormat formatDef = new SimpleDateFormat("h:mm:s");
+		String formattedTime = formatDef.format(timeInFormat);
+		return formattedTime;
+		
+		
+	}
+    // This is the easiest way to fix the 5 hour error
+    protected String convertTimertoHMS(long time) {
+    	int seconds = (int) (time / 1000) % 60 ;
+    	int minutes = (int) ((time / (1000*60)) % 60);
+    	int hours   = (int) ((time / (1000*60*60)) % 24);
+    	return (hours + ":" + minutes + ":" + seconds);
+	}
+
+	public void updateTotalEst(){
         		totalEstTextField.setText("" + ((int)planningSpinner.getValue() + (int)designSpinner.getValue() + 
         		(int)designReviewSpinner.getValue() + (int)codeSpinner.getValue() + (int)codeReviewSpinner.getValue() +
         		(int)compileSPinner.getValue() + (int)testSpinner.getValue() + (int)postmortemSpinner.getValue())); 
@@ -597,5 +701,4 @@ public class TaskDialog extends JDialog {
     	((AppFrame)App.getFrame()).workPanel.dailyItemsPanel.eventsPanel.newEventB_actionPerformed(e, 
 			this.todoField.getText(), (Date)startDate.getModel().getValue(),(Date)endDate.getModel().getValue());
     }
-
 }
