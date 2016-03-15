@@ -35,4 +35,9 @@ public class CurrentNoteTest
     {
         //TODO - Create tearDown
     }
+
+    @Test
+	public void holdIn() {
+		assertTrue(true);
+	}
 }

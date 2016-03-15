@@ -35,4 +35,9 @@ public class ContextTest
     {
         //TODO - Create tearDown
     }
+
+    @Test
+	public void holdIn() {
+		assertTrue(true);
+	}
 }
