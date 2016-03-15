@@ -35,4 +35,9 @@ public class AppListTest
     {
         //TODO - Create tearDown
     }
+
+    @Test
+	public void holdIn() {
+		assertTrue(true);
+	}
 }

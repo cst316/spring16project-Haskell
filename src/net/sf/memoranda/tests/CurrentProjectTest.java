@@ -6,11 +6,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test; 
-import net.sf.memoranda.util.AgendaGenerator;
+import net.sf.memoranda.CurrentProject;
  
-public class AgendaGeneratorTest
+public class CurrentProjectTest
 {
-    private AgendaGenerator ag = null;
+    private CurrentProject cp = null;
 	
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
@@ -35,9 +35,4 @@ public class AgendaGeneratorTest
     {
         //TODO - Create tearDown
     }
-
-    @Test
-	public void holdIn() {
-		assertTrue(true);
-	}
 }
