@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
@@ -110,6 +111,36 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton clearButton;
 	private JLabel errorLabel;
 	private JLabel requirementLabel;
+	
+	//Estimation Components//
+	private JPanel estimationPanel;
+	private JPanel designEst = new JPanel();
+	private JLabel lblDesign = new JLabel("Design");
+	private JSpinner designSpinner;
+	private final JPanel planningEst = new JPanel();
+	private final JLabel lblPlanning = new JLabel("Planning");
+	private JSpinner planningSpinner = new JSpinner();
+	private final JPanel designRevEsT = new JPanel();
+	private final JLabel lblDesignReview = new JLabel("Design Review");
+	private final JSpinner designReviewSpinner = new JSpinner();
+	private final JPanel codeEst = new JPanel();
+	private final JLabel lblCode = new JLabel("Code");
+	private final JSpinner codeSpinner = new JSpinner();
+	private final JPanel codeReviewEst = new JPanel();
+	private final JLabel lblCodeReview = new JLabel("Code Review");
+	private final JSpinner codeReviewSpinner = new JSpinner();
+	private final JPanel compileEst = new JPanel();
+	private final JLabel lblCompile = new JLabel("Compile");
+	private final JSpinner compileSPinner = new JSpinner();
+	private final JPanel testEst = new JPanel();
+	private final JLabel lblTest = new JLabel("Test");
+	private final JSpinner testSpinner = new JSpinner();
+	private final JPanel postmortemEst = new JPanel();
+	private final JLabel lblPostmortem = new JLabel("Postmortem");
+	private final JSpinner postmortemSpinner = new JSpinner();
+	private final JPanel totalEst = new JPanel();
+	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
+	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
 	
 	
 	public ProjectCreationPanel() {
@@ -389,6 +420,45 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	
 	}
 
+	public void buildEstimation(){
+		estimationPanel = new JPanel();
+		estimationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		estimationPanel.setBounds(10, 75, 464, 441);
+		estimationPanel.setLayout(null);
+		
+		SpinnerNumberModel model = new SpinnerNumberModel();
+		model.setMinimum(0);
+		model.setStepSize(1);
+		
+		/*
+		planningEst.setBounds(232, 10, 222, 100);
+		planningEst.setLayout(null);
+		planningEst.setBackground(Color.red);
+		*/
+		
+		planningSpinner = new JSpinner();
+		planningSpinner.setBounds(10, 10, 100, 40);
+		planningSpinner.setEnabled(true);
+		
+		/*
+		designEst.setBounds(10, 10, 222, 100);
+        designEst.setLayout(null);
+        designEst.setBackground(Color.blue);
+        */
+		
+		designSpinner = new JSpinner();
+        designSpinner.setBounds(110, 10, 100, 40);
+        designSpinner.setEnabled(true);
+        //designSpinner.grabFocus();
+        
+        /*
+        planningEst.add(planningSpinner);
+        designEst.add(designSpinner);
+        */
+        
+        estimationPanel.add(planningSpinner);
+        estimationPanel.add(designSpinner);
+	}
 	
 	
 	@Override
@@ -503,16 +573,36 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        if (endDateChB.isSelected()){
 	            endD = new CalendarDate((Date) endDate.getModel().getValue());
 	        }
-			Project prj = ProjectManager.createProject (title, 
-														startD, 
-														endD,
-														description.getText());
-	        CurrentStorage.get().storeProjectManager();
+	      //Add all team members//
+	        String[] teammembers = new String[list.getModel().getSize()];
+	        for(int i = 0; i < list.getModel().getSize(); i++){
+	        	teammembers[i] = (String)list.getModel().getElementAt(i);
+	        }
 	        
-	        
-	        
-	        this.setVisible(false);
-	        this.dispose();
+	        //If the data given is invalid...//
+	        if(prTitleField.getText().length() == 0 || fileField.getText().length() == 0){
+	        	//Show the user an error//
+	        	errorLabel.setText("Required Information Not Given, Cannot Continue!");
+	        	errorLabel.setVisible(true);
+	        }
+	        else if(teammembers.length == 0){
+	        	errorLabel.setText("               Must have at least 1 team member!");
+	        	errorLabel.setVisible(true);
+	        }
+	        else{
+	        	//Make sure label disappears//
+	        	errorLabel.setVisible(false);
+	        	
+	        	//Out with the old...//
+	        	c.remove(centerPanel);
+				
+				//...In with the NEW//
+				buildEstimation();
+				c.add(estimationPanel);
+				
+				c.repaint();
+	
+	        }
 		}
 		
 		//Cancel Button//
