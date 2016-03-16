@@ -30,20 +30,22 @@ import net.sf.memoranda.util.Local;
  * Panel on the left that has "Agenda, Tasks, Events, Notes, Files(Resources)
  * */
 public class WorkPanel extends JPanel {
+	
 	BorderLayout borderLayout1 = new BorderLayout();
 	JToolBar toolBar = new JToolBar();
 	JPanel panel = new JPanel();
 	CardLayout cardLayout1 = new CardLayout();
-
 	
 	public DailyItemsPanel dailyItemsPanel = new DailyItemsPanel(this);
 	public ResourcesPanel filesPanel = new ResourcesPanel();
+	public StatsPanel statsPanel = new StatsPanel();
 	
 	public JButton notesB = new JButton();
 	public JButton agendaB = new JButton();
 	public JButton tasksB = new JButton();
 	public JButton eventsB = new JButton();
 	public JButton filesB = new JButton();
+	public JButton statsB = new JButton();
 	
 	//Current Selection in the toolBar//
 	JButton currentB = null;
@@ -179,6 +181,33 @@ public class WorkPanel extends JPanel {
 					"resources/icons/notes.png")));
 		notesB.setMargin(new Insets(0, 0, 0, 0));
 		notesB.setSelected(true);
+
+		statsB.setBackground(Color.white);
+		statsB.setMaximumSize(new Dimension(60, 80));
+		statsB.setMinimumSize(new Dimension(30, 30));
+
+		statsB.setFont(new java.awt.Font("Dialog", 1, 10));
+		statsB.setPreferredSize(new Dimension(50, 50));
+		statsB.setBorderPainted(false);
+		statsB.setContentAreaFilled(false);
+		statsB.setFocusPainted(false);
+		statsB.setHorizontalTextPosition(SwingConstants.CENTER);
+		statsB.setText(Local.getString("Stats"));
+		statsB.setVerticalAlignment(SwingConstants.TOP);
+		statsB.setVerticalTextPosition(SwingConstants.BOTTOM);
+		statsB.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				statsB_actionPerformed(e);
+			}
+		});
+		statsB.setIcon(
+			new ImageIcon(
+				net.sf.memoranda.ui.AppFrame.class.getResource(
+					"resources/icons/stats.png")));
+		statsB.setOpaque(false);
+		statsB.setMargin(new Insets(0, 0, 0, 0));
+		
+		
 		this.setPreferredSize(new Dimension(1073, 300));
 
 		filesB.setSelected(true);
@@ -209,11 +238,15 @@ public class WorkPanel extends JPanel {
 		this.add(panel, BorderLayout.CENTER);
 		panel.add(dailyItemsPanel, "DAILYITEMS");
 		panel.add(filesPanel, "FILES");
+		panel.add(statsPanel, "STATS");
+		
 		toolBar.add(agendaB, null);
 		toolBar.add(eventsB, null);
 		toolBar.add(tasksB, null);
 		toolBar.add(notesB, null);
 		toolBar.add(filesB, null);
+		toolBar.add(statsB, null);
+		
 		currentB = agendaB;
 		// Default blue color
 		currentB.setBackground(new Color(215, 225, 250));
@@ -223,6 +256,7 @@ public class WorkPanel extends JPanel {
 		panel.setBorder(null);
 		dailyItemsPanel.setBorder(null);
 		filesPanel.setBorder(null);
+		statsPanel.setBorder(null);
 
 	}
 
@@ -236,6 +270,8 @@ public class WorkPanel extends JPanel {
 				eventsB_actionPerformed(null);
 			else if (pan.equals("FILES"))
 				filesB_actionPerformed(null);
+			else if (pan.equals("STATS"))
+				statsB_actionPerformed(null);
 		}
 	}
 
@@ -271,6 +307,13 @@ public class WorkPanel extends JPanel {
 		cardLayout1.show(panel, "FILES");
 		setCurrentButton(filesB);
 		Context.put("CURRENT_PANEL", "FILES");
+	}
+	
+	public void statsB_actionPerformed(ActionEvent e) {
+		cardLayout1.show(panel, "STATS");
+		statsPanel.getTimes();
+		setCurrentButton(statsB);
+		Context.put("CURRENT_PANEL", "STATS");
 	}
 
 	void setCurrentButton(JButton cb) {

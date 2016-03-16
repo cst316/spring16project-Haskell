@@ -38,10 +38,16 @@ import javax.swing.JCheckBox;
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.Util;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JFormattedTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
@@ -157,7 +163,8 @@ public class TaskDialog extends JDialog {
 	private long startTime;
 	private long endTime;
 	private long initialTime;
-	//private long finalTime;
+	private long finalTime;
+	private String fileLocation = Util.getEnvDir();
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -569,6 +576,16 @@ public class TaskDialog extends JDialog {
                         		sessionTime = (long) (sessionTime / 1000000.0);				//converts nanoseconds to milliseconds
                         		//long difference = (long) ((1.8 * Math.pow(10, 7))/2);
                         		String sessionString = convertTimertoHMS(sessionTime);
+                        		
+                        		try {
+                        			Writer output = new BufferedWriter(new FileWriter(fileLocation + "times.txt", true));
+                            		output.append("Date: " + new SimpleDateFormat("MM-dd-yy").format(new Date()) + " Start Time: " + convertMillitoHMS(startTime)
+                            				+ " End Time: " + convertMillitoHMS(endTime) + " Time Passed: " + sessionString + "\n");
+                            		output.close();
+                            		
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								} 
                         		
                         		sessionTextField.setText(sessionString);
               
