@@ -601,6 +601,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 				c.add(estimationPanel);
 				
 				c.repaint();
+
 	
 	        }
 		}
