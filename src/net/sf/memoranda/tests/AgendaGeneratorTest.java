@@ -1,13 +1,21 @@
 package net.sf.memoranda.tests;
 
-import static org.junit.Assert.*;            
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test; 
 import net.sf.memoranda.util.AgendaGenerator;
- 
+import net.sf.memoranda.date.CalendarDate;
+
+
 public class AgendaGeneratorTest
 {
     private AgendaGenerator ag = null;
@@ -28,6 +36,7 @@ public class AgendaGeneratorTest
     public void setUp() throws Exception
     {
         //TODO - Create setUp
+    	ag = new AgendaGenerator();
     }
     
     @After
@@ -37,7 +46,25 @@ public class AgendaGeneratorTest
     }
 
     @Test
-	public void holdIn() {
-		assertTrue(true);
-	}
+    public void Equals(){
+    	List<String> collection = new ArrayList();
+    	collection.add("One");
+    	collection.add("Two");
+    	collection.add("Three");
+    	collection.add("Four");
+    	String getAgenda = ag.getAgenda(new CalendarDate(), collection);
+    	assertTrue(ag.getAgenda(new CalendarDate(), collection).equals(getAgenda));
+    }
+    
+    @Test
+    public void Inequals(){
+    	List<String> collection = new ArrayList();
+    	collection.add("One");
+    	collection.add("Two");
+    	collection.add("Three");
+    	collection.add("Four");
+    	String getAgenda = ag.getAgenda(new CalendarDate(), collection);
+    	collection.add("Five");
+    	assertTrue(ag.getAgenda(new CalendarDate(), null).equals(getAgenda));
+    }
 }
