@@ -114,33 +114,24 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	
 	//Estimation Components//
 	private JPanel estimationPanel;
-	private JPanel designEst = new JPanel();
-	private JLabel lblDesign = new JLabel("Design");
+	private JLabel lblDesign;
 	private JSpinner designSpinner;
-	private final JPanel planningEst = new JPanel();
-	private final JLabel lblPlanning = new JLabel("Planning");
-	private JSpinner planningSpinner = new JSpinner();
-	private final JPanel designRevEsT = new JPanel();
-	private final JLabel lblDesignReview = new JLabel("Design Review");
-	private final JSpinner designReviewSpinner = new JSpinner();
-	private final JPanel codeEst = new JPanel();
-	private final JLabel lblCode = new JLabel("Code");
-	private final JSpinner codeSpinner = new JSpinner();
-	private final JPanel codeReviewEst = new JPanel();
-	private final JLabel lblCodeReview = new JLabel("Code Review");
-	private final JSpinner codeReviewSpinner = new JSpinner();
-	private final JPanel compileEst = new JPanel();
-	private final JLabel lblCompile = new JLabel("Compile");
-	private final JSpinner compileSPinner = new JSpinner();
-	private final JPanel testEst = new JPanel();
-	private final JLabel lblTest = new JLabel("Test");
-	private final JSpinner testSpinner = new JSpinner();
-	private final JPanel postmortemEst = new JPanel();
-	private final JLabel lblPostmortem = new JLabel("Postmortem");
-	private final JSpinner postmortemSpinner = new JSpinner();
-	private final JPanel totalEst = new JPanel();
-	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
-	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
+	private JLabel lblPlanning;
+	private JSpinner planningSpinner;
+	private JLabel lblDesignReview;
+	private JSpinner designReviewSpinner;
+	private JLabel lblCode;
+	private JSpinner codeSpinner;
+	private JLabel lblCodeReview;
+	private JSpinner codeReviewSpinner;
+	private JLabel lblCompile;
+	private JSpinner compileSpinner;
+	private JLabel lblTest;
+	private JSpinner testSpinner;
+	private JLabel lblPostmortem;
+	private JSpinner postmortemSpinner;
+	private JLabel lblTotal;
+	private JTextField totalTextField;
 	
 	
 	public ProjectCreationPanel() {
@@ -157,6 +148,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		c.add(topPanel);
 		c.add(centerPanel);
 		c.add(bottomPanel);
+		
 		
 		//Visibility and Close Operation//
 		this.setVisible(true);
@@ -420,44 +412,98 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	
 	}
 
-	public void buildEstimation(){
+	public SpinnerNumberModel getModel(){
+		//Make the model that will be used for all estimation spinners//
+		SpinnerNumberModel model = new SpinnerNumberModel();
+		model.setMinimum(0);
+		model.setStepSize(1);
+		
+		//Return it//
+		return model;
+	}
+	
+	public void buildEstimationPanel(){
+		//Panel Info//
 		estimationPanel = new JPanel();
 		estimationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		estimationPanel.setBounds(10, 75, 464, 441);
 		estimationPanel.setLayout(null);
 		
-		SpinnerNumberModel model = new SpinnerNumberModel();
-		model.setMinimum(0);
-		model.setStepSize(1);
+		//Labels//
+		lblPlanning = new JLabel("Planning");
+		lblPlanning.setBounds(50, 45, 60, 14);
+		estimationPanel.add(lblPlanning);
 		
-		/*
-		planningEst.setBounds(232, 10, 222, 100);
-		planningEst.setLayout(null);
-		planningEst.setBackground(Color.red);
-		*/
+		lblDesign = new JLabel("Design");
+		lblDesign.setBounds(267, 45, 46, 14);
+		estimationPanel.add(lblDesign);
 		
-		planningSpinner = new JSpinner();
-		planningSpinner.setBounds(10, 10, 100, 40);
-		planningSpinner.setEnabled(true);
+		lblDesignReview = new JLabel("Design Review");
+		lblDesignReview.setBounds(13, 125, 97, 14);
+		estimationPanel.add(lblDesignReview);
 		
-		/*
-		designEst.setBounds(10, 10, 222, 100);
-        designEst.setLayout(null);
-        designEst.setBackground(Color.blue);
-        */
+		lblCode = new JLabel("Code");
+		lblCode.setBounds(267, 125, 46, 14);
+		estimationPanel.add(lblCode);
 		
-		designSpinner = new JSpinner();
-        designSpinner.setBounds(110, 10, 100, 40);
-        designSpinner.setEnabled(true);
-        //designSpinner.grabFocus();
-        
-        /*
-        planningEst.add(planningSpinner);
-        designEst.add(designSpinner);
-        */
-        
-        estimationPanel.add(planningSpinner);
-        estimationPanel.add(designSpinner);
+		lblCodeReview = new JLabel("Code Review");
+		lblCodeReview.setBounds(21, 203, 89, 14);
+		estimationPanel.add(lblCodeReview);
+		
+		lblCompile = new JLabel("Compile");
+		lblCompile.setBounds(250, 203, 46, 14);
+		estimationPanel.add(lblCompile);
+		
+		lblTest = new JLabel("Test");
+		lblTest.setBounds(64, 278, 46, 14);
+		estimationPanel.add(lblTest);
+		
+		lblPostmortem = new JLabel("Postmortem");
+		lblPostmortem.setBounds(235, 278, 78, 14);
+		estimationPanel.add(lblPostmortem);
+		
+		//Spinners//
+		planningSpinner = new JSpinner(getModel());
+		planningSpinner.setBounds(114, 37, 89, 30);
+		estimationPanel.add(planningSpinner);
+		
+		designSpinner = new JSpinner(getModel());
+		designSpinner.setBounds(314, 37, 89, 30);
+		estimationPanel.add(designSpinner);
+		
+		designReviewSpinner = new JSpinner(getModel());
+		designReviewSpinner.setBounds(114, 117, 89, 30);
+		estimationPanel.add(designReviewSpinner);
+		
+		codeReviewSpinner = new JSpinner(getModel());
+		codeReviewSpinner.setBounds(114, 195, 89, 30);
+		estimationPanel.add(codeReviewSpinner);
+		
+		testSpinner = new JSpinner(getModel());
+		testSpinner.setBounds(114, 270, 89, 30);
+		estimationPanel.add(testSpinner);
+		
+		codeSpinner = new JSpinner(getModel());
+		codeSpinner.setBounds(314, 117, 89, 30);
+		estimationPanel.add(codeSpinner);
+		
+		compileSpinner = new JSpinner(getModel());
+		compileSpinner.setBounds(314, 195, 89, 30);
+		estimationPanel.add(compileSpinner);
+		
+		postmortemSpinner = new JSpinner(getModel());
+		postmortemSpinner.setBounds(314, 270, 89, 30);
+		estimationPanel.add(postmortemSpinner);
+		
+		//Total//
+		lblTotal = new JLabel("Total");
+		lblTotal.setBounds(163, 375, 40, 14);
+		estimationPanel.add(lblTotal);
+		
+		totalTextField = new JTextField();
+		totalTextField.setBounds(206, 372, 86, 20);
+		estimationPanel.add(totalTextField);
+		totalTextField.setColumns(10);
 	}
 	
 	
@@ -593,16 +639,18 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        	//Make sure label disappears//
 	        	errorLabel.setVisible(false);
 	        	
-	        	//Out with the old...//
+	        	//Need to set invisible so JSpinners show up//
+	        	centerPanel.setVisible(false);
+	        	
+	        	//Out with the OLD...//
 	        	c.remove(centerPanel);
 				
 				//...In with the NEW//
-				buildEstimation();
+				buildEstimationPanel();
 				c.add(estimationPanel);
 				
+				//Repaint to show changes//
 				c.repaint();
-
-	
 	        }
 		}
 		
