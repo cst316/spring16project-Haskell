@@ -132,6 +132,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JSpinner postmortemSpinner;
 	private JLabel lblTotal;
 	private JTextField totalTextField;
+	private JPanel estBottomPanel;
+	private JButton estOkButton;
+	private JButton estCancelButton;
+	private JButton estClearButton;
+	private JButton estBackButton;
 	
 	
 	public ProjectCreationPanel() {
@@ -148,6 +153,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		c.add(topPanel);
 		c.add(centerPanel);
 		c.add(bottomPanel);
+		
 		
 		
 		//Visibility and Close Operation//
@@ -465,34 +471,43 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		//Spinners//
 		planningSpinner = new JSpinner(getModel());
 		planningSpinner.setBounds(114, 37, 89, 30);
+		planningSpinner.addChangeListener(this);
 		estimationPanel.add(planningSpinner);
+		
 		
 		designSpinner = new JSpinner(getModel());
 		designSpinner.setBounds(314, 37, 89, 30);
+		designSpinner.addChangeListener(this);
 		estimationPanel.add(designSpinner);
 		
 		designReviewSpinner = new JSpinner(getModel());
 		designReviewSpinner.setBounds(114, 117, 89, 30);
+		designReviewSpinner.addChangeListener(this);
 		estimationPanel.add(designReviewSpinner);
 		
 		codeReviewSpinner = new JSpinner(getModel());
 		codeReviewSpinner.setBounds(114, 195, 89, 30);
+		codeReviewSpinner.addChangeListener(this);
 		estimationPanel.add(codeReviewSpinner);
 		
 		testSpinner = new JSpinner(getModel());
 		testSpinner.setBounds(114, 270, 89, 30);
+		testSpinner.addChangeListener(this);
 		estimationPanel.add(testSpinner);
 		
 		codeSpinner = new JSpinner(getModel());
 		codeSpinner.setBounds(314, 117, 89, 30);
+		codeSpinner.addChangeListener(this);
 		estimationPanel.add(codeSpinner);
 		
 		compileSpinner = new JSpinner(getModel());
 		compileSpinner.setBounds(314, 195, 89, 30);
+		compileSpinner.addChangeListener(this);
 		estimationPanel.add(compileSpinner);
 		
 		postmortemSpinner = new JSpinner(getModel());
 		postmortemSpinner.setBounds(314, 270, 89, 30);
+		postmortemSpinner.addChangeListener(this);
 		estimationPanel.add(postmortemSpinner);
 		
 		//Total//
@@ -500,12 +515,49 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		lblTotal.setBounds(163, 375, 40, 14);
 		estimationPanel.add(lblTotal);
 		
-		totalTextField = new JTextField();
+		totalTextField = new JTextField("0");
 		totalTextField.setBounds(206, 372, 86, 20);
-		estimationPanel.add(totalTextField);
+		totalTextField.setEditable(false);
 		totalTextField.setColumns(10);
+		totalTextField.setBackground(Color.white);
+		totalTextField.setOpaque(true);
+		estimationPanel.add(totalTextField);
 	}
 	
+	public void updateTotalEst(){
+		totalTextField.setText("" + ((int)planningSpinner.getValue() + (int)designSpinner.getValue() + 
+		(int)designReviewSpinner.getValue() + (int)codeSpinner.getValue() + (int)codeReviewSpinner.getValue() +
+		(int)compileSpinner.getValue() + (int)testSpinner.getValue() + (int)postmortemSpinner.getValue())); 
+	}
+	
+	public void buildEstimationBottomPanel(){	
+		estBottomPanel = new JPanel();
+		estBottomPanel.setLayout(null);
+		estBottomPanel.setBounds(10, 527, 464, 73);
+		estBottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		
+		//Bottom Buttons//
+		estOkButton = new JButton("Continue");
+		estOkButton.setBounds(360, 26, 94, 23);
+		estOkButton.addActionListener(this);
+		estBottomPanel.add(estOkButton);
+		
+		estCancelButton = new JButton("Cancel");
+		estCancelButton.setBounds(248, 26, 94, 23);
+		estCancelButton.addActionListener(this);
+		estBottomPanel.add(estCancelButton);
+		
+		estClearButton = new JButton("Clear");
+		estClearButton.setBounds(127, 26, 94, 23);
+		estClearButton.addActionListener(this);
+		estBottomPanel.add(estClearButton);
+		
+		estBackButton = new JButton("Back");
+		estBackButton.setBounds(10, 26, 94, 23);
+		estBackButton.addActionListener(this);
+		estBottomPanel.add(estBackButton);
+			
+	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
@@ -610,15 +662,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//OK Button//
 		if(o == okButton){
-			//Get title and stage//
-			String title = prTitleField.getText();
 			
-			//Get start and end dates//
-			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
-	        CalendarDate endD = null;
-	        if (endDateChB.isSelected()){
-	            endD = new CalendarDate((Date) endDate.getModel().getValue());
-	        }
 	      //Add all team members//
 	        String[] teammembers = new String[list.getModel().getSize()];
 	        for(int i = 0; i < list.getModel().getSize(); i++){
@@ -636,18 +680,25 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        	errorLabel.setVisible(true);
 	        }
 	        else{
+	        	//Change header for user understanding//
+	            header.setText(Local.getString("Estimating Phases (in hours)"));
+	        	
 	        	//Make sure label disappears//
 	        	errorLabel.setVisible(false);
 	        	
 	        	//Need to set invisible so JSpinners show up//
 	        	centerPanel.setVisible(false);
+	        	bottomPanel.setVisible(false);
 	        	
 	        	//Out with the OLD...//
 	        	c.remove(centerPanel);
-				
+				c.remove(bottomPanel);
+	        	
 				//...In with the NEW//
 				buildEstimationPanel();
+	    		buildEstimationBottomPanel();
 				c.add(estimationPanel);
+				c.add(estBottomPanel);
 				
 				//Repaint to show changes//
 				c.repaint();
@@ -668,6 +719,71 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			//Dispose of the old one//
 			this.setVisible(false);
 			this.dispose();
+		}
+		
+		if(o == estOkButton){
+			//Get title and stage//
+			String title = prTitleField.getText();
+			
+			//Get start and end dates//
+			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
+	        CalendarDate endD = null;
+	        if (endDateChB.isSelected()){
+	            endD = new CalendarDate((Date) endDate.getModel().getValue());
+	        }
+			
+			//Add project to manager//
+			Project prj = ProjectManager.createProject(title, startD, endD);
+	        CurrentStorage.get().storeProjectManager();
+	        
+	        //Dispose of frame//
+	        this.setVisible(false);
+	        this.dispose();
+		}
+		
+		if(o == estCancelButton){
+			//Dispose of frame//
+	        this.setVisible(false);
+	        this.dispose();
+		}
+		
+		if(o == estClearButton){
+			planningSpinner.setValue(0);
+			designSpinner.setValue(0);
+			designReviewSpinner.setValue(0);
+			codeSpinner.setValue(0);
+			codeReviewSpinner.setValue(0);
+			compileSpinner.setValue(0);
+			testSpinner.setValue(0);
+			postmortemSpinner.setValue(0);
+		}
+		
+		if(o == estBackButton){
+			//Put header back to old text//
+	        header.setText(Local.getString("New Project"));
+			
+        	//Need to set invisible so components show up//
+        	estimationPanel.setVisible(false);
+        	estBottomPanel.setVisible(false);
+        	
+        	//Out with the NEW...//
+        	c.remove(estimationPanel);
+			c.remove(estBottomPanel);
+        	
+			//Make sure label reappears//
+        	errorLabel.setVisible(true);
+			
+        	//Make panels visible again//
+        	centerPanel.setVisible(true);
+        	bottomPanel.setVisible(true);
+        	
+			//...In with the OLD//
+			c.add(centerPanel);
+			c.add(bottomPanel);
+			
+			
+			//Repaint to show changes//
+			c.repaint();
 		}
 		
 	}
@@ -704,5 +820,19 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
             endCalFrame.cal.set(new CalendarDate(ed));
             ignoreEndChanged = false;
 		}
+		
+		//If any of the spinners are changed...//
+		if(o == planningSpinner ||
+			o == designSpinner ||
+			o == designReviewSpinner ||
+			o == codeSpinner ||
+			o == codeReviewSpinner ||
+			o == compileSpinner ||
+			o == testSpinner ||
+			o == postmortemSpinner){
+			//...update the total//
+			updateTotalEst();
+		}
+	
 	}
 }
