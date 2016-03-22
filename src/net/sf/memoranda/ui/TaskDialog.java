@@ -50,6 +50,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.DefaultComboBoxModel;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
@@ -162,6 +165,10 @@ public class TaskDialog extends JDialog {
 	private long initialTime;
 	private long finalTime;
 	private String fileLocation = Util.getEnvDir();
+	private final JPanel defectTab = new JPanel();
+	private JTable defectTable;
+	private JTextField classNameField;
+	private JTextField lineNumField;
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -597,8 +604,63 @@ public class TaskDialog extends JDialog {
                         
                         timerTab.add(sessionTextField);
                         
+<<<<<<< Updated upstream
                         testField.setBounds(145, 206, 75, 20);
                         timerTab.add(testField);
+=======
+                        tabbedPane.addTab("Defect Log", null, defectTab, null);
+                        defectTab.setLayout(null);
+                        
+                        defectTable = new JTable();
+                        defectTable.setForeground(Color.GRAY);
+                        defectTable.setModel(new DefaultTableModel(
+                        	new Object[][] {
+                        		{"", "", "", null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        		{null, null, null, null},
+                        	},
+                        	new String[] {
+                        		"Date", "Class", "Line #", "Type"
+                        	}
+                        ));
+                        defectTable.setCellSelectionEnabled(true);
+                        defectTable.setColumnSelectionAllowed(true);
+                        defectTable.setBounds(10, 256, 634, -118);
+                        defectTab.add(defectTable);
+                        
+                        JLabel lblClass = new JLabel("Class");
+                        lblClass.setBounds(10, 11, 46, 14);
+                        defectTab.add(lblClass);
+                        
+                        classNameField = new JTextField();
+                        classNameField.setBounds(66, 8, 86, 20);
+                        defectTab.add(classNameField);
+                        classNameField.setColumns(10);
+                        
+                        JLabel lblLine = new JLabel("Line #");
+                        lblLine.setBounds(10, 56, 46, 14);
+                        defectTab.add(lblLine);
+                        
+                        lineNumField = new JTextField();
+                        lineNumField.setBounds(66, 53, 86, 20);
+                        defectTab.add(lineNumField);
+                        lineNumField.setColumns(10);
+                        
+                        JLabel lblType = new JLabel("Type");
+                        lblType.setBounds(192, 11, 46, 14);
+                        defectTab.add(lblType);
+                        
+                        JComboBox typeComboBox = new JComboBox();
+                        typeComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Error Handling", "Calculation", "Control Flow", "UI"}));
+                        typeComboBox.setBounds(244, 8, 86, 20);
+                        defectTab.add(typeComboBox);
+>>>>>>> Stashed changes
                         
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
