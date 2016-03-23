@@ -16,7 +16,8 @@ import javax.swing.JTextArea;
 import net.sf.memoranda.util.Util;
 
 public class StatsPanel extends JPanel {
-	JTextArea textArea = new JTextArea();
+	JTextArea timeTextArea = new JTextArea();
+	JTextArea linesTextArea = new JTextArea();
 	private String fileLocation = Util.getEnvDir();
 	
     public StatsPanel() {
@@ -26,9 +27,14 @@ public class StatsPanel extends JPanel {
     	add(tabbedPane);
     	
     	getTimes();
-    	textArea.setEditable(false);
-    	textArea.setBackground(Color.WHITE);
-    	tabbedPane.addTab("Time", null, textArea, null);
+    	timeTextArea.setEditable(false);
+    	timeTextArea.setBackground(Color.WHITE);
+    	tabbedPane.addTab("Time", null, timeTextArea, null);
+    	
+    	updateLines();
+    	linesTextArea.setEditable(false);
+    	linesTextArea.setBackground(Color.WHITE);
+    	tabbedPane.addTab("Lines", null, linesTextArea, null);
        
     	
     }
@@ -37,7 +43,17 @@ public class StatsPanel extends JPanel {
     	try {
     		   FileReader fileReader = new FileReader(fileLocation + "times.txt");
     		   BufferedReader reader = new BufferedReader(fileReader);
-    		   textArea.read(reader,"textArea");
+    		   timeTextArea.read(reader,"timeTextArea");
+    		}catch (IOException ioe) {
+    		   System.out.println(ioe);
+    		}
+    }
+    
+    public void updateLines(){
+    	try {
+    		   FileReader fileReader = new FileReader(fileLocation + "times.txt");
+    		   BufferedReader reader = new BufferedReader(fileReader);
+    		   timeTextArea.read(reader,"timeTextArea");
     		}catch (IOException ioe) {
     		   System.out.println(ioe);
     		}
