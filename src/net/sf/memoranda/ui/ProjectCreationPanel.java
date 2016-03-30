@@ -37,6 +37,7 @@ import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -153,7 +154,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		c.add(topPanel);
 		c.add(centerPanel);
 		c.add(bottomPanel);
-		
 		
 		
 		//Visibility and Close Operation//
@@ -417,16 +417,19 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		bottomPanel.add(clearButton);
 	
 	}
-
-	public SpinnerNumberModel getModel(){
+	
+	public JSpinner getSpinner(JSpinner js){
 		//Make the model that will be used for all estimation spinners//
-		SpinnerNumberModel model = new SpinnerNumberModel();
-		model.setMinimum(0);
-		model.setStepSize(1);
+		SpinnerNumberModel model = new SpinnerNumberModel(0.0, 0.0, 5000.0, 0.50);
+		js = new JSpinner(model);
+		JSpinner.NumberEditor editor = (JSpinner.NumberEditor)js.getEditor();
+		DecimalFormat format = editor.getFormat();
+		format.setMinimumFractionDigits(1);
 		
 		//Return it//
-		return model;
+		return js;
 	}
+	
 	
 	public void buildEstimationPanel(){
 		//Panel Info//
@@ -469,43 +472,43 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		estimationPanel.add(lblPostmortem);
 		
 		//Spinners//
-		planningSpinner = new JSpinner(getModel());
+		planningSpinner = this.getSpinner(planningSpinner);
 		planningSpinner.setBounds(114, 37, 89, 30);
 		planningSpinner.addChangeListener(this);
 		estimationPanel.add(planningSpinner);
 		
 		
-		designSpinner = new JSpinner(getModel());
+		designSpinner = getSpinner(designSpinner);
 		designSpinner.setBounds(314, 37, 89, 30);
 		designSpinner.addChangeListener(this);
 		estimationPanel.add(designSpinner);
 		
-		designReviewSpinner = new JSpinner(getModel());
+		designReviewSpinner = getSpinner(designReviewSpinner);
 		designReviewSpinner.setBounds(114, 117, 89, 30);
 		designReviewSpinner.addChangeListener(this);
 		estimationPanel.add(designReviewSpinner);
 		
-		codeReviewSpinner = new JSpinner(getModel());
+		codeReviewSpinner = getSpinner(codeReviewSpinner);
 		codeReviewSpinner.setBounds(114, 195, 89, 30);
 		codeReviewSpinner.addChangeListener(this);
 		estimationPanel.add(codeReviewSpinner);
 		
-		testSpinner = new JSpinner(getModel());
+		testSpinner = getSpinner(testSpinner);
 		testSpinner.setBounds(114, 270, 89, 30);
 		testSpinner.addChangeListener(this);
 		estimationPanel.add(testSpinner);
 		
-		codeSpinner = new JSpinner(getModel());
+		codeSpinner = getSpinner(codeSpinner);
 		codeSpinner.setBounds(314, 117, 89, 30);
 		codeSpinner.addChangeListener(this);
 		estimationPanel.add(codeSpinner);
 		
-		compileSpinner = new JSpinner(getModel());
+		compileSpinner = getSpinner(compileSpinner);
 		compileSpinner.setBounds(314, 195, 89, 30);
 		compileSpinner.addChangeListener(this);
 		estimationPanel.add(compileSpinner);
 		
-		postmortemSpinner = new JSpinner(getModel());
+		postmortemSpinner = getSpinner(postmortemSpinner);
 		postmortemSpinner.setBounds(314, 270, 89, 30);
 		postmortemSpinner.addChangeListener(this);
 		estimationPanel.add(postmortemSpinner);
@@ -525,9 +528,9 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	}
 	
 	public void updateTotalEst(){
-		totalTextField.setText("" + ((int)planningSpinner.getValue() + (int)designSpinner.getValue() + 
-		(int)designReviewSpinner.getValue() + (int)codeSpinner.getValue() + (int)codeReviewSpinner.getValue() +
-		(int)compileSpinner.getValue() + (int)testSpinner.getValue() + (int)postmortemSpinner.getValue())); 
+		totalTextField.setText("" + ((double)planningSpinner.getValue() + (double)designSpinner.getValue() + 
+		(double)designReviewSpinner.getValue() + (double)codeSpinner.getValue() + (double)codeReviewSpinner.getValue() +
+		(double)compileSpinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
 	}
 	
 	public void buildEstimationBottomPanel(){	
