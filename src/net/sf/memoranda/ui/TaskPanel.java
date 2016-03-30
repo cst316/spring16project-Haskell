@@ -310,6 +310,14 @@ public class TaskPanel extends JPanel {
 			}
 		});
 	
+	ppDefects.setFont(new java.awt.Font("Dialog", 1, 11));
+	ppDefects.setText(Local.getString("Defects"));
+	ppDefects.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ppTimer_actionPerformed(e);
+			}
+		});
+	
 	ppCalcTask.setFont(new java.awt.Font("Dialog", 1, 11));
 	ppCalcTask.setText(Local.getString("Calculate task data"));
 	ppCalcTask.addActionListener(new java.awt.event.ActionListener() {
@@ -534,7 +542,6 @@ public class TaskPanel extends JPanel {
 
     void addSubTask_actionPerformed(ActionEvent e) {
         TaskDialog dlg = new TaskDialog(App.getFrame(), Local.getString("New Task"));
-        dlg.setTab();
         String parentTaskId = taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString();
         
 //        Util.debug("Adding sub task under " + parentTaskId);
@@ -774,6 +781,10 @@ public class TaskPanel extends JPanel {
   }
   void ppTimer_actionPerformed(ActionEvent e) {
 	  tabNumber = 2;
+	  editTaskB_actionPerformed(e);
+  }
+  void ppDefects_actionPerformed(ActionEvent e) {
+	  tabNumber = 3;
 	  editTaskB_actionPerformed(e);
   }
 }
