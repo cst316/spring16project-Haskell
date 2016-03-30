@@ -160,19 +160,21 @@ public class TaskDialog extends JDialog {
 	private final JFormattedTextField endTextField = new JFormattedTextField();
 	private final JLabel lblSession = new JLabel("Session Time");
 	private final JFormattedTextField sessionTextField = new JFormattedTextField();
-	private final JFormattedTextField testField = new JFormattedTextField();
 	private long startTime;
 	private long endTime;
 	private long initialTime;
 	private long finalTime;
 	private String fileLocation = Util.getEnvDir();
+	//defect tab components
 	private final JPanel defectTab = new JPanel();
-	private JTable table;
+	private JTable defectTable;
 	private final JLabel lblClass = new JLabel("Class");
 	private final JTextField classField = new JTextField();
 	private final JLabel lblLine = new JLabel("Line #");
 	private final JTextField lineNumField = new JTextField();
 	private final JLabel lblType = new JLabel("Type");
+	private int defects;
+
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -181,6 +183,7 @@ public class TaskDialog extends JDialog {
         lineNumField.setColumns(10);
         classField.setBounds(10, 39, 86, 20);
         classField.setColumns(10);
+        defects = 0;
         try {
             jbInit();            
             pack();
@@ -192,7 +195,6 @@ public class TaskDialog extends JDialog {
     
     @SuppressWarnings("unchecked")
 	void jbInit() throws Exception {
-	this.setResizable(false);
 	this.setSize(new Dimension(370, 200));
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         border2 = BorderFactory.createEtchedBorder(Color.white, 
@@ -613,15 +615,12 @@ public class TaskDialog extends JDialog {
                         sessionTextField.setBounds(10, 206, 90, 20);
                         
                         timerTab.add(sessionTextField);
-                        
-                        testField.setBounds(145, 206, 75, 20);
-                        timerTab.add(testField);
 
                         tabbedPane.addTab("Defect Log", null, defectTab, null);
                         defectTab.setLayout(null);
                         
                         JPanel panel = new JPanel();
-                        panel.setBounds(10, 11, 795, 119);
+                        panel.setBounds(10, 11, 795, 81);
                         defectTab.add(panel);
                         panel.setLayout(null);
                         lblClass.setBounds(10, 11, 46, 14);
@@ -638,27 +637,41 @@ public class TaskDialog extends JDialog {
                         
                         panel.add(lblType);
                         
-                        JComboBox comboBox = new JComboBox();
-                        comboBox.setModel(new DefaultComboBoxModel(new String[] {"", "UI", "Error Handling", "Syntax", "Control Flow"}));
-                        comboBox.setBounds(261, 39, 72, 20);
-                        panel.add(comboBox);
+                        JComboBox typeComboBox = new JComboBox();
+                        typeComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "UI", "Error Handling", "Syntax", "Control Flow"}));
+                        typeComboBox.setBounds(261, 39, 72, 20);
+                        panel.add(typeComboBox);
                         
                         JLabel lblStatus = new JLabel("Status");
                         lblStatus.setBounds(378, 11, 46, 14);
                         panel.add(lblStatus);
                         
-                        JComboBox comboBox_1 = new JComboBox();
-                        comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
-                        comboBox_1.setBounds(378, 39, 72, 20);
-                        panel.add(comboBox_1);
+                        JComboBox statusComboBox = new JComboBox();
+                        statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
+                        statusComboBox.setBounds(378, 39, 72, 20);
+                        panel.add(statusComboBox);
+                        
+                        JButton btnAdd = new JButton("Add");
+                        btnAdd.addMouseListener(new MouseAdapter() {
+                        	@Override
+                        	public void mouseClicked(MouseEvent e) {
+                        		
+                        	}
+                        });
+                        btnAdd.setBounds(518, 7, 89, 23);
+                        panel.add(btnAdd);
+                        
+                        JButton btnUpdate = new JButton("Update");
+                        btnUpdate.setBounds(518, 38, 89, 23);
+                        panel.add(btnUpdate);
                         
                         JScrollPane scrollPane = new JScrollPane();
                         scrollPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-                        scrollPane.setBounds(10, 141, 795, 110);
+                        scrollPane.setBounds(10, 103, 795, 148);
                         defectTab.add(scrollPane);
                         
-                        table = new JTable();
-                        table.setModel(new DefaultTableModel(
+                        defectTable = new JTable();
+                        defectTable.setModel(new DefaultTableModel(
                         	new Object[][] {
                         		{null, null, null, null, null},
                         		{null, null, null, null, null},
@@ -675,7 +688,7 @@ public class TaskDialog extends JDialog {
                         		"Date", "Class", "Line #", "Type", "Status"
                         	}
                         ));
-                        scrollPane.setViewportView(table);
+                        scrollPane.setViewportView(defectTable);
                         
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
