@@ -138,7 +138,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton estCancelButton;
 	private JButton estClearButton;
 	private JButton estBackButton;
-	
+	private boolean estIsBuilt;
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -390,7 +390,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		bottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		//Bottom Buttons//
-		okButton = new JButton("Continue");
+		okButton = new JButton("Next");
 		okButton.setBounds(327, 26, 112, 23);
 		okButton.addActionListener(this);
 		bottomPanel.add(okButton);
@@ -525,6 +525,9 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		totalTextField.setBackground(Color.white);
 		totalTextField.setOpaque(true);
 		estimationPanel.add(totalTextField);
+		
+		//Set flag for build to true//
+		estIsBuilt = true;
 	}
 	
 	public void updateTotalEst(){
@@ -540,7 +543,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		estBottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		//Bottom Buttons//
-		estOkButton = new JButton("Continue");
+		estOkButton = new JButton("Finish");
 		estOkButton.setBounds(360, 26, 94, 23);
 		estOkButton.addActionListener(this);
 		estBottomPanel.add(estOkButton);
@@ -651,7 +654,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		}
 		
 		//Add Team Member Button//
-		if (o == addButton  && addMemberField.getText().equals("")){
+		if (o == addButton  && !addMemberField.getText().equals("")){
         	listModel.addElement(addMemberField.getText());
         	list = new JList(listModel);
         	addMemberField.setText("");
@@ -698,8 +701,14 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 				c.remove(bottomPanel);
 	        	
 				//...In with the NEW//
-				buildEstimationPanel();
-	    		buildEstimationBottomPanel();
+				if(estIsBuilt == false){
+					buildEstimationPanel();
+		    		buildEstimationBottomPanel();
+				}
+				else{
+					estimationPanel.setVisible(true);
+					estBottomPanel.setVisible(true);
+				}
 				c.add(estimationPanel);
 				c.add(estBottomPanel);
 				
