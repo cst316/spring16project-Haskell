@@ -30,7 +30,6 @@ public class AppListTest
     @Before
     public void setUp() throws Exception
     {
-    	el = null;
     	al = new AppList(el);
     }
     
@@ -42,6 +41,6 @@ public class AppListTest
 
     @Test
 	public void rootTest() {
-    	assertTrue(al._root.equals(el));
+    	assertTrue(al._root==(el));
 	}
 }

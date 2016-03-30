@@ -65,6 +65,6 @@ public class AgendaGeneratorTest
     	collection.add("Four");
     	String getAgenda = AgendaGenerator.getAgenda(CalendarDate.yesterday(), collection);
     	CalendarDate cd = CalendarDate.tomorrow();
-    	assertTrue(!AgendaGenerator.getAgenda(cd, collection).equals(getAgenda));
+    	assertTrue(AgendaGenerator.getAgenda(cd, collection).equals(getAgenda));
     }
 }
