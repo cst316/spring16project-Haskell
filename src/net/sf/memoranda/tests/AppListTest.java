@@ -7,10 +7,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test; 
 import net.sf.memoranda.util.AppList;
- 
+
+import nu.xom.Element;
+import nu.xom.Elements;
 public class AppListTest
 {
     private AppList al = null;
+    private Element el;
 	
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
@@ -27,7 +30,8 @@ public class AppListTest
     @Before
     public void setUp() throws Exception
     {
-        //TODO - Create setUp
+    	el = null;
+    	al = new AppList(el);
     }
     
     @After
@@ -37,7 +41,7 @@ public class AppListTest
     }
 
     @Test
-	public void holdIn() {
-		assertTrue(true);
+	public void rootTest() {
+    	assertTrue(al._root.equals(el));
 	}
 }

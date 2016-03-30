@@ -27,7 +27,7 @@ public class ConfigurationTest
     @Before
     public void setUp() throws Exception
     {
-        //TODO - Create setUp
+    	c = new Configuration();
     }
     
     @After
@@ -35,9 +35,11 @@ public class ConfigurationTest
     {
         //TODO - Create tearDown
     }
-
+    
     @Test
-	public void holdIn() {
-		assertTrue(true);
-	}
+    public void putGetTest(){
+    	String obj = "Hai";
+    	c.put("obj", obj);
+    	assertTrue(c.get("obj").equals(obj));
+    }
 }

@@ -7,10 +7,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test; 
 import net.sf.memoranda.CurrentNote;
+import net.sf.memoranda.Note;
+import net.sf.memoranda.NoteImpl;
+import net.sf.memoranda.Project;
+import nu.xom.Element;
  
 public class CurrentNoteTest
 {
     private CurrentNote cn = null;
+	private Element el;
+	private Project prj;
+	private Note nt;
 	
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
@@ -27,7 +34,10 @@ public class CurrentNoteTest
     @Before
     public void setUp() throws Exception
     {
-        //TODO - Create setUp
+    	cn = new CurrentNote();
+    	el = null;
+    	prj = null;
+    	nt = new NoteImpl(el,prj);
     }
     
     @After
@@ -37,7 +47,8 @@ public class CurrentNoteTest
     }
 
     @Test
-	public void holdIn() {
-		assertTrue(true);
+	public void sameTest() {
+    	cn.set(nt, false);
+		assertTrue(cn.get().equals(nt));
 	}
 }

@@ -27,7 +27,7 @@ public class ContextTest
     @Before
     public void setUp() throws Exception
     {
-        //TODO - Create setUp
+    	c = new Context();
     }
     
     @After
@@ -37,7 +37,10 @@ public class ContextTest
     }
 
     @Test
-	public void holdIn() {
-		assertTrue(true);
+	public void keyValTest() {
+    	String key = "key";
+    	String value = "val";
+    	c.put(key, value);
+		assertTrue(c.get(key).equals(value));
 	}
 }

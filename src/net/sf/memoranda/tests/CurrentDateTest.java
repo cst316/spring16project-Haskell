@@ -5,7 +5,9 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test; 
+import org.junit.Test;
+
+import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
  
 public class CurrentDateTest
@@ -27,7 +29,8 @@ public class CurrentDateTest
     @Before
     public void setUp() throws Exception
     {
-        //TODO - Create setUp
+    	cd = new CurrentDate();
+    	cd.set((new CalendarDate()).today());
     }
     
     @After
@@ -37,7 +40,9 @@ public class CurrentDateTest
     }
 
     @Test
-	public void holdIn() {
-		assertTrue(true);
+	public void diffTest() {
+    	String today = cd.get().toString();
+    	cd.set((new CalendarDate()).tomorrow());
+		assertTrue(!(today.equals(cd.get())));
 	}
 }
