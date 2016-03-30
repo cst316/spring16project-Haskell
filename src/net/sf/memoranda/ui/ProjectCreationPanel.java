@@ -651,7 +651,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		}
 		
 		//Add Team Member Button//
-		if (o == addButton  && addMemberField.getText() != ""){
+		if (o == addButton  && addMemberField.getText().equals("")){
         	listModel.addElement(addMemberField.getText());
         	list = new JList(listModel);
         	addMemberField.setText("");
