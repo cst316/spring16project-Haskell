@@ -701,4 +701,8 @@ public class TaskDialog extends JDialog {
     	((AppFrame)App.getFrame()).workPanel.dailyItemsPanel.eventsPanel.newEventB_actionPerformed(e, 
 			this.todoField.getText(), (Date)startDate.getModel().getValue(),(Date)endDate.getModel().getValue());
     }
+    void setTab(int tabNumber){
+    	tabbedPane.setSelectedIndex(tabNumber);
+    }
+   
 }
