@@ -58,13 +58,13 @@ public class AgendaGeneratorTest
     
     @Test
     public void Inequals(){
-    	List<String> collection = new ArrayList();
+    	List<String> collection = new ArrayList<String>();
     	collection.add("One");
     	collection.add("Two");
     	collection.add("Three");
     	collection.add("Four");
-    	String getAgenda = ag.getAgenda(new CalendarDate(), collection);
-    	collection.add("Five");
-    	assertTrue(ag.getAgenda(new CalendarDate(), null).equals(getAgenda));
+    	String getAgenda = AgendaGenerator.getAgenda(CalendarDate.yesterday(), collection);
+    	CalendarDate cd = CalendarDate.tomorrow();
+    	assertTrue(!AgendaGenerator.getAgenda(cd, collection).equals(getAgenda));
     }
 }
