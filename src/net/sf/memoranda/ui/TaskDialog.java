@@ -50,6 +50,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.ComponentOrientation;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
@@ -162,9 +166,21 @@ public class TaskDialog extends JDialog {
 	private long initialTime;
 	private long finalTime;
 	private String fileLocation = Util.getEnvDir();
+	private final JPanel defectTab = new JPanel();
+	private JTable table;
+	private final JLabel lblClass = new JLabel("Class");
+	private final JTextField classField = new JTextField();
+	private final JLabel lblLine = new JLabel("Line #");
+	private final JTextField lineNumField = new JTextField();
+	private final JLabel lblType = new JLabel("Type");
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
+        lineNumField.setText("");
+        lineNumField.setBounds(136, 39, 86, 20);
+        lineNumField.setColumns(10);
+        classField.setBounds(10, 39, 86, 20);
+        classField.setColumns(10);
         try {
             jbInit();            
             pack();
@@ -174,7 +190,8 @@ public class TaskDialog extends JDialog {
         }
     }
     
-    void jbInit() throws Exception {
+    @SuppressWarnings("unchecked")
+	void jbInit() throws Exception {
 	this.setResizable(false);
 	this.setSize(new Dimension(370, 200));
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -599,6 +616,66 @@ public class TaskDialog extends JDialog {
                         
                         testField.setBounds(145, 206, 75, 20);
                         timerTab.add(testField);
+
+                        tabbedPane.addTab("Defect Log", null, defectTab, null);
+                        defectTab.setLayout(null);
+                        
+                        JPanel panel = new JPanel();
+                        panel.setBounds(10, 11, 795, 119);
+                        defectTab.add(panel);
+                        panel.setLayout(null);
+                        lblClass.setBounds(10, 11, 46, 14);
+                        
+                        panel.add(lblClass);
+                        
+                        panel.add(classField);
+                        lblLine.setBounds(136, 11, 46, 14);
+                        
+                        panel.add(lblLine);
+                        
+                        panel.add(lineNumField);
+                        lblType.setBounds(261, 11, 46, 14);
+                        
+                        panel.add(lblType);
+                        
+                        JComboBox comboBox = new JComboBox();
+                        comboBox.setModel(new DefaultComboBoxModel(new String[] {"", "UI", "Error Handling", "Syntax", "Control Flow"}));
+                        comboBox.setBounds(261, 39, 72, 20);
+                        panel.add(comboBox);
+                        
+                        JLabel lblStatus = new JLabel("Status");
+                        lblStatus.setBounds(378, 11, 46, 14);
+                        panel.add(lblStatus);
+                        
+                        JComboBox comboBox_1 = new JComboBox();
+                        comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
+                        comboBox_1.setBounds(378, 39, 72, 20);
+                        panel.add(comboBox_1);
+                        
+                        JScrollPane scrollPane = new JScrollPane();
+                        scrollPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                        scrollPane.setBounds(10, 141, 795, 110);
+                        defectTab.add(scrollPane);
+                        
+                        table = new JTable();
+                        table.setModel(new DefaultTableModel(
+                        	new Object[][] {
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        		{null, null, null, null, null},
+                        	},
+                        	new String[] {
+                        		"Date", "Class", "Line #", "Type", "Status"
+                        	}
+                        ));
+                        scrollPane.setViewportView(table);
                         
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
