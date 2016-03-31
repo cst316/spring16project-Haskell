@@ -174,7 +174,7 @@ public class TaskDialog extends JDialog {
 	private final JTextField lineNumField = new JTextField();
 	private final JLabel lblType = new JLabel("Type");
 	private int numDefects;
-
+	private DefaultTableModel model = new DefaultTableModel();
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -195,8 +195,7 @@ public class TaskDialog extends JDialog {
     
     @SuppressWarnings("unchecked")
 	void jbInit() throws Exception {
-    Dimension dim = new Dimension(846, 432);
-	this.setSize(dim);
+	this.setSize(new Dimension(370, 200));
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
@@ -651,12 +650,11 @@ public class TaskDialog extends JDialog {
                         statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
                         statusComboBox.setBounds(378, 39, 72, 20);
                         panel.add(statusComboBox);
-                        
+                        numDefects = 0;		//Used to track how many defects have been added to the table
                         JButton btnAdd = new JButton("Add");
                         btnAdd.addMouseListener(new MouseAdapter() {
                         	@Override
                         	public void mouseClicked(MouseEvent e) {
-                        		//numDefects = 0;		//Used to track how many defects have been added to the table
                         		int initialRows = 10;
                         		int dateCol = 0;	//Integers mapped to column locations on table
                                 int classCol = 1;
@@ -675,7 +673,7 @@ public class TaskDialog extends JDialog {
                         		++numDefects;			//increments defect count
                         		
                         		if (numDefects >= initialRows)
-                        			defectTable(defectTable, new Object[]{null,null,null,null,null});
+                        			model.addRow(new Object[]{null,null,null,null,null});
                         	}
                         });
                         btnAdd.setBounds(518, 7, 89, 23);
@@ -692,23 +690,20 @@ public class TaskDialog extends JDialog {
                         
                         numDefects = 0;		//Used to track how many defects have been added to the table
                         defectTable = new JTable();
-                        defectTable.setModel(new DefaultTableModel(
-                        	new Object[][] {
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        		{null, null, null, null, null},
-                        	},
-                        	new String[] {
-                        		"Date", "Class", "Line #", "Type", "Status"
-                        	}
-                        ));
+                        model = new DefaultTableModel(
+                            	new Object[][] {
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null},
+                            		{null, null, null, null, null}}, new String[] {"Date", "Class", "Line #", "Type", "Status"}
+                            );
+                        defectTable.setModel(model);
                         scrollPane.setViewportView(defectTable);
                         
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
@@ -812,8 +807,4 @@ public class TaskDialog extends JDialog {
     	((AppFrame)App.getFrame()).workPanel.dailyItemsPanel.eventsPanel.newEventB_actionPerformed(e, 
 			this.todoField.getText(), (Date)startDate.getModel().getValue(),(Date)endDate.getModel().getValue());
     }
-    void setTab(int tabNumber){
-    	tabbedPane.setSelectedIndex(tabNumber);
-    }
-   
 }
