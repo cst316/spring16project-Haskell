@@ -118,6 +118,59 @@ public class ProjectManager {
     	prj.setDescription(description);
     }
     
+    //New setters//
+    public static void setStage(String stage){
+        el.addAttribute(new Attribute("stage",stage));
+    	prj.setStage(stage);
+    }
+    public static void setPriority(String priority){
+        el.addAttribute(new Attribute("priority",priority));
+    	prj.setPriority(priority);
+    }
+    public static void setCustomer(String customer){
+        el.addAttribute(new Attribute("customer",customer));
+    	prj.setCustomer(customer);
+    }
+    public static void setFile(String file){
+        el.addAttribute(new Attribute("file",file));
+    	prj.setFile(file);
+    }
+    
+    //Estimates//
+    public static void setPlanningEst(double planningEst){
+        el.addAttribute(new Attribute("planningEst",planningEst + ""));
+    	prj.setPlanningEst(planningEst);
+    }
+    public static void setDesignEst(double designEst){
+        el.addAttribute(new Attribute("designEst",designEst + ""));
+    	prj.setDesignEst(designEst);
+    }
+    public static void setDesignReviewEst(double designReviewEst){
+        el.addAttribute(new Attribute("designReviewEst",designReviewEst + ""));
+    	prj.setDesignReviewEst(designReviewEst);
+    }
+    public static void setCodeEst(double codeEst){
+        el.addAttribute(new Attribute("codeEst",codeEst + ""));
+    	prj.setCodeEst(codeEst);
+    }
+    public static void setCodeReviewEst(double codeReviewEst){
+        el.addAttribute(new Attribute("codeReviewEst",codeReviewEst + ""));
+    	prj.setCodeReviewEst(codeReviewEst);
+    }
+    public static void setCompileEst(double compileEst){
+        el.addAttribute(new Attribute("compileEst",compileEst + ""));
+    	prj.setCompileEst(compileEst);
+    }
+    public static void setTestEst(double testEst){
+        el.addAttribute(new Attribute("testEst",testEst + ""));
+    	prj.setTestEst(testEst);
+    }
+    public static void setPostmortemEst(double postmortemEst){
+        el.addAttribute(new Attribute("postmortemEst",postmortemEst + ""));
+    	prj.setPostmortemEst(postmortemEst);
+    }
+    //
+    
     public static void createProject(){
     	el.addAttribute(new Attribute("id",Util.generateId()));
         _root.appendChild(el);
@@ -153,6 +206,42 @@ public class ProjectManager {
 		setStartDate(startDate);
 		setDescription(description);
 		setTitle(title);
+		return build();
+    }
+    
+    public static Project createProject(String title, 
+    									String description, 
+    									CalendarDate startDate, 
+    									CalendarDate endDate,
+    									String stage,
+    									String priority,
+    									String customer,
+    									String file,
+    									double planningEst,
+    									double designEst,
+    									double designRevEst,
+    									double codeEst,
+    									double codeRevEst,
+    									double compileEst,
+    									double testEst,
+    									double postmortemEst) {
+		createProject();
+		setEndDate(endDate);
+		setStartDate(startDate);
+		setDescription(description);
+		setTitle(title);
+		setStage(stage);
+		setPriority(priority);
+		setCustomer(customer);
+		setFile(file);
+		setPlanningEst(planningEst);
+		setDesignEst(designEst);
+		setDesignReviewEst(designRevEst);
+		setCodeEst(codeEst);
+		setCodeReviewEst(codeRevEst);
+		setTestEst(testEst);
+		setPostmortemEst(postmortemEst);
+		
 		return build();
     }
 

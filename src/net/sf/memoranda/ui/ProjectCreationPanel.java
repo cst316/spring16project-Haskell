@@ -744,8 +744,29 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	            endD = new CalendarDate((Date) endDate.getModel().getValue());
 	        }
 			
+	        //New Add//
+			Project prj = ProjectManager.createProject(title, 
+													   description.toString(), 
+													   startD, 
+													   endD,
+													   (String) stageComboBox.getSelectedItem(),
+													   (String) statusComboBox.getSelectedItem(),
+													   customerField.getText(),
+													   fileField.getText(),
+													   (double) planningSpinner.getValue(),
+													   (double) designSpinner.getValue(),
+													   (double) designReviewSpinner.getValue(),
+													   (double) codeSpinner.getValue(),
+													   (double) codeReviewSpinner.getValue(),
+													   (double) compileSpinner.getValue(),
+													   (double) testSpinner.getValue(),
+													   (double) postmortemSpinner.getValue());
+	        
+	        /*
 			//Add project to manager//
 			Project prj = ProjectManager.createProject(title, startD, endD);
+			*/
+	        
 	        CurrentStorage.get().storeProjectManager();
 	        
 	        //Dispose of frame//
