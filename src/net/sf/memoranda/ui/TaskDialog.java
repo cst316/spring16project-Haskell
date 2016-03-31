@@ -173,7 +173,7 @@ public class TaskDialog extends JDialog {
 	private final JLabel lblLine = new JLabel("Line #");
 	private final JTextField lineNumField = new JTextField();
 	private final JLabel lblType = new JLabel("Type");
-	private int defects;
+	private int numDefects;
 
 	
     public TaskDialog(Frame frame, String title) {
@@ -183,7 +183,7 @@ public class TaskDialog extends JDialog {
         lineNumField.setColumns(10);
         classField.setBounds(10, 39, 86, 20);
         classField.setColumns(10);
-        defects = 0;
+       
         try {
             jbInit();            
             pack();
@@ -195,7 +195,8 @@ public class TaskDialog extends JDialog {
     
     @SuppressWarnings("unchecked")
 	void jbInit() throws Exception {
-	this.setSize(new Dimension(370, 200));
+    Dimension dim = new Dimension(846, 432);
+	this.setSize(dim);
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
@@ -655,7 +656,26 @@ public class TaskDialog extends JDialog {
                         btnAdd.addMouseListener(new MouseAdapter() {
                         	@Override
                         	public void mouseClicked(MouseEvent e) {
+                        		//numDefects = 0;		//Used to track how many defects have been added to the table
+                        		int initialRows = 10;
+                        		int dateCol = 0;	//Integers mapped to column locations on table
+                                int classCol = 1;
+                                int lineCol = 2;
+                                int typeCol = 3;
+                                int statusCol = 4;
+                                
+                                //Takes values form GUI fields and inserts them into the jTable
+                        		String defectDate = new SimpleDateFormat("MM.dd.YYYY").format(new Date());
+                        		defectTable.setValueAt(defectDate, numDefects , dateCol);
+                        		defectTable.setValueAt(classField.getText(), numDefects, classCol);
+                        		defectTable.setValueAt(lineNumField.getText(), numDefects, lineCol);
+                        		defectTable.setValueAt(typeComboBox.getSelectedItem(), numDefects, typeCol);
+                        		defectTable.setValueAt(statusComboBox.getSelectedItem(), numDefects, statusCol);
                         		
+                        		++numDefects;			//increments defect count
+                        		
+                        		if (numDefects >= initialRows)
+                        			defectTable(defectTable, new Object[]{null,null,null,null,null});
                         	}
                         });
                         btnAdd.setBounds(518, 7, 89, 23);
@@ -670,6 +690,7 @@ public class TaskDialog extends JDialog {
                         scrollPane.setBounds(10, 103, 795, 148);
                         defectTab.add(scrollPane);
                         
+                        numDefects = 0;		//Used to track how many defects have been added to the table
                         defectTable = new JTable();
                         defectTable.setModel(new DefaultTableModel(
                         	new Object[][] {
