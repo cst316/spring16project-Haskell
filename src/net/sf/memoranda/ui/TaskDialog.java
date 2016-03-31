@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -125,28 +126,28 @@ public class TaskDialog extends JDialog {
 	private final JPanel estimationTab = new JPanel();
 	private final JPanel designEst = new JPanel();
 	private final JLabel lblDesign = new JLabel("Design");
-	private final JSpinner designSpinner = new JSpinner();
+	private JSpinner designSpinner;
 	private final JPanel planningEst = new JPanel();
 	private final JLabel lblPlanning = new JLabel("Planning");
-	private final JSpinner planningSpinner = new JSpinner();
+	private JSpinner planningSpinner;
 	private final JPanel designRevEsT = new JPanel();
 	private final JLabel lblDesignReview = new JLabel("Design Review");
-	private final JSpinner designReviewSpinner = new JSpinner();
+	private JSpinner designReviewSpinner;
 	private final JPanel codeEst = new JPanel();
 	private final JLabel lblCode = new JLabel("Code");
-	private final JSpinner codeSpinner = new JSpinner();
+	private JSpinner codeSpinner = new JSpinner();
 	private final JPanel codeReviewEst = new JPanel();
 	private final JLabel lblCodeReview = new JLabel("Code Review");
-	private final JSpinner codeReviewSpinner = new JSpinner();
+	private JSpinner codeReviewSpinner = new JSpinner();
 	private final JPanel compileEst = new JPanel();
 	private final JLabel lblCompile = new JLabel("Compile");
-	private final JSpinner compileSPinner = new JSpinner();
+	private JSpinner compileSPinner = new JSpinner();
 	private final JPanel testEst = new JPanel();
 	private final JLabel lblTest = new JLabel("Test");
-	private final JSpinner testSpinner = new JSpinner();
+	private JSpinner testSpinner = new JSpinner();
 	private final JPanel postmortemEst = new JPanel();
 	private final JLabel lblPostmortem = new JLabel("Postmortem");
-	private final JSpinner postmortemSpinner = new JSpinner();
+	private JSpinner postmortemSpinner = new JSpinner();
 	private final JPanel totalEst = new JPanel();
 	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
 	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
@@ -195,8 +196,8 @@ public class TaskDialog extends JDialog {
     
     @SuppressWarnings("unchecked")
 	void jbInit() throws Exception {
-    Dimension dim = new Dimension(846, 432);
-	this.setSize(dim);
+    Dimension dim = new Dimension(846, 532);
+	this.setPreferredSize(dim);
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
@@ -444,7 +445,8 @@ public class TaskDialog extends JDialog {
                         planningEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblPlanning.setHorizontalAlignment(SwingConstants.CENTER);
                         
-                        planningEst.add(lblPlanning);                        
+                        planningEst.add(lblPlanning);               
+                        planningSpinner = getSpinner(planningSpinner);
                         planningEst.add(planningSpinner);
                         planningSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -457,6 +459,7 @@ public class TaskDialog extends JDialog {
                         lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         designEst.add(lblDesign);
+                        designSpinner = getSpinner(designSpinner);
                         designEst.add(designSpinner);
                         designSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -469,6 +472,7 @@ public class TaskDialog extends JDialog {
                         lblDesignReview.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         designRevEsT.add(lblDesignReview);
+                        designReviewSpinner = getSpinner(designReviewSpinner);
                         designRevEsT.add(designReviewSpinner);
                         designReviewSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -481,6 +485,7 @@ public class TaskDialog extends JDialog {
                         lblCode.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         codeEst.add(lblCode);
+                        codeSpinner = getSpinner(codeSpinner);
                         codeEst.add(codeSpinner);
                         codeSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -492,7 +497,8 @@ public class TaskDialog extends JDialog {
                         codeReviewEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblCodeReview.setHorizontalAlignment(SwingConstants.CENTER);
                         
-                        codeReviewEst.add(lblCodeReview);                        
+                        codeReviewEst.add(lblCodeReview);
+                        codeReviewSpinner = getSpinner(codeReviewSpinner);
                         codeReviewEst.add(codeReviewSpinner);
                         codeReviewSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -504,7 +510,8 @@ public class TaskDialog extends JDialog {
                         compileEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblCompile.setHorizontalAlignment(SwingConstants.CENTER);
                         
-                        compileEst.add(lblCompile);                        
+                        compileEst.add(lblCompile);                       
+                        compileSPinner = getSpinner(compileSPinner);
                         compileEst.add(compileSPinner);
                         compileSPinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -516,7 +523,8 @@ public class TaskDialog extends JDialog {
                         testEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblTest.setHorizontalAlignment(SwingConstants.CENTER);
                         
-                        testEst.add(lblTest);                        
+                        testEst.add(lblTest);
+                        testSpinner = getSpinner(testSpinner);
                         testEst.add(testSpinner);
                         testSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -528,7 +536,8 @@ public class TaskDialog extends JDialog {
                         postmortemEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblPostmortem.setHorizontalAlignment(SwingConstants.CENTER);
                         
-                        postmortemEst.add(lblPostmortem);                        
+                        postmortemEst.add(lblPostmortem);     
+                        postmortemSpinner = getSpinner(postmortemSpinner);
                         postmortemEst.add(postmortemSpinner);
                         postmortemSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) {
@@ -674,8 +683,8 @@ public class TaskDialog extends JDialog {
                         		
                         		++numDefects;			//increments defect count
                         		
-                        		if (numDefects >= initialRows)
-                        			defectTable(defectTable, new Object[]{null,null,null,null,null});
+                        		//if (numDefects >= initialRows)
+                        			//defectTable(defectTable, new Object[]{null,null,null,null,null});
                         	}
                         });
                         btnAdd.setBounds(518, 7, 89, 23);
@@ -730,6 +739,18 @@ public class TaskDialog extends JDialog {
         });
     }
     
+    public JSpinner getSpinner(JSpinner js){
+		//Make the model that will be used for all estimation spinners//
+		SpinnerNumberModel model = new SpinnerNumberModel(0.0, 0.0, 5000.0, 0.50);
+		js = new JSpinner(model);
+		JSpinner.NumberEditor editor = (JSpinner.NumberEditor)js.getEditor();
+		DecimalFormat format = editor.getFormat();
+		format.setMinimumFractionDigits(1);
+		
+		//Return it//
+		return js;
+	}
+    
     protected String convertMillitoHMS(long time) {
 		Date timeInFormat = new Date(time);
 		SimpleDateFormat formatDef = new SimpleDateFormat("h:mm:s");
@@ -747,9 +768,9 @@ public class TaskDialog extends JDialog {
 	}
 
 	public void updateTotalEst(){
-        		totalEstTextField.setText("" + ((int)planningSpinner.getValue() + (int)designSpinner.getValue() + 
-        		(int)designReviewSpinner.getValue() + (int)codeSpinner.getValue() + (int)codeReviewSpinner.getValue() +
-        		(int)compileSPinner.getValue() + (int)testSpinner.getValue() + (int)postmortemSpinner.getValue())); 
+        		totalEstTextField.setText("" + ((double)planningSpinner.getValue() + (double)designSpinner.getValue() + 
+        		(double)designReviewSpinner.getValue() + (double)codeSpinner.getValue() + (double)codeReviewSpinner.getValue() +
+        		(double)compileSPinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
         	}
 
 	public void setStartDate(CalendarDate d) {
