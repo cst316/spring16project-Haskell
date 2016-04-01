@@ -653,6 +653,7 @@ public class TaskDialog extends JDialog {
                         
                         panel.add(lblLine);
                         
+<<<<<<< HEAD
                         panel.add(lineNumField);
                         lblType.setBounds(261, 11, 46, 14);
                         
@@ -734,6 +735,8 @@ public class TaskDialog extends JDialog {
                         
 =======
 >>>>>>> master
+=======
+>>>>>>> master
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
         startCalFrame.cal.addSelectionListener(new ActionListener() {
@@ -753,6 +756,7 @@ public class TaskDialog extends JDialog {
         });
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     public JSpinner getSpinner(JSpinner js){
 		//Make the model that will be used for all estimation spinners//
@@ -767,12 +771,17 @@ public class TaskDialog extends JDialog {
 	}
     
 =======
+=======
+>>>>>>> master
     /*This method takes an time input in milliseconds, and converts it
      * to a time formatted in hours:minutes:seconds
      * 
      * @param time - the time in milliseconds after UTC
      * @return formattedTime - a string that displays time in Hours:Minutes:Seconds
      */
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
     protected String convertMillitoHMS(long time) {
 		Date timeInFormat = new Date(time);
