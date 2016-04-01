@@ -13,8 +13,3 @@ Your first steps should be to get your team set up with this code, ensure you ca
 
 Enjoy!
 Dr. Gary
-
-Chris read this aga
-
-And Zach J. Too!
-Don't forget Trent. 
