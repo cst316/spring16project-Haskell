@@ -15,6 +15,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -58,14 +59,15 @@ public class TaskPanel extends JPanel {
     TaskTable taskTable = new TaskTable();
 	JMenuItem ppEditTask = new JMenuItem();
 	JPopupMenu taskPPMenu = new JPopupMenu();
-	JMenuItem ppRemoveTask = new JMenuItem();
-	JMenuItem ppNewTask = new JMenuItem();
-	JMenuItem ppCompleteTask = new JMenuItem();
-	//JMenuItem ppSubTasks = new JMenuItem();
-	//JMenuItem ppParentTask = new JMenuItem();
 	JMenuItem ppAddSubTask = new JMenuItem();
 	JMenuItem ppCalcTask = new JMenuItem();
 	DailyItemsPanel parentPanel = null;
+	JMenuItem ppRemoveTask = new JMenuItem();
+	JMenuItem ppNewTask = new JMenuItem();
+	JMenuItem ppCompleteTask = new JMenuItem();
+	JMenuItem ppTimer = new JMenuItem();
+	JMenuItem ppDefects = new JMenuItem();
+	int tabNumber;
 
     public TaskPanel(DailyItemsPanel _parentPanel) {
         try {
@@ -299,7 +301,23 @@ public class TaskPanel extends JPanel {
 		});
 	ppCompleteTask.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/todo_complete.png")));
 	ppCompleteTask.setEnabled(false);
-
+	
+	ppTimer.setFont(new java.awt.Font("Dialog", 1, 11));
+	ppTimer.setText(Local.getString("Timer"));
+	ppTimer.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ppTimer_actionPerformed(e);
+			}
+		});
+	
+	ppDefects.setFont(new java.awt.Font("Dialog", 1, 11));
+	ppDefects.setText(Local.getString("Defects"));
+	ppDefects.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ppTimer_actionPerformed(e);
+			}
+		});
+	
 	ppCalcTask.setFont(new java.awt.Font("Dialog", 1, 11));
 	ppCalcTask.setText(Local.getString("Calculate task data"));
 	ppCalcTask.addActionListener(new java.awt.event.ActionListener() {
@@ -399,6 +417,8 @@ public class TaskPanel extends JPanel {
     taskPPMenu.addSeparator();
 	taskPPMenu.add(ppCompleteTask);
 	taskPPMenu.add(ppCalcTask);
+	taskPPMenu.add(ppTimer);
+	taskPPMenu.add(ppDefects);
 	
     //taskPPMenu.addSeparator();
     
@@ -447,6 +467,7 @@ public class TaskPanel extends JPanel {
             CurrentProject.getTaskList().getTask(
                 taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString());
         TaskDialog dlg = new TaskDialog(App.getFrame(), Local.getString("Edit task"));
+        dlg.setTab(tabNumber);
         Dimension frmSize = App.getFrame().getSize();
         Point loc = App.getFrame().getLocation();
         dlg.setLocation((frmSize.width - dlg.getSize().width) / 2 + loc.x, (frmSize.height - dlg.getSize().height) / 2 + loc.y);
@@ -758,5 +779,12 @@ public class TaskPanel extends JPanel {
   void ppCalcTask_actionPerformed(ActionEvent e) {
       calcTask_actionPerformed(e);
   }
-
+  void ppTimer_actionPerformed(ActionEvent e) {
+	  tabNumber = 2;
+	  editTaskB_actionPerformed(e);
+  }
+  void ppDefects_actionPerformed(ActionEvent e) {
+	  tabNumber = 3;
+	  editTaskB_actionPerformed(e);
+  }
 }
