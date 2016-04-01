@@ -15,6 +15,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -56,11 +58,7 @@ import java.awt.ComponentOrientation;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -62365071932024344L;
-	JPanel mPanel = new JPanel(new BorderLayout());
+    JPanel mPanel = new JPanel(new BorderLayout());
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton cancelB = new JButton();
     JButton okB = new JButton();
@@ -107,7 +105,7 @@ public class TaskDialog extends JDialog {
 //    JPanel jPanelNotes = new JPanel(new FlowLayout(FlowLayout.LEFT));
     
     JButton setNotifB = new JButton();
-    JComboBox<?> priorityCB = new JComboBox<Object>(priority);
+    JComboBox priorityCB = new JComboBox(priority);
     JLabel jLabel7 = new JLabel();
     // added by rawsushi
     JLabel jLabelEffort = new JLabel();
@@ -123,8 +121,6 @@ public class TaskDialog extends JDialog {
 	CalendarDate startDateMax = CurrentProject.get().getEndDate();
 	CalendarDate endDateMin = startDateMin;
 	CalendarDate endDateMax = startDateMax;
-	
-	//Changes made to original project 
 	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	private final JPanel generalTab = new JPanel();
 	private final JPanel estimationTab = new JPanel();
@@ -273,6 +269,25 @@ public class TaskDialog extends JDialog {
         mPanel.add(tabbedPane, BorderLayout.SOUTH);
         tabbedPane.addTab("General", null, generalTab, null);
         generalTab.setBorder(border2);
+        
+        GridBagLayout gbLayout = (GridBagLayout) jPanel8.getLayout();
+        jPanel8.setBorder(border3);
+        
+        todoField.setBorder(border8);
+        todoField.setPreferredSize(new Dimension(375, 24));
+        gbLayout.setConstraints(todoField,gbCon);
+        
+        jLabelDescription.setMaximumSize(new Dimension(100, 16));
+        jLabelDescription.setMinimumSize(new Dimension(60, 16));
+        jLabelDescription.setText(Local.getString("Description"));
+        gbLayout.setConstraints(jLabelDescription,gbCon);
+        
+                descriptionField.setBorder(border8);
+                descriptionField.setPreferredSize(new Dimension(375, 387)); // 3 additional pixels from 384 so that the last line is not cut off
+                descriptionField.setLineWrap(true);
+                descriptionField.setWrapStyleWord(true);
+                descriptionScrollPane.setPreferredSize(new Dimension(375,96));
+                gbLayout.setConstraints(descriptionScrollPane,gbCon);
                 
                         jLabelEffort.setMaximumSize(new Dimension(100, 16));
                         jLabelEffort.setMinimumSize(new Dimension(60, 16));
@@ -391,29 +406,10 @@ public class TaskDialog extends JDialog {
                 priorityCB.setFont(new java.awt.Font("Dialog", 0, 11));
                 jPanel4.add(jLabel7, null);
                 generalTab.setLayout(new GridLayout(0, 1, 0, 0));
-                
-                GridBagLayout gbLayout = (GridBagLayout) jPanel8.getLayout();
-                jPanel8.setBorder(border3);
-                
-                todoField.setBorder(border8);
-                todoField.setPreferredSize(new Dimension(375, 24));
-                gbLayout.setConstraints(todoField,gbCon);
-                
-                jLabelDescription.setMaximumSize(new Dimension(100, 16));
-                jLabelDescription.setMinimumSize(new Dimension(60, 16));
-                jLabelDescription.setText(Local.getString("Description"));
-                gbLayout.setConstraints(jLabelDescription,gbCon);
-                
-                        descriptionField.setBorder(border8);
-                        descriptionField.setPreferredSize(new Dimension(375, 387)); // 3 additional pixels from 384 so that the last line is not cut off
-                        descriptionField.setLineWrap(true);
-                        descriptionField.setWrapStyleWord(true);
-                        descriptionScrollPane.setPreferredSize(new Dimension(375,96));
-                        gbLayout.setConstraints(descriptionScrollPane,gbCon);
-                        generalTab.add(jPanel8);
-                        jPanel8.add(todoField, null);
-                        jPanel8.add(jLabelDescription);
-                        jPanel8.add(descriptionScrollPane, null);
+                generalTab.add(jPanel8);
+                jPanel8.add(todoField, null);
+                jPanel8.add(jLabelDescription);
+                jPanel8.add(descriptionScrollPane, null);
                 generalTab.add(jPanel2);
                 jPanel2.add(jPanel6, null);
                 jPanel6.add(jLabel6, null);
@@ -566,7 +562,6 @@ public class TaskDialog extends JDialog {
                         
                         lblStartTime.setBounds(10, 23, 60, 14);
                         timerTab.add(lblStartTime);
-                        startTextField.setBackground(Color.WHITE);
                         startTextField.setEditable(false);
                         
                         startTextField.setBounds(106, 20, 90, 20);
@@ -588,10 +583,6 @@ public class TaskDialog extends JDialog {
                         
                         lblEndTime.setBounds(10, 109, 55, 14);
                         timerTab.add(lblEndTime);
-                        btnEnd.addActionListener(new ActionListener() {
-                        	public void actionPerformed(ActionEvent e) {
-                        	}
-                        });
                         
                         btnEnd.setBounds(10, 134, 89, 23);
                         timerTab.add(btnEnd);
@@ -621,7 +612,6 @@ public class TaskDialog extends JDialog {
               
                         	}
                         });
-                        endTextField.setBackground(Color.WHITE);
                         
                        
                         
@@ -631,7 +621,6 @@ public class TaskDialog extends JDialog {
                         lblSession.setBounds(10, 181, 80, 14);
                         
                         timerTab.add(lblSession);
-                        sessionTextField.setBackground(Color.WHITE);
                         sessionTextField.setEditable(false);
                         sessionTextField.setBounds(10, 206, 90, 20);
                         
@@ -653,8 +642,6 @@ public class TaskDialog extends JDialog {
                         
                         panel.add(lblLine);
                         
-<<<<<<< HEAD
-<<<<<<< HEAD
                         panel.add(lineNumField);
                         lblType.setBounds(261, 11, 46, 14);
                         
@@ -674,7 +661,6 @@ public class TaskDialog extends JDialog {
                         statusComboBox.setBounds(378, 39, 72, 20);
                         panel.add(statusComboBox);
                         
-<<<<<<< HEAD
                         JButton btnAdd = new JButton("Add");
                         btnAdd.addMouseListener(new MouseAdapter() {
                         	@Override
@@ -734,12 +720,6 @@ public class TaskDialog extends JDialog {
                         ));
                         scrollPane.setViewportView(defectTable);
                         
-=======
->>>>>>> master
-=======
->>>>>>> master
-=======
->>>>>>> master
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
         startCalFrame.cal.addSelectionListener(new ActionListener() {
@@ -758,9 +738,6 @@ public class TaskDialog extends JDialog {
             }
         });
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     
     public JSpinner getSpinner(JSpinner js){
 		//Make the model that will be used for all estimation spinners//
@@ -774,24 +751,6 @@ public class TaskDialog extends JDialog {
 		return js;
 	}
     
-=======
-=======
->>>>>>> master
-=======
->>>>>>> master
-    /*This method takes an time input in milliseconds, and converts it
-     * to a time formatted in hours:minutes:seconds
-     * 
-     * @param time - the time in milliseconds after UTC
-     * @return formattedTime - a string that displays time in Hours:Minutes:Seconds
-     */
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> master
-=======
->>>>>>> master
-=======
->>>>>>> master
     protected String convertMillitoHMS(long time) {
 		Date timeInFormat = new Date(time);
 		SimpleDateFormat formatDef = new SimpleDateFormat("h:mm:s");
@@ -800,22 +759,14 @@ public class TaskDialog extends JDialog {
 		
 		
 	}
-    /* There was a bug where elapsed time would always have a 5 hour time displayed
-     * This is the easiest way to fix the 5 hour error
-     * 
-     * @param time - millisecond time value
-     * @return - time formatted in hours:minutes:seconds
-     */
+    // This is the easiest way to fix the 5 hour error
     protected String convertTimertoHMS(long time) {
     	int seconds = (int) (time / 1000) % 60 ;
     	int minutes = (int) ((time / (1000*60)) % 60);
     	int hours   = (int) ((time / (1000*60*60)) % 24);
     	return (hours + ":" + minutes + ":" + seconds);
 	}
-    /* Method called in event handlers for phase estimate spinners
-     * each time a spinner is incremented, the total of all spinners
-     * is updated
-     */
+
 	public void updateTotalEst(){
         		totalEstTextField.setText("" + ((double)planningSpinner.getValue() + (double)designSpinner.getValue() + 
         		(double)designReviewSpinner.getValue() + (double)codeSpinner.getValue() + (double)codeReviewSpinner.getValue() +
