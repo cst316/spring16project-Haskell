@@ -49,6 +49,49 @@ public interface Project {
     void setDescription(String description);
     String getDescription();
     
+    //New getters/setters//
+    void setStage(String stage);
+    String getStage();
+    
+    void setPriority(String priority);
+    String getPriority();
+    
+    void setCustomer(String customer);
+    String getCustomer();
+    
+    void setFile(String file);
+    String getFile();
+    
+    /*
+    void setTeam(String[] team);
+    String[] getTeam();
+    */
+    
+    void setPlanningEst(double plan);
+    String getPlanningEst();
+    
+    void setDesignEst(double design);
+    String getDesignEst();
+    
+    void setDesignReviewEst(double designRev);
+    String getDesignReviewEst();
+    
+    void setCodeEst(double code);
+    String getCodeEst();
+    
+    void setCodeReviewEst(double codeRev);
+    String getCodeReviewEst();
+    
+    void setCompileEst(double compile);
+    String getCompileEst();
+    
+    void setTestEst(double test);
+    String getTestEst();
+    
+    void setPostmortemEst(double post);
+    String getPostmortemEst();
+    //Up to here//
+    
     int getStatus();
             
     //int getProgress();

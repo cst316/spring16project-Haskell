@@ -191,7 +191,308 @@ public class ProjectImpl implements Project {
             desc.appendChild(s);    	
     	}
     }
-        
+    
+    public String getStage() {
+    	Element thisElement = _root.getFirstChildElement("stage");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setStage(String s) {
+    	Element stage = _root.getFirstChildElement("stage");
+    	if (stage == null) {
+    		stage = new Element("stage");
+    		stage.appendChild(s);
+            _root.appendChild(stage);    	
+    	}
+    	else {
+    		stage.removeChildren();
+    		stage.appendChild(s);    	
+    	}
+    }
+    
+    public String getPriority() {
+    	Element thisElement = _root.getFirstChildElement("priority");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setPriority(String s) {
+    	Element priority = _root.getFirstChildElement("priority");
+    	if (priority == null) {
+    		priority = new Element("priority");
+    		priority.appendChild(s);
+            _root.appendChild(priority);    	
+    	}
+    	else {
+    		priority.removeChildren();
+    		priority.appendChild(s);    	
+    	}
+    }
+    
+    public String getCustomer() {
+    	Element thisElement = _root.getFirstChildElement("customer");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setCustomer(String s) {
+    	Element customer = _root.getFirstChildElement("customer");
+    	if (customer == null) {
+    		customer = new Element("customer");
+    		customer.appendChild(s);
+            _root.appendChild(customer);    	
+    	}
+    	else {
+    		customer.removeChildren();
+    		customer.appendChild(s);    	
+    	}
+    }
+    
+    public String getFile() {
+    	Element thisElement = _root.getFirstChildElement("file");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setFile(String s) {
+    	Element file = _root.getFirstChildElement("file");
+    	if (file == null) {
+    		file = new Element("file");
+    		file.appendChild(s);
+            _root.appendChild(file);    	
+    	}
+    	else {
+    		file.removeChildren();
+    		file.appendChild(s);    	
+    	}
+    }
+    
+    /*
+    public String[] getTeam() {
+    	Element thisElement = _root.getFirstChildElement("team");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement;
+    	}
+    }
+
+    public void setTeam(String[] s) {
+    	Element stage = _root.getFirstChildElement("stage");
+    	if (stage == null) {
+    		stage = new Element("stage");
+    		stage.appendChild(s);
+            _root.appendChild(stage);    	
+    	}
+    	else {
+    		stage.removeChildren();
+    		stage.appendChild(s);    	
+    	}
+    }
+    */
+    
+    public String getPlanningEst() {
+    	Element thisElement = _root.getFirstChildElement("file");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setPlanningEst(double s) {
+    	Element plan = _root.getFirstChildElement("planningEst");
+    	if (plan == null) {
+    		plan = new Element("planningEst");
+    		plan.appendChild(s + "");
+            _root.appendChild(plan);    	
+    	}
+    	else {
+    		plan.removeChildren();
+    		plan.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getDesignEst() {
+    	Element thisElement = _root.getFirstChildElement("designEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setDesignEst(double s) {
+    	Element design = _root.getFirstChildElement("designEst");
+    	if (design == null) {
+    		design = new Element("designEst");
+    		design.appendChild(s + "");
+            _root.appendChild(design);    	
+    	}
+    	else {
+    		design.removeChildren();
+    		design.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getDesignReviewEst() {
+    	Element thisElement = _root.getFirstChildElement("designRevEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setDesignReviewEst(double s) {
+    	Element designRev = _root.getFirstChildElement("designRevEst");
+    	if (designRev == null) {
+    		designRev = new Element("designEst");
+    		designRev.appendChild(s + "");
+            _root.appendChild(designRev);    	
+    	}
+    	else {
+    		designRev.removeChildren();
+    		designRev.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getCodeEst() {
+    	Element thisElement = _root.getFirstChildElement("codeEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setCodeEst(double s) {
+    	Element code = _root.getFirstChildElement("codeEst");
+    	if (code == null) {
+    		code = new Element("codeEst");
+    		code.appendChild(s + "");
+            _root.appendChild(code);    	
+    	}
+    	else {
+    		code.removeChildren();
+    		code.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getCodeReviewEst() {
+    	Element thisElement = _root.getFirstChildElement("codeRevEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setCodeReviewEst(double s) {
+    	Element codeRev = _root.getFirstChildElement("codeRevEst");
+    	if (codeRev == null) {
+    		codeRev = new Element("codeRevEst");
+    		codeRev.appendChild(s + "");
+            _root.appendChild(codeRev);    	
+    	}
+    	else {
+    		codeRev.removeChildren();
+    		codeRev.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getCompileEst() {
+    	Element thisElement = _root.getFirstChildElement("compileEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setCompileEst(double s) {
+    	Element compile = _root.getFirstChildElement("compileEst");
+    	if (compile == null) {
+    		compile = new Element("compileEst");
+    		compile.appendChild(s + "");
+            _root.appendChild(compile);    	
+    	}
+    	else {
+    		compile.removeChildren();
+    		compile.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getTestEst() {
+    	Element thisElement = _root.getFirstChildElement("testEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setTestEst(double s) {
+    	Element test = _root.getFirstChildElement("testEst");
+    	if (test == null) {
+    		test = new Element("testEst");
+    		test.appendChild(s + "");
+            _root.appendChild(test);    	
+    	}
+    	else {
+    		test.removeChildren();
+    		test.appendChild(s + "");    	
+    	}
+    }
+    
+    public String getPostmortemEst() {
+    	Element thisElement = _root.getFirstChildElement("postmortemEst");
+    	if (thisElement == null) {
+    		return null;
+    	}
+    	else {
+       		return thisElement.getValue();
+    	}
+    }
+
+    public void setPostmortemEst(double s) {
+    	Element postmortem = _root.getFirstChildElement("postmortemEst");
+    	if (postmortem == null) {
+    		postmortem = new Element("postmortemEst");
+    		postmortem.appendChild(s + "");
+            _root.appendChild(postmortem);    	
+    	}
+    	else {
+    		postmortem.removeChildren();
+    		postmortem.appendChild(s + "");    	
+    	}
+    }
+    
     /**
      * @see net.sf.memoranda.Project#getTaskList()
      */
