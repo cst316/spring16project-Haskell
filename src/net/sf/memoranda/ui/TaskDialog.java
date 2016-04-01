@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
+//update
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -175,6 +175,7 @@ public class TaskDialog extends JDialog {
 	private final JLabel lblType = new JLabel("Type");
 	private int numDefects;
 	private DefaultTableModel model = new DefaultTableModel();
+	private int gitTest;
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -195,7 +196,8 @@ public class TaskDialog extends JDialog {
     
     @SuppressWarnings("unchecked")
 	void jbInit() throws Exception {
-	this.setSize(new Dimension(370, 200));
+    	Dimension dim = new Dimension(846, 532);
+    	this.setPreferredSize(dim);
         border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
@@ -223,15 +225,14 @@ public class TaskDialog extends JDialog {
         GridBagConstraints gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
-        gbCon = new GridBagConstraints();
+        //gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
         gbCon.anchor = GridBagConstraints.WEST;
         gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 3;
-		SimpleDateFormat sdf = new SimpleDateFormat();
-		sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
+		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
         getContentPane().add(mPanel);
         
                 startDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
@@ -474,7 +475,7 @@ public class TaskDialog extends JDialog {
                         		updateTotalEst(); 
                         	}
                         });
-                        
+                        //git edit
                         estimationTab.add(codeEst);
                         codeEst.setLayout(new GridLayout(0, 2, 0, 0));
                         lblCode.setHorizontalAlignment(SwingConstants.CENTER);
@@ -588,7 +589,7 @@ public class TaskDialog extends JDialog {
                         		//long difference = (long) ((1.8 * Math.pow(10, 7))/2);
                         		String sessionString = convertTimertoHMS(sessionTime);
                         		
-                        		try {
+                        		/*try {
                         			Writer output = new BufferedWriter(new FileWriter(fileLocation + "times.txt", true));
                             		output.append("Date: " + new SimpleDateFormat("MM-dd-yy").format(new Date()) + " Start Time: " + convertMillitoHMS(startTime)
                             				+ " End Time: " + convertMillitoHMS(endTime) + " Time Passed: " + sessionString + "\n");
@@ -596,15 +597,14 @@ public class TaskDialog extends JDialog {
                             		
 								} catch (IOException e1) {
 									e1.printStackTrace();
-								} 
+								} */
                         		
                         		sessionTextField.setText(sessionString);
               
                         	}
                         });
                         
-                       
-                        
+                      
                         endTextField.setEditable(false);
                         endTextField.setBounds(106, 106, 90, 20);
                         timerTab.add(endTextField);
@@ -676,12 +676,8 @@ public class TaskDialog extends JDialog {
                         			model.addRow(new Object[]{null,null,null,null,null});
                         	}
                         });
-                        btnAdd.setBounds(518, 7, 89, 23);
+                        btnAdd.setBounds(523, 38, 89, 23);
                         panel.add(btnAdd);
-                        
-                        JButton btnUpdate = new JButton("Update");
-                        btnUpdate.setBounds(518, 38, 89, 23);
-                        panel.add(btnUpdate);
                         
                         JScrollPane scrollPane = new JScrollPane();
                         scrollPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -806,5 +802,9 @@ public class TaskDialog extends JDialog {
     void setNotifB_actionPerformed(ActionEvent e) {
     	((AppFrame)App.getFrame()).workPanel.dailyItemsPanel.eventsPanel.newEventB_actionPerformed(e, 
 			this.todoField.getText(), (Date)startDate.getModel().getValue(),(Date)endDate.getModel().getValue());
+    }
+    
+    void setTab(int tabNumber){
+    	tabbedPane.setSelectedIndex(tabNumber);
     }
 }
