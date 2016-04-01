@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
@@ -38,6 +39,7 @@ import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -113,6 +115,32 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JLabel errorLabel;
 	private JLabel requirementLabel;
 	
+	//Estimation Components//
+	private JPanel estimationPanel;
+	private JLabel lblDesign;
+	private JSpinner designSpinner;
+	private JLabel lblPlanning;
+	private JSpinner planningSpinner;
+	private JLabel lblDesignReview;
+	private JSpinner designReviewSpinner;
+	private JLabel lblCode;
+	private JSpinner codeSpinner;
+	private JLabel lblCodeReview;
+	private JSpinner codeReviewSpinner;
+	private JLabel lblCompile;
+	private JSpinner compileSpinner;
+	private JLabel lblTest;
+	private JSpinner testSpinner;
+	private JLabel lblPostmortem;
+	private JSpinner postmortemSpinner;
+	private JLabel lblTotal;
+	private JTextField totalTextField;
+	private JPanel estBottomPanel;
+	private JButton estOkButton;
+	private JButton estCancelButton;
+	private JButton estClearButton;
+	private JButton estBackButton;
+	private boolean estIsBuilt;
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -128,6 +156,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		c.add(topPanel);
 		c.add(centerPanel);
 		c.add(bottomPanel);
+		
 		
 		//Visibility and Close Operation//
 		this.setVisible(true);
@@ -363,7 +392,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		bottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		//Bottom Buttons//
-		okButton = new JButton("Continue");
+		okButton = new JButton("Next");
 		okButton.setBounds(327, 26, 112, 23);
 		okButton.addActionListener(this);
 		bottomPanel.add(okButton);
@@ -390,8 +419,153 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		bottomPanel.add(clearButton);
 	
 	}
-
 	
+	public JSpinner getSpinner(JSpinner js){
+		//Make the model that will be used for all estimation spinners//
+		SpinnerNumberModel model = new SpinnerNumberModel(0.0, 0.0, 5000.0, 0.50);
+		js = new JSpinner(model);
+		JSpinner.NumberEditor editor = (JSpinner.NumberEditor)js.getEditor();
+		DecimalFormat format = editor.getFormat();
+		format.setMinimumFractionDigits(1);
+		
+		//Return it//
+		return js;
+	}
+	
+	
+	public void buildEstimationPanel(){
+		//Panel Info//
+		estimationPanel = new JPanel();
+		estimationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		estimationPanel.setBounds(10, 75, 464, 441);
+		estimationPanel.setLayout(null);
+		
+		//Labels//
+		lblPlanning = new JLabel("Planning");
+		lblPlanning.setBounds(50, 45, 60, 14);
+		estimationPanel.add(lblPlanning);
+		
+		lblDesign = new JLabel("Design");
+		lblDesign.setBounds(267, 45, 46, 14);
+		estimationPanel.add(lblDesign);
+		
+		lblDesignReview = new JLabel("Design Review");
+		lblDesignReview.setBounds(13, 125, 97, 14);
+		estimationPanel.add(lblDesignReview);
+		
+		lblCode = new JLabel("Code");
+		lblCode.setBounds(267, 125, 46, 14);
+		estimationPanel.add(lblCode);
+		
+		lblCodeReview = new JLabel("Code Review");
+		lblCodeReview.setBounds(21, 203, 89, 14);
+		estimationPanel.add(lblCodeReview);
+		
+		lblCompile = new JLabel("Compile");
+		lblCompile.setBounds(250, 203, 46, 14);
+		estimationPanel.add(lblCompile);
+		
+		lblTest = new JLabel("Test");
+		lblTest.setBounds(64, 278, 46, 14);
+		estimationPanel.add(lblTest);
+		
+		lblPostmortem = new JLabel("Postmortem");
+		lblPostmortem.setBounds(235, 278, 78, 14);
+		estimationPanel.add(lblPostmortem);
+		
+		//Spinners//
+		planningSpinner = this.getSpinner(planningSpinner);
+		planningSpinner.setBounds(114, 37, 89, 30);
+		planningSpinner.addChangeListener(this);
+		estimationPanel.add(planningSpinner);
+		
+		
+		designSpinner = getSpinner(designSpinner);
+		designSpinner.setBounds(314, 37, 89, 30);
+		designSpinner.addChangeListener(this);
+		estimationPanel.add(designSpinner);
+		
+		designReviewSpinner = getSpinner(designReviewSpinner);
+		designReviewSpinner.setBounds(114, 117, 89, 30);
+		designReviewSpinner.addChangeListener(this);
+		estimationPanel.add(designReviewSpinner);
+		
+		codeReviewSpinner = getSpinner(codeReviewSpinner);
+		codeReviewSpinner.setBounds(114, 195, 89, 30);
+		codeReviewSpinner.addChangeListener(this);
+		estimationPanel.add(codeReviewSpinner);
+		
+		testSpinner = getSpinner(testSpinner);
+		testSpinner.setBounds(114, 270, 89, 30);
+		testSpinner.addChangeListener(this);
+		estimationPanel.add(testSpinner);
+		
+		codeSpinner = getSpinner(codeSpinner);
+		codeSpinner.setBounds(314, 117, 89, 30);
+		codeSpinner.addChangeListener(this);
+		estimationPanel.add(codeSpinner);
+		
+		compileSpinner = getSpinner(compileSpinner);
+		compileSpinner.setBounds(314, 195, 89, 30);
+		compileSpinner.addChangeListener(this);
+		estimationPanel.add(compileSpinner);
+		
+		postmortemSpinner = getSpinner(postmortemSpinner);
+		postmortemSpinner.setBounds(314, 270, 89, 30);
+		postmortemSpinner.addChangeListener(this);
+		estimationPanel.add(postmortemSpinner);
+		
+		//Total//
+		lblTotal = new JLabel("Total");
+		lblTotal.setBounds(163, 375, 40, 14);
+		estimationPanel.add(lblTotal);
+		
+		totalTextField = new JTextField("0");
+		totalTextField.setBounds(206, 372, 86, 20);
+		totalTextField.setEditable(false);
+		totalTextField.setColumns(10);
+		totalTextField.setBackground(Color.white);
+		totalTextField.setOpaque(true);
+		estimationPanel.add(totalTextField);
+		
+		//Set flag for build to true//
+		estIsBuilt = true;
+	}
+	
+	public void updateTotalEst(){
+		totalTextField.setText("" + ((double)planningSpinner.getValue() + (double)designSpinner.getValue() + 
+		(double)designReviewSpinner.getValue() + (double)codeSpinner.getValue() + (double)codeReviewSpinner.getValue() +
+		(double)compileSpinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
+	}
+	
+	public void buildEstimationBottomPanel(){	
+		estBottomPanel = new JPanel();
+		estBottomPanel.setLayout(null);
+		estBottomPanel.setBounds(10, 527, 464, 73);
+		estBottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		
+		//Bottom Buttons//
+		estOkButton = new JButton("Finish");
+		estOkButton.setBounds(360, 26, 94, 23);
+		estOkButton.addActionListener(this);
+		estBottomPanel.add(estOkButton);
+		
+		estCancelButton = new JButton("Cancel");
+		estCancelButton.setBounds(248, 26, 94, 23);
+		estCancelButton.addActionListener(this);
+		estBottomPanel.add(estCancelButton);
+		
+		estClearButton = new JButton("Clear");
+		estClearButton.setBounds(127, 26, 94, 23);
+		estClearButton.addActionListener(this);
+		estBottomPanel.add(estClearButton);
+		
+		estBackButton = new JButton("Back");
+		estBackButton.setBounds(10, 26, 94, 23);
+		estBackButton.addActionListener(this);
+		estBottomPanel.add(estBackButton);
+			
+	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
@@ -483,7 +657,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		}
 		
 		//Add Team Member Button//
-		if (o == addButton  && addMemberField.getText() != ""){
+		if (o == addButton  && !addMemberField.getText().equals("")){
         	listModel.addElement(addMemberField.getText());
         	list = new JList(listModel);
         	addMemberField.setText("");
@@ -497,15 +671,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//OK Button//
 		if(o == okButton){
-			//Get title and stage//
-			String title = prTitleField.getText();
 			
-			//Get start and end dates//
-			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
-	        CalendarDate endD = null;
-	        if (endDateChB.isSelected()){
-	            endD = new CalendarDate((Date) endDate.getModel().getValue());
-	        }
 	      //Add all team members//
 	        String[] teammembers = new String[list.getModel().getSize()];
 	        for(int i = 0; i < list.getModel().getSize(); i++){
@@ -523,13 +689,34 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        	errorLabel.setVisible(true);
 	        }
 	        else{
-	        	Project prj = ProjectManager.createProject(title, startD, endD);
-		        CurrentStorage.get().storeProjectManager();
-		        
-		        
-		        this.setVisible(false);
-		        this.dispose();
-	
+	        	//Change header for user understanding//
+	            header.setText(Local.getString("Estimating Phases (in hours)"));
+	        	
+	        	//Make sure label disappears//
+	        	errorLabel.setVisible(false);
+	        	
+	        	//Need to set invisible so JSpinners show up//
+	        	centerPanel.setVisible(false);
+	        	bottomPanel.setVisible(false);
+	        	
+	        	//Out with the OLD...//
+	        	c.remove(centerPanel);
+				c.remove(bottomPanel);
+	        	
+				//...In with the NEW//
+				if(estIsBuilt == false){
+					buildEstimationPanel();
+		    		buildEstimationBottomPanel();
+				}
+				else{
+					estimationPanel.setVisible(true);
+					estBottomPanel.setVisible(true);
+				}
+				c.add(estimationPanel);
+				c.add(estBottomPanel);
+				
+				//Repaint to show changes//
+				c.repaint();
 	        }
 		}
 		
@@ -547,6 +734,92 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			//Dispose of the old one//
 			this.setVisible(false);
 			this.dispose();
+		}
+		
+		if(o == estOkButton){
+			//Get title and stage//
+			String title = prTitleField.getText();
+			
+			//Get start and end dates//
+			CalendarDate startD = new CalendarDate((Date) startDate.getModel().getValue());
+	        CalendarDate endD = null;
+	        if (endDateChB.isSelected()){
+	            endD = new CalendarDate((Date) endDate.getModel().getValue());
+	        }
+			
+	        //New Add//
+			Project prj = ProjectManager.createProject(title, 
+													   description.toString(), 
+													   startD, 
+													   endD,
+													   (String) stageComboBox.getSelectedItem(),
+													   (String) statusComboBox.getSelectedItem(),
+													   customerField.getText(),
+													   fileField.getText(),
+													   (double) planningSpinner.getValue(),
+													   (double) designSpinner.getValue(),
+													   (double) designReviewSpinner.getValue(),
+													   (double) codeSpinner.getValue(),
+													   (double) codeReviewSpinner.getValue(),
+													   (double) compileSpinner.getValue(),
+													   (double) testSpinner.getValue(),
+													   (double) postmortemSpinner.getValue());
+	        
+	        /*
+			//Add project to manager//
+			Project prj = ProjectManager.createProject(title, startD, endD);
+			*/
+	        
+	        CurrentStorage.get().storeProjectManager();
+	        
+	        //Dispose of frame//
+	        this.setVisible(false);
+	        this.dispose();
+		}
+		
+		if(o == estCancelButton){
+			//Dispose of frame//
+	        this.setVisible(false);
+	        this.dispose();
+		}
+		
+		if(o == estClearButton){
+			planningSpinner.setValue(0);
+			designSpinner.setValue(0);
+			designReviewSpinner.setValue(0);
+			codeSpinner.setValue(0);
+			codeReviewSpinner.setValue(0);
+			compileSpinner.setValue(0);
+			testSpinner.setValue(0);
+			postmortemSpinner.setValue(0);
+		}
+		
+		if(o == estBackButton){
+			//Put header back to old text//
+	        header.setText(Local.getString("New Project"));
+			
+        	//Need to set invisible so components show up//
+        	estimationPanel.setVisible(false);
+        	estBottomPanel.setVisible(false);
+        	
+        	//Out with the NEW...//
+        	c.remove(estimationPanel);
+			c.remove(estBottomPanel);
+        	
+			//Make sure label reappears//
+        	errorLabel.setVisible(true);
+			
+        	//Make panels visible again//
+        	centerPanel.setVisible(true);
+        	bottomPanel.setVisible(true);
+        	
+			//...In with the OLD//
+			c.add(centerPanel);
+			c.add(bottomPanel);
+			
+			
+			//Repaint to show changes//
+			c.repaint();
 		}
 		
 	}
@@ -583,5 +856,19 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
             endCalFrame.cal.set(new CalendarDate(ed));
             ignoreEndChanged = false;
 		}
+		
+		//If any of the spinners are changed...//
+		if(o == planningSpinner ||
+			o == designSpinner ||
+			o == designReviewSpinner ||
+			o == codeSpinner ||
+			o == codeReviewSpinner ||
+			o == compileSpinner ||
+			o == testSpinner ||
+			o == postmortemSpinner){
+			//...update the total//
+			updateTotalEst();
+		}
+	
 	}
 }
