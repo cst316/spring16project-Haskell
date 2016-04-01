@@ -37,16 +37,17 @@ import java.io.*;
 public class ResourcesPanel extends JPanel {
     BorderLayout borderLayout1 = new BorderLayout();
     JToolBar toolBar = new JToolBar();
+    
     JButton newResB = new JButton();
     ResourcesTable resourcesTable = new ResourcesTable();
     JButton removeResB = new JButton();
     JScrollPane scrollPane = new JScrollPane();
     JButton refreshB = new JButton();
-  JPopupMenu resPPMenu = new JPopupMenu();
-  JMenuItem ppRun = new JMenuItem();
-  JMenuItem ppRemoveRes = new JMenuItem();
-  JMenuItem ppNewRes = new JMenuItem();
-  JMenuItem ppRefresh = new JMenuItem();
+	JPopupMenu resPPMenu = new JPopupMenu();
+	JMenuItem ppRun = new JMenuItem();
+	JMenuItem ppRemoveRes = new JMenuItem();
+	JMenuItem ppNewRes = new JMenuItem();
+	JMenuItem ppRefresh = new JMenuItem();
 
     public ResourcesPanel() {
         try {

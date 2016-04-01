@@ -804,7 +804,7 @@ public class TaskDialog extends JDialog {
 		this.startDateMin = min;
 		this.startDateMax = max;
 	}
-	
+	//rand
 	public void setEndDateLimit(CalendarDate min, CalendarDate max) {
 		this.endDateMin = min;
 		this.endDateMax = max;
