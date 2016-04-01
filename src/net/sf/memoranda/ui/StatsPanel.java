@@ -12,12 +12,15 @@ import java.io.IOException;
 import javax.swing.JList;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 import net.sf.memoranda.util.Util;
+import net.sf.memoranda.util.lineCounter;
 
 public class StatsPanel extends JPanel {
 	JTextArea timeTextArea = new JTextArea();
 	JTextArea linesTextArea = new JTextArea();
+	JScrollPane scroll = new JScrollPane(linesTextArea);
 	private String fileLocation = Util.getEnvDir();
 	
     public StatsPanel() {
@@ -34,7 +37,9 @@ public class StatsPanel extends JPanel {
     	updateLines();
     	linesTextArea.setEditable(false);
     	linesTextArea.setBackground(Color.WHITE);
-    	tabbedPane.addTab("Lines", null, linesTextArea, null);
+    	scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+
+    	tabbedPane.addTab("Lines", null, scroll, null);
        
     	
     }
@@ -51,9 +56,11 @@ public class StatsPanel extends JPanel {
     
     public void updateLines(){
     	try {
-    		   FileReader fileReader = new FileReader(fileLocation + "times.txt");
-    		   BufferedReader reader = new BufferedReader(fileReader);
-    		   timeTextArea.read(reader,"timeTextArea");
+    		lineCounter lc = new lineCounter();
+    		lc.updateLineFile();
+    		FileReader fileReader = new FileReader(fileLocation + "lines.txt");
+    		BufferedReader reader = new BufferedReader(fileReader);
+    		linesTextArea.read(reader,"lineTextArea");
     		}catch (IOException ioe) {
     		   System.out.println(ioe);
     		}

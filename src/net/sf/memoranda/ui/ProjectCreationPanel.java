@@ -11,6 +11,8 @@ import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.lineCounter;
+
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
@@ -408,6 +410,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			if(returnValue == JFileChooser.APPROVE_OPTION){
 				File file = fileChooser.getSelectedFile();
 				fileField.setText(file.getPath());
+				lineCounter.setFileLOC(file.getPath());
 			}
 			
 		}

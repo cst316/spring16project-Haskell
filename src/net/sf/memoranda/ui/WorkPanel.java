@@ -312,6 +312,7 @@ public class WorkPanel extends JPanel {
 	public void statsB_actionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "STATS");
 		statsPanel.getTimes();
+		statsPanel.updateLines();
 		setCurrentButton(statsB);
 		Context.put("CURRENT_PANEL", "STATS");
 	}
