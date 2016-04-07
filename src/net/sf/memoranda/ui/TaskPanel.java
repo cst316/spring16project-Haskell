@@ -309,6 +309,7 @@ public class TaskPanel extends JPanel {
 				ppTimer_actionPerformed(e);
 			}
 		});
+	ppTimer.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/timer.png")));
 	
 	ppDefects.setFont(new java.awt.Font("Dialog", 1, 11));
 	ppDefects.setText(Local.getString("Defects"));
@@ -317,6 +318,7 @@ public class TaskPanel extends JPanel {
 				ppTimer_actionPerformed(e);
 			}
 		});
+	ppDefects.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/bug-128.png")));
 	
 	ppCalcTask.setFont(new java.awt.Font("Dialog", 1, 11));
 	ppCalcTask.setText(Local.getString("Calculate task data"));
