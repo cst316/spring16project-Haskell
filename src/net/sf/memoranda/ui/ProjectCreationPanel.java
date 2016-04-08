@@ -132,6 +132,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton estClearButton;
 	private JButton estBackButton;
 	private boolean estIsBuilt;
+	private JLabel estNote;
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -480,6 +481,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		totalTextField.setBackground(Color.white);
 		totalTextField.setOpaque(true);
 		estimationPanel.add(totalTextField);
+		
+		//Note explaining this information is not required//
+		estNote = new JLabel("Note: This information is not required for completion.");
+		estNote.setBounds(10, 415, 350, 20);
+		estimationPanel.add(estNote);
 		
 		//Set flag for build to true//
 		estIsBuilt = true;
