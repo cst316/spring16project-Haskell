@@ -179,7 +179,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//Project Name Label and Field//
 		titleLabel = new JLabel("*Name");
-		titleLabel.setBounds(18, 22, 39, 14);
+		titleLabel.setBounds(15, 22, 39, 14);
 		centerPanel.add(titleLabel);
 		
 		prTitleField = new JTextField();
@@ -400,39 +400,38 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		estimationPanel.add(lblPlanning);
 		
 		lblDesign = new JLabel("Design");
-		lblDesign.setBounds(267, 45, 46, 14);
+		lblDesign.setBounds(263, 45, 46, 14);
 		estimationPanel.add(lblDesign);
 		
 		lblDesignReview = new JLabel("Design Review");
-		lblDesignReview.setBounds(13, 125, 97, 14);
+		lblDesignReview.setBounds(15, 125, 97, 14);
 		estimationPanel.add(lblDesignReview);
 		
 		lblCode = new JLabel("Code");
-		lblCode.setBounds(267, 125, 46, 14);
+		lblCode.setBounds(269, 125, 46, 14);
 		estimationPanel.add(lblCode);
 		
 		lblCodeReview = new JLabel("Code Review");
-		lblCodeReview.setBounds(21, 203, 89, 14);
+		lblCodeReview.setBounds(23, 203, 89, 14);
 		estimationPanel.add(lblCodeReview);
 		
 		lblCompile = new JLabel("Compile");
-		lblCompile.setBounds(250, 203, 46, 14);
+		lblCompile.setBounds(253, 203, 46, 14);
 		estimationPanel.add(lblCompile);
 		
 		lblTest = new JLabel("Test");
-		lblTest.setBounds(64, 278, 46, 14);
+		lblTest.setBounds(70, 278, 46, 14);
 		estimationPanel.add(lblTest);
 		
 		lblPostmortem = new JLabel("Postmortem");
-		lblPostmortem.setBounds(235, 278, 78, 14);
+		lblPostmortem.setBounds(230, 278, 78, 14);
 		estimationPanel.add(lblPostmortem);
 		
 		//Spinners//
-		planningSpinner = this.getSpinner(planningSpinner);
+		planningSpinner = getSpinner(planningSpinner);
 		planningSpinner.setBounds(114, 37, 89, 30);
 		planningSpinner.addChangeListener(this);
 		estimationPanel.add(planningSpinner);
-		
 		
 		designSpinner = getSpinner(designSpinner);
 		designSpinner.setBounds(314, 37, 89, 30);
