@@ -70,7 +70,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 	Component component1;
 	JPopupMenu projectsPPMenu = new JPopupMenu();
 	JMenuItem ppNewProject = new JMenuItem();
-	JMenuItem ppProperties = new JMenuItem();
+	JMenuItem ppEditProject = new JMenuItem();
 	JMenuItem ppDeleteProject = new JMenuItem();
 	JMenuItem ppOpenProject = new JMenuItem();	
 	JCheckBoxMenuItem ppShowActiveOnlyChB = new JCheckBoxMenuItem();
@@ -79,7 +79,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 
 	public Action newProjectAction =
 		new AbstractAction(
-			Local.getString("New project") + "...",
+			Local.getString("New Project"),
 			new ImageIcon(
 				net.sf.memoranda.ui.AppFrame.class.getResource(
 					"resources/icons/newproject.png"))) {
@@ -88,7 +88,6 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 			ppNewProject_actionPerformed(e);
 		}
 	};
-
 	
 	public ProjectsPanel() {
 		try {
@@ -152,21 +151,22 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 		 */
 		ppNewProject.setFont(new java.awt.Font("Dialog", 1, 11));
 		ppNewProject.setAction(newProjectAction);
+		
 
-		ppProperties.setFont(new java.awt.Font("Dialog", 1, 11));
-		ppProperties.setText(Local.getString("Project properties"));
-		ppProperties.addActionListener(new java.awt.event.ActionListener() {
+		ppEditProject.setFont(new java.awt.Font("Dialog", 1, 11));
+		ppEditProject.setText(Local.getString("Edit Project"));
+		ppEditProject.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ppProperties_actionPerformed(e);
+				ppEditProject_actionPerformed(e);
 			}
 		});
-		ppProperties.setIcon(
+		ppEditProject.setIcon(
 			new ImageIcon(
 				net.sf.memoranda.ui.AppFrame.class.getResource(
 					"resources/icons/editproject.png")));
-		ppProperties.setEnabled(false);
+		ppEditProject.setEnabled(false);
 		ppDeleteProject.setFont(new java.awt.Font("Dialog", 1, 11));
-		ppDeleteProject.setText(Local.getString("Delete project"));
+		ppDeleteProject.setText(Local.getString("Delete Project"));
 		ppDeleteProject.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ppDeleteProject_actionPerformed(e);
@@ -180,7 +180,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 
 		ppOpenProject.setFont(new java.awt.Font("Dialog", 1, 11));
 
-		ppOpenProject.setText(" " + Local.getString("Open project"));
+		ppOpenProject.setText(" " + Local.getString("Open Project"));
 
 		ppOpenProject.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -232,9 +232,8 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 		projectsPPMenu.add(ppOpenProject);
 		projectsPPMenu.addSeparator();
 		projectsPPMenu.add(ppNewProject);
+		projectsPPMenu.add(ppEditProject);
 		projectsPPMenu.add(ppDeleteProject);
-		projectsPPMenu.addSeparator();
-		projectsPPMenu.add(ppProperties);
 		projectsPPMenu.addSeparator();
 		projectsPPMenu.add(ppShowActiveOnlyChB);
 		CurrentProject.addProjectListener(new ProjectListener() {
@@ -271,7 +270,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 						.equals(CurrentProject.get().getID());
 				ppDeleteProject.setEnabled(enabled);
 				ppOpenProject.setEnabled(enabled);				
-				ppProperties.setEnabled(true);
+				ppEditProject.setEnabled(true);
 			}
 		});
 		prjTablePanel.projectsTable.setToolTipText(
@@ -345,10 +344,10 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 
 	void ppNewProject_actionPerformed(ActionEvent e) {
 		//ProjectDialog.newProject();
-		//hahaha PCP...//
 		ProjectCreationPanel PCP = new ProjectCreationPanel();
 		prjTablePanel.updateUI();
 	}
+	
 
 	void ppDeleteProject_actionPerformed(ActionEvent e) {
 		String msg;
@@ -403,10 +402,10 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 		setMenuEnabled(false);
 	}
 
-	void ppProperties_actionPerformed(ActionEvent e) {
+	void ppEditProject_actionPerformed(ActionEvent e) {
 		Project prj = prjTablePanel.getSelectedProject();
 		ProjectDialog dlg =
-			new ProjectDialog(null, Local.getString("Project properties"));
+			new ProjectDialog(null, Local.getString("Edit Project"));
 		Dimension dlgSize = dlg.getSize();
 		Dimension frmSize = App.getFrame().getSize();
 		Point loc = App.getFrame().getLocation();
@@ -455,7 +454,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 	void setMenuEnabled(boolean enabled) {
 		ppDeleteProject.setEnabled(enabled);
 		ppOpenProject.setEnabled(enabled);
-		ppProperties.setEnabled(enabled);		
+		ppEditProject.setEnabled(enabled);		
 	}
 
 }
