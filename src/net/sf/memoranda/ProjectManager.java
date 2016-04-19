@@ -184,6 +184,7 @@ public class ProjectManager {
     }
     
     public static Project build(){
+    	CurrentStorage.get().createProjectStorage(prj);
     	return prj;
     }
 
@@ -239,6 +240,7 @@ public class ProjectManager {
 		setDesignReviewEst(designRevEst);
 		setCodeEst(codeEst);
 		setCodeReviewEst(codeRevEst);
+		setCompileEst(compileEst);
 		setTestEst(testEst);
 		setPostmortemEst(postmortemEst);
 		

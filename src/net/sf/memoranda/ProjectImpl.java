@@ -310,7 +310,7 @@ public class ProjectImpl implements Project {
     */
     
     public String getPlanningEst() {
-    	Element thisElement = _root.getFirstChildElement("file");
+    	Element thisElement = _root.getFirstChildElement("planningEst");
     	if (thisElement == null) {
     		return null;
     	}
@@ -368,7 +368,7 @@ public class ProjectImpl implements Project {
     public void setDesignReviewEst(double s) {
     	Element designRev = _root.getFirstChildElement("designRevEst");
     	if (designRev == null) {
-    		designRev = new Element("designEst");
+    		designRev = new Element("designRevEst");
     		designRev.appendChild(s + "");
             _root.appendChild(designRev);    	
     	}
