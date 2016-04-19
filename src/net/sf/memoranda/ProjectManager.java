@@ -184,6 +184,7 @@ public class ProjectManager {
     }
     
     public static Project build(){
+    	CurrentStorage.get().createProjectStorage(prj);
     	return prj;
     }
 
