@@ -6,8 +6,10 @@ import javax.swing.JTable;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.JList;
 import javax.swing.JTabbedPane;
@@ -46,12 +48,18 @@ public class StatsPanel extends JPanel {
     
     public void getTimes(){
     	try {
-    		   FileReader fileReader = new FileReader(fileLocation + "times.txt");
-    		   BufferedReader reader = new BufferedReader(fileReader);
-    		   timeTextArea.read(reader,"timeTextArea");
-    		}catch (IOException ioe) {
-    		   System.out.println(ioe);
+    		File f = new File(fileLocation + "times.txt");
+    		if(!f.exists()) { 
+    			PrintWriter writer = new PrintWriter(fileLocation + "times.txt", "UTF-8");
+    			writer.println("");
+    			writer.close();
     		}
+    		FileReader fileReader = new FileReader(fileLocation + "times.txt");
+    		BufferedReader reader = new BufferedReader(fileReader);
+    		timeTextArea.read(reader,"timeTextArea");
+    	}catch (IOException ioe) {
+    		   System.out.println(ioe);
+    	}
     }
     
     public void updateLines(){
