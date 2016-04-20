@@ -12,9 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -43,8 +46,6 @@ import net.sf.memoranda.TaskList;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
 import net.sf.memoranda.date.DateListener;
-import net.sf.memoranda.util.Context;
-import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.*;
 
 /*$Id: ProjectsPanel.java,v 1.14 2005/01/04 09:59:22 pbielen Exp $*/
@@ -403,8 +404,35 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 	}
 
 	void ppEditProject_actionPerformed(ActionEvent e) {
-		Project prj = prjTablePanel.getSelectedProject();
-		ProjectDialog dlg =
+		EditPanel();
+		
+		
+		/*title, 
+	
+		   description.toString(), 
+		   startD, 
+		   endD,*/
+		   /*(String) prj.stageComboBox.setSelectedItem(),
+		   (String) statusComboBox.getSelectedItem(),
+		   customerField.getText(),
+		   fileField.getText(),*/
+		/*String[] team = new String[pcp.getList().getModel().getSize()];
+		 for(int i = 0; i < pcp.getList().getModel().getSize(); i++){
+	        	team[i] = (String)pcp.getList().getModel().getElementAt(i);
+	        	pcp.addTeamMember(team[i]);
+	        }*/
+			
+		   //pcp.setPlanningSpinner(Double.parseDouble(prj.getPlanningEst()));
+		   /*(double) designSpinner.getValue(),
+		   (double) designReviewSpinner.getValue(),
+		   (double) codeSpinner.getValue(),
+		   (double) codeReviewSpinner.getValue(),
+		   (double) compileSpinner.getValue(),
+		   (double) testSpinner.getValue(),
+		   (double) postmortemSpinner.getValue());*/
+
+		
+		/*ProjectDialog dlg =
 			new ProjectDialog(null, Local.getString("Edit Project"));
 		Dimension dlgSize = dlg.getSize();
 		Dimension frmSize = App.getFrame().getSize();
@@ -423,10 +451,10 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 			dlg.endDate.setEnabled(true);
 			dlg.endDate.getModel().setValue(
 				prj.getEndDate().getCalendar().getTime());
-		}
+		}*/
 		/*if (prj.getStatus() == Project.FROZEN)
 			dlg.freezeChB.setSelected(true);*/
-		dlg.setVisible(true);
+		/*dlg.setVisible(true);
 		if (dlg.CANCELLED)
 			return;
 		prj.setTitle(dlg.prTitleField.getText());
@@ -438,11 +466,60 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 				new CalendarDate((Date) dlg.endDate.getModel().getValue()));
 		else
 			prj.setEndDate(null);
-		prjTablePanel.updateUI();
+		prjTablePanel.updateUI();*/
 		/*
 		 * if (dlg.freezeChB.isSelected()) prj.freeze(); else
 		 */
 	}
+/** Method to populate an instance of a ProjectCreationPanel with
+ * values from a selected saved project for editing purposes
+ * 
+ * @author trent f
+ * @param null
+ * @return void
+ * @exception ParseException Uses a dd/m/yyyy string format to be parsed to a Date object 
+ */
+	private void EditPanel(){
+		Project prj = prjTablePanel.getSelectedProject();
+		ProjectCreationPanel pcp = new ProjectCreationPanel();
+		pcp.setPrjTablePanel(prj);
+		pcp.setEditModeTrue();
+		
+		pcp.getHeader().setText(Local.getString("Edit Project"));
+		
+		pcp.setPrTitleField(prj.getTitle());
+		pcp.setDescription(prj.getDescription());
+		pcp.setFileField(prj.getFile());
+		if (!(prj.getCustomer().equals(null))){
+			pcp.getCustomerCheckBox().doClick();
+			pcp.setCustomerField(prj.getCustomer());
+		}
+		pcp.setStage(prj.getStage());
+		pcp.setStatusComboBox(prj.getStatus());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy",Locale.US);
+		String sd = prj.getStartDate().toString();
+		Date stDate = null;
+		try {
+			stDate = (Date)sdf.parse(sd);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		pcp.setStartDate(stDate);
+		if (!(prj.getEndDate().equals(null))){
+			String ed = prj.getEndDate().toString();
+	        Date enDate = null;
+			try {
+				enDate = (Date)sdf.parse(ed);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+	        pcp.getEndDateChB().doClick();
+	        pcp.setEndDate(enDate);
+		}
+		
+	}
+	
 
 	void ppShowActiveOnlyChB_actionPerformed(ActionEvent e) {
 		prjTablePanel.setShowActiveOnly(ppShowActiveOnlyChB.isSelected());

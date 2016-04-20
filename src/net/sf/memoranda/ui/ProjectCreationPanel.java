@@ -68,6 +68,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton edButton;
 	boolean ignoreStartChanged = false;
 	boolean ignoreEndChanged = false;
+	boolean editMode = false;
 	CalendarFrame endCalFrame = new CalendarFrame();
     CalendarFrame startCalFrame = new CalendarFrame();
     	//Description Label and Text Area//
@@ -142,6 +143,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton estClearButton;
 	private JButton estBackButton;
 	private boolean estIsBuilt;
+	Project pr;
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -169,15 +171,15 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		topPanel.setBackground(new Color(255, 255, 255));
 		topPanel.setLayout(null);
 		topPanel.setBounds(10, 11, 464, 53);
-		header.setHorizontalAlignment(SwingConstants.LEFT);
+		getHeader().setHorizontalAlignment(SwingConstants.LEFT);
 		
-		header.setBounds(10, 0, 350, 41);
-    	header.setFont(new java.awt.Font("Dialog", 0, 20));
-        header.setForeground(new Color(0, 0, 124));
-        header.setText(Local.getString("New Project"));
-        header.setIcon(new ImageIcon(net.sf.memoranda.ui.ProjectDialog.class.getResource(
+		getHeader().setBounds(10, 0, 350, 41);
+    	getHeader().setFont(new java.awt.Font("Dialog", 0, 20));
+        getHeader().setForeground(new Color(0, 0, 124));
+        getHeader().setText(Local.getString("New Project"));
+        getHeader().setIcon(new ImageIcon(net.sf.memoranda.ui.ProjectDialog.class.getResource(
             "resources/icons/project48.png")));
-        topPanel.add(header);
+        topPanel.add(getHeader());
 	}
 	
 	public void buildCenterPanel(){
@@ -254,7 +256,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		descScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		centerPanel.add(descScrollPane);
 		
-		description = new JTextArea();
+		description = (new JTextArea());
 		descScrollPane.setViewportView(description);
 		description.setLineWrap(true);
 		description.setWrapStyleWord(true);
@@ -326,9 +328,9 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		teamScrollPane = new JScrollPane();
 		teamScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		teamScrollPane.setBounds(21, 317, 198, 107);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(this);
-		teamScrollPane.setViewportView(list);
+		getList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getList().addListSelectionListener(this);
+		teamScrollPane.setViewportView(getList());
 		teamLabel = new JLabel("Team Members:");
 		teamLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		teamScrollPane.setColumnHeaderView(teamLabel);
@@ -348,10 +350,10 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		addMemberLabel.setBounds(244, 311, 138, 14);
 		centerPanel.add(addMemberLabel);
 		
-		addMemberField = new JTextField();
-		addMemberField.setBounds(244, 336, 191, 20);
-		addMemberField.setColumns(10);
-		centerPanel.add(addMemberField);
+		addMemberField = (new JTextField());
+		getAddMemberField().setBounds(244, 336, 191, 20);
+		getAddMemberField().setColumns(10);
+		centerPanel.add(getAddMemberField());
 		
 		//Lines of Code of Project Components//
 		LOClabel = new JLabel("Size of Current Code");
@@ -475,7 +477,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		estimationPanel.add(lblPostmortem);
 		
 		//Spinners//
-		planningSpinner = this.getSpinner(planningSpinner);
+		planningSpinner = (getSpinner(planningSpinner));
 		planningSpinner.setBounds(114, 37, 89, 30);
 		planningSpinner.addChangeListener(this);
 		estimationPanel.add(planningSpinner);
@@ -666,26 +668,28 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		}
 		
 		//Add Team Member Button//
-		if (o == addButton  && !addMemberField.getText().equals("")){
-        	listModel.addElement(addMemberField.getText());
-        	list = new JList(listModel);
-        	addMemberField.setText("");
+		if (o == addButton  && !getAddMemberField().getText().equals("")){
+        	listModel.addElement(getAddMemberField().getText());
+        	setList(new JList(listModel));
+        	getAddMemberField().setText("");
         }
 		
 		//Remove Team Member Button//
 		if(o == removeButton){
 			listModel.remove(selected);
-			list = new JList(listModel);
+			setList(new JList(listModel));
 		}
 		
 		//OK Button//
 		if(o == okButton){
 			
 	      //Add all team members//
+
 	        teammembers = new String[list.getModel().getSize()];
 	        for(int i = 0; i < list.getModel().getSize(); i++){
 	        	teammembers[i] = (String)list.getModel().getElementAt(i);
 	        }
+
 	        
 	        //If the data given is invalid...//
 	        if(prTitleField.getText().length() == 0 || fileField.getText().length() == 0){
@@ -699,7 +703,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	        }
 	        else{
 	        	//Change header for user understanding//
-	            header.setText(Local.getString("Estimating Phases (in hours)"));
+	            getHeader().setText(Local.getString("Estimating Phases (in hours)"));
 	        	
 	        	//Make sure label disappears//
 	        	errorLabel.setVisible(false);
@@ -720,6 +724,58 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 				else{
 					estimationPanel.setVisible(true);
 					estBottomPanel.setVisible(true);
+				}
+				if (editMode == true){
+					
+					if (pr.getPlanningEst().equals(null)){
+						setPlanningSpinner(0);
+					}
+					else {
+						setPlanningSpinner(Double.parseDouble(pr.getPlanningEst()));
+					}
+					if (pr.getDesignEst().equals(null)){
+						setDesignSpinner(0);
+					}
+					else {
+						setDesignSpinner(Double.parseDouble(pr.getDesignEst()));
+					}
+					if (pr.getDesignReviewEst().equals(null)){
+						setDesignReviewSpinner(0);
+					}
+					else {
+						setDesignReviewSpinner(Double.parseDouble(pr.getDesignReviewEst()));
+					}
+					if (pr.getCodeEst().equals(null)){
+						setCodeSpinner(0);
+					}
+					else {
+						setCodeSpinner(Double.parseDouble(pr.getCodeEst()));
+					}
+					if (pr.getCompileEst().equals(null)){
+						setCompileSpinner(0);
+					}
+					else {
+						setCompileSpinner(Double.parseDouble(pr.getCompileEst()));
+					}
+					if (pr.getTestEst().equals(null)){
+						setTestSpinner(0);
+					}
+					else {
+						setTestSpinner(Double.parseDouble(pr.getTestEst()));
+					}
+					if (pr.getPostmortemEst().equals(null)){
+						setPostmortemSpinner(0);
+					}
+					else {
+						setPostmortemSpinner(Double.parseDouble(pr.getPostmortemEst()));
+					}
+					if (pr.getCodeReviewEst().equals(null)){
+						setCodeReviewSpinner(0);
+					}
+					else {
+						setCodeReviewSpinner(Double.parseDouble(pr.getCodeReviewEst()));
+					}			
+					setEditModeFalse();
 				}
 				c.add(estimationPanel);
 				c.add(estBottomPanel);
@@ -758,7 +814,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			
 	        //New Add//
 			Project prj = ProjectManager.createProject(title, 
-													   description.toString(), 
+													   description.getText().toString(), 
 													   startD, 
 													   endD,
 													   (String) stageComboBox.getSelectedItem(),
@@ -806,7 +862,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		if(o == estBackButton){
 			//Put header back to old text//
-	        header.setText(Local.getString("New Project"));
+	        getHeader().setText(Local.getString("New Project"));
 			
         	//Need to set invisible so components show up//
         	estimationPanel.setVisible(false);
@@ -880,5 +936,97 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			updateTotalEst();
 		}
 	
+	}
+	public void setPrjTablePanel(Project prj){
+		this.pr = prj;
+	}
+	public void setEditModeTrue(){
+		editMode = true;
+	}
+	public void setEditModeFalse(){
+		editMode = false;
+	}
+	public JTextField getPrTitleField(){
+		return prTitleField;
+	}
+	public void setPrTitleField(String t){
+		prTitleField.setText(t);
+	}
+	public JSpinner getPlanningSpinner() {
+		return planningSpinner;
+	}
+	public JLabel getHeader() {
+		return header;
+	}
+	public void setHeader(JLabel header) {
+		this.header = header;
+	}
+	public JList getList() {
+		return list;
+	}
+	public void setList(JList list) {
+		this.list = list;
+	}
+	public void addTeamMember(String t){
+		addMemberField.setText(t);
+		addButton.doClick();
+	}
+	public JTextField getAddMemberField() {
+		return addMemberField;
+	}
+	public JTextArea getDescription() {
+		return description;
+	}
+	public void setDescription(String t) {
+		description.insert(t,0);
+	}
+	public void setFileField(String t){
+		fileField.setText(t);
+	}
+	public JCheckBox getCustomerCheckBox(){
+		return customerChB;
+	}
+	public void setCustomerField(String t){
+		customerField.setText(t);
+	}
+	public void setStage(String t){
+		stageComboBox.setSelectedItem(t);
+	}
+	public void setStatusComboBox(int t){
+		statusComboBox.setSelectedIndex(t);
+	}
+	public void setStartDate(Date stDate){
+		startDate.getModel().setValue(stDate);
+	}
+	public JCheckBox getEndDateChB(){
+		return endDateChB;
+	}
+	public void setEndDate(Date enDate){
+		//endDateChB.doClick();
+		endDate.getModel().setValue(enDate);
+	}
+	public void setPlanningSpinner(double t) {
+		planningSpinner.setValue(t);
+	}
+	public void setDesignSpinner(double t){
+		designSpinner.setValue(t);
+	}
+	public void setDesignReviewSpinner(double t){
+		designReviewSpinner.setValue(t);
+	}
+	public void setCodeSpinner(double t){
+		codeSpinner.setValue(t);
+	}
+	public void setCompileSpinner(double t){
+		compileSpinner.setValue(t);
+	}
+	public void setTestSpinner(double t){
+		testSpinner.setValue(t);
+	}
+	public void setPostmortemSpinner(double t){
+		postmortemSpinner.setValue(t);
+	}
+	public void setCodeReviewSpinner(double t){
+		codeReviewSpinner.setValue(t);
 	}
 }
