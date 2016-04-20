@@ -314,7 +314,7 @@ public class TaskPanel extends JPanel {
 	ppDefects.setText(Local.getString("Defects"));
 	ppDefects.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ppTimer_actionPerformed(e);
+				ppDefects_actionPerformed(e);
 			}
 		});
 	
