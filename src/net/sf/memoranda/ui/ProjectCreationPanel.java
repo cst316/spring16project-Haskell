@@ -98,6 +98,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JTextField addMemberField;
 	private JButton addButton;
 	private JButton removeButton;
+	private String[] teammembers;
 	private int selected;
     	//Base Lines of Code//
 	private JLabel LOClabel;
@@ -567,6 +568,14 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			
 	}
 	
+	public String teamToString(String[] arr){
+    	String s = "";
+    	for(int i = 0; i < arr.length; i++){
+    		s = s + arr[i] + "|";
+    	}
+    	return s;
+    }
+	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		JList l = (JList)e.getSource();
@@ -673,7 +682,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		if(o == okButton){
 			
 	      //Add all team members//
-	        String[] teammembers = new String[list.getModel().getSize()];
+	        teammembers = new String[list.getModel().getSize()];
 	        for(int i = 0; i < list.getModel().getSize(); i++){
 	        	teammembers[i] = (String)list.getModel().getElementAt(i);
 	        }
@@ -756,6 +765,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 													   (String) statusComboBox.getSelectedItem(),
 													   customerField.getText(),
 													   fileField.getText(),
+													   teamToString(teammembers),
 													   (double) planningSpinner.getValue(),
 													   (double) designSpinner.getValue(),
 													   (double) designReviewSpinner.getValue(),

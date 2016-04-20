@@ -284,30 +284,32 @@ public class ProjectImpl implements Project {
     	}
     }
     
-    /*
-    public String[] getTeam() {
+    
+    
+    
+    public String getTeam() {
     	Element thisElement = _root.getFirstChildElement("team");
     	if (thisElement == null) {
     		return null;
     	}
     	else {
-       		return thisElement;
+       		return thisElement.getValue();
     	}
     }
 
-    public void setTeam(String[] s) {
-    	Element stage = _root.getFirstChildElement("stage");
-    	if (stage == null) {
-    		stage = new Element("stage");
-    		stage.appendChild(s);
-            _root.appendChild(stage);    	
+    public void setTeam(String s) {
+    	Element team = _root.getFirstChildElement("team");
+    	if (team == null) {
+    		team = new Element("team");
+    		team.appendChild(s);
+            _root.appendChild(team);    	
     	}
     	else {
-    		stage.removeChildren();
-    		stage.appendChild(s);    	
+    		team.removeChildren();
+    		team.appendChild(s);    	
     	}
     }
-    */
+    
     
     public String getPlanningEst() {
     	Element thisElement = _root.getFirstChildElement("file");

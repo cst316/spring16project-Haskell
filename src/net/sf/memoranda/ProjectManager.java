@@ -135,6 +135,10 @@ public class ProjectManager {
         el.addAttribute(new Attribute("file",file));
     	prj.setFile(file);
     }
+    public static void setTeam(String team){
+        el.addAttribute(new Attribute("team",team));
+    	prj.setFile(team);
+    }
     
     //Estimates//
     public static void setPlanningEst(double planningEst){
@@ -217,6 +221,7 @@ public class ProjectManager {
     									String priority,
     									String customer,
     									String file,
+    									String team,
     									double planningEst,
     									double designEst,
     									double designRevEst,
@@ -234,6 +239,7 @@ public class ProjectManager {
 		setPriority(priority);
 		setCustomer(customer);
 		setFile(file);
+		setTeam(team);
 		setPlanningEst(planningEst);
 		setDesignEst(designEst);
 		setDesignReviewEst(designRevEst);

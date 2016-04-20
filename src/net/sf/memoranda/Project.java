@@ -62,10 +62,9 @@ public interface Project {
     void setFile(String file);
     String getFile();
     
-    /*
-    void setTeam(String[] team);
-    String[] getTeam();
-    */
+    void setTeam(String team);
+    String getTeam();
+    
     
     void setPlanningEst(double plan);
     String getPlanningEst();
