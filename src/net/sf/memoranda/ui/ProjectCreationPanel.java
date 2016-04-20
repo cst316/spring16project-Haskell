@@ -749,7 +749,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			
 	        //New Add//
 			Project prj = ProjectManager.createProject(title, 
-													   description.toString(), 
+													   description.getText(), 
 													   startD, 
 													   endD,
 													   (String) stageComboBox.getSelectedItem(),
