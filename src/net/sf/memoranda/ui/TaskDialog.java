@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 //update
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -129,32 +128,32 @@ public class TaskDialog extends JDialog {
 	//Changes made to original project 
 	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	private final JPanel generalTab = new JPanel();
-	private final JPanel estimationTab = new JPanel();
-	private final JPanel designEst = new JPanel();
+	private final JPanel estimationTab = new JPanel(new GridLayout(8, 2, 0, 0));
+	private final JPanel designEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblDesign = new JLabel("Design");
 	private JSpinner designSpinner;
-	private final JPanel planningEst = new JPanel();
+	private final JPanel planningEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblPlanning = new JLabel("Planning");
 	private JSpinner planningSpinner;
-	private final JPanel designRevEsT = new JPanel();
+	private final JPanel designRevEsT = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblDesignReview = new JLabel("Design Review");
 	private JSpinner designReviewSpinner;
-	private final JPanel codeEst = new JPanel();
+	private final JPanel codeEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblCode = new JLabel("Code");
 	private JSpinner codeSpinner = new JSpinner();
-	private final JPanel codeReviewEst = new JPanel();
+	private final JPanel codeReviewEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblCodeReview = new JLabel("Code Review");
 	private JSpinner codeReviewSpinner = new JSpinner();
-	private final JPanel compileEst = new JPanel();
+	private final JPanel compileEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblCompile = new JLabel("Compile");
-	private JSpinner compileSPinner = new JSpinner();
-	private final JPanel testEst = new JPanel();
+	private JSpinner compileSpinner = new JSpinner();
+	private final JPanel testEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblTest = new JLabel("Test");
 	private JSpinner testSpinner = new JSpinner();
-	private final JPanel postmortemEst = new JPanel();
+	private final JPanel postmortemEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblPostmortem = new JLabel("Postmortem");
 	private JSpinner postmortemSpinner = new JSpinner();
-	private final JPanel totalEst = new JPanel();
+	private final JPanel totalEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
 	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
 	//components added 2/17/16
@@ -182,7 +181,6 @@ public class TaskDialog extends JDialog {
 	private final JLabel lblType = new JLabel("Type");
 	private int numDefects;
 	private DefaultTableModel model = new DefaultTableModel();
-	private int gitTest;
 	
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -209,7 +207,7 @@ public class TaskDialog extends JDialog {
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
         border3 = new TitledBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0), 
-        Local.getString("Task Name"), TitledBorder.LEFT, TitledBorder.BELOW_TOP);
+        Local.getString("Task Name"), TitledBorder.CENTER, TitledBorder.BELOW_TOP);
         border4 = BorderFactory.createEmptyBorder(0, 5, 0, 5);
 //        border5 = BorderFactory.createEmptyBorder();
 //        border6 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,
@@ -232,7 +230,7 @@ public class TaskDialog extends JDialog {
         GridBagConstraints gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
-        //gbCon = new GridBagConstraints();
+        gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
         gbCon.anchor = GridBagConstraints.WEST;
@@ -445,14 +443,15 @@ public class TaskDialog extends JDialog {
                         priorityCB.setSelectedItem(Local.getString("Normal"));
                         
                         tabbedPane.addTab("Phase Estimation", null, estimationTab, null);
-                        estimationTab.setLayout(new GridLayout(0, 2, 0, 0));
+                        GridLayout layout = new GridLayout(0, 2, 0, 0);
+                        //estimationTab.setLayout(layout);
                         
                         estimationTab.add(planningEst);
-                        planningEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //planningEst.setLayout(layout);
                         lblPlanning.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         planningEst.add(lblPlanning);               
-                        planningSpinner = getSpinner(planningSpinner);
+                        planningSpinner = getSpinner(planningSpinner); 
                         planningEst.add(planningSpinner);
                         planningSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
@@ -461,7 +460,7 @@ public class TaskDialog extends JDialog {
                        	});
                         
                         estimationTab.add(designEst);
-                        designEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //designEst.setLayout(layout);
                         lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         designEst.add(lblDesign);
@@ -474,7 +473,7 @@ public class TaskDialog extends JDialog {
                         });
                         
                         estimationTab.add(designRevEsT);
-                        designRevEsT.setLayout(new GridLayout(0, 2, 0, 0));
+                        //designRevEsT.setLayout(layout);
                         lblDesignReview.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         designRevEsT.add(lblDesignReview);
@@ -485,9 +484,9 @@ public class TaskDialog extends JDialog {
                         		updateTotalEst(); 
                         	}
                         });
-                        //git edit
+                        
                         estimationTab.add(codeEst);
-                        codeEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //codeEst.setLayout(layout);
                         lblCode.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         codeEst.add(lblCode);
@@ -500,7 +499,7 @@ public class TaskDialog extends JDialog {
                         });
                         
                         estimationTab.add(codeReviewEst);
-                        codeReviewEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //codeReviewEst.setLayout(layout);
                         lblCodeReview.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         codeReviewEst.add(lblCodeReview);
@@ -513,20 +512,20 @@ public class TaskDialog extends JDialog {
                         });
                         
                         estimationTab.add(compileEst);
-                        compileEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //compileEst.setLayout(layout);
                         lblCompile.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         compileEst.add(lblCompile);                       
-                        compileSPinner = getSpinner(compileSPinner);
-                        compileEst.add(compileSPinner);
-                        compileSPinner.addChangeListener(new ChangeListener() {
+                        compileSpinner = getSpinner(compileSpinner);
+                        compileEst.add(compileSpinner);
+                        compileSpinner.addChangeListener(new ChangeListener() {
                         	public void stateChanged(ChangeEvent e) { 
                         		updateTotalEst();
                         	}
                         });
                         
                         estimationTab.add(testEst);
-                        testEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //testEst.setLayout(layout);
                         lblTest.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         testEst.add(lblTest);
@@ -539,7 +538,7 @@ public class TaskDialog extends JDialog {
                         });
                         
                         estimationTab.add(postmortemEst);
-                        postmortemEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //postmortemEst.setLayout(layout);
                         lblPostmortem.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         postmortemEst.add(lblPostmortem);     
@@ -553,7 +552,7 @@ public class TaskDialog extends JDialog {
                         
                         
                         estimationTab.add(totalEst);
-                        totalEst.setLayout(new GridLayout(0, 2, 0, 0));
+                        //totalEst.setLayout(layout);
                         lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
                         
                         totalEst.add(lblTotal);
@@ -661,7 +660,7 @@ public class TaskDialog extends JDialog {
                         
                         JComboBox typeComboBox = new JComboBox();
                         typeComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "UI", "Error Handling", "Syntax", "Control Flow"}));
-                        typeComboBox.setBounds(261, 39, 72, 20);
+                        typeComboBox.setBounds(261, 39, 100, 20);
                         panel.add(typeComboBox);
                         
                         JLabel lblStatus = new JLabel("Status");
@@ -670,7 +669,7 @@ public class TaskDialog extends JDialog {
                         
                         JComboBox statusComboBox = new JComboBox();
                         statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
-                        statusComboBox.setBounds(378, 39, 72, 20);
+                        statusComboBox.setBounds(378, 39, 100, 20);
                         panel.add(statusComboBox);
                         numDefects = 0;		//Used to track how many defects have been added to the table
                         JButton btnAdd = new JButton("Add");
@@ -788,7 +787,7 @@ public class TaskDialog extends JDialog {
 	public void updateTotalEst(){
         		totalEstTextField.setText("" + ((double)planningSpinner.getValue() + (double)designSpinner.getValue() + 
         		(double)designReviewSpinner.getValue() + (double)codeSpinner.getValue() + (double)codeReviewSpinner.getValue() +
-        		(double)compileSPinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
+        		(double)compileSpinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
         	}
 
 	public void setStartDate(CalendarDate d) {
