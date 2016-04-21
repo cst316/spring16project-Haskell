@@ -573,7 +573,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	public String teamToString(String[] arr){
     	String s = "";
     	for(int i = 0; i < arr.length; i++){
-    		s = s + arr[i] + "|";
+    		s = s + arr[i] + " ";
     	}
     	return s;
     }
@@ -668,10 +668,10 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		}
 		
 		//Add Team Member Button//
-		if (o == addButton  && !getAddMemberField().getText().equals("")){
+		if (o == addButton  && !(addMemberField.getText().equals(""))){
         	listModel.addElement(getAddMemberField().getText());
         	setList(new JList(listModel));
-        	getAddMemberField().setText("");
+        	addMemberField.setText("");
         }
 		
 		//Remove Team Member Button//

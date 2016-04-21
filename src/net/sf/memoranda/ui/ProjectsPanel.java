@@ -484,7 +484,6 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 		ProjectCreationPanel pcp = new ProjectCreationPanel();
 		pcp.setPrjTablePanel(prj);
 		pcp.setEditModeTrue();
-		
 		pcp.getHeader().setText(Local.getString("Edit Project"));
 		
 		pcp.setPrTitleField(prj.getTitle());
@@ -496,6 +495,10 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 		}
 		pcp.setStage(prj.getStage());
 		pcp.setStatusComboBox(prj.getStatus());
+		String[] team = prj.getTeam().split("\\s"); 
+		for (int i = 0; i < team.length; i++){
+			pcp.addTeamMember(team[i]);
+		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy",Locale.US);
 		String sd = prj.getStartDate().toString();

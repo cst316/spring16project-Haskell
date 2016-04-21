@@ -137,7 +137,7 @@ public class ProjectManager {
     }
     public static void setTeam(String team){
         el.addAttribute(new Attribute("team",team));
-    	prj.setFile(team);
+    	prj.setTeam(team);
     }
     
     //Estimates//
