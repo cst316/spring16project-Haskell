@@ -48,8 +48,7 @@ public class StatsPanel extends JPanel {
     
     public void getTimes(){
     	try {
-    		File f = new File(fileLocation + "times.txt");
-    		if(!f.exists()) { 
+    		if(!(new File(fileLocation + "times.txt")).exists()) { 
     			PrintWriter writer = new PrintWriter(fileLocation + "times.txt", "UTF-8");
     			writer.println("");
     			writer.close();
