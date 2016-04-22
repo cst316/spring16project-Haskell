@@ -727,49 +727,49 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 				}
 				if (editMode == true){
 					
-					if (pr.getPlanningEst().equals(null)){
+					if (pr.getPlanningEst() == null){
 						setPlanningSpinner(0);
 					}
 					else {
 						setPlanningSpinner(Double.parseDouble(pr.getPlanningEst()));
 					}
-					if (pr.getDesignEst().equals(null)){
+					if (pr.getDesignEst() == null){
 						setDesignSpinner(0);
 					}
 					else {
 						setDesignSpinner(Double.parseDouble(pr.getDesignEst()));
 					}
-					if (pr.getDesignReviewEst().equals(null)){
+					if (pr.getDesignReviewEst() == null){
 						setDesignReviewSpinner(0);
 					}
 					else {
 						setDesignReviewSpinner(Double.parseDouble(pr.getDesignReviewEst()));
 					}
-					if (pr.getCodeEst().equals(null)){
+					if (pr.getCodeEst() == null){
 						setCodeSpinner(0);
 					}
 					else {
 						setCodeSpinner(Double.parseDouble(pr.getCodeEst()));
 					}
-					if (pr.getCompileEst().equals(null)){
+					if (pr.getCompileEst() == null){
 						setCompileSpinner(0);
 					}
 					else {
 						setCompileSpinner(Double.parseDouble(pr.getCompileEst()));
 					}
-					if (pr.getTestEst().equals(null)){
+					if (pr.getTestEst() == null){
 						setTestSpinner(0);
 					}
 					else {
 						setTestSpinner(Double.parseDouble(pr.getTestEst()));
 					}
-					if (pr.getPostmortemEst().equals(null)){
+					if (pr.getPostmortemEst() == null){
 						setPostmortemSpinner(0);
 					}
 					else {
 						setPostmortemSpinner(Double.parseDouble(pr.getPostmortemEst()));
 					}
-					if (pr.getCodeReviewEst().equals(null)){
+					if (pr.getCodeReviewEst() == null){
 						setCodeReviewSpinner(0);
 					}
 					else {

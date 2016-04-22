@@ -489,7 +489,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 		pcp.setPrTitleField(prj.getTitle());
 		pcp.setDescription(prj.getDescription());
 		pcp.setFileField(prj.getFile());
-		if (!(prj.getCustomer().equals(null))){
+		if (!(prj.getCustomer() == null)){
 			pcp.getCustomerCheckBox().doClick();
 			pcp.setCustomerField(prj.getCustomer());
 		}
@@ -509,7 +509,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
 			e.printStackTrace();
 		}
 		pcp.setStartDate(stDate);
-		if (!(prj.getEndDate().equals(null))){
+		if (!(prj.getEndDate() == null)){
 			String ed = prj.getEndDate().toString();
 	        Date enDate = null;
 			try {
