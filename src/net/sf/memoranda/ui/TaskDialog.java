@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 //update
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -57,11 +56,18 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.ComponentOrientation;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
+
+/**
+ * 
+ * @custom Duncan McQuarrie
+ * 
+ * @version 1.5
+ * This is the TasDialog class, that handles the GUI elements for the 
+ * Task Dialog window
+ *
+ */
 public class TaskDialog extends JDialog {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -62365071932024344L;
+   	private static final long serialVersionUID = -62365071932024344L;
 	JPanel mPanel = new JPanel(new BorderLayout());
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton cancelB = new JButton();
@@ -129,32 +135,32 @@ public class TaskDialog extends JDialog {
 	//Changes made to original project 
 	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	private final JPanel generalTab = new JPanel();
-	private final JPanel estimationTab = new JPanel();
-	private final JPanel designEst = new JPanel();
+	private final JPanel estimationTab = new JPanel(new GridLayout(8, 2, 0, 0));
+	private final JPanel designEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblDesign = new JLabel("Design");
 	private JSpinner designSpinner;
-	private final JPanel planningEst = new JPanel();
+	private final JPanel planningEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblPlanning = new JLabel("Planning");
 	private JSpinner planningSpinner;
-	private final JPanel designRevEsT = new JPanel();
+	private final JPanel designRevEsT = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblDesignReview = new JLabel("Design Review");
 	private JSpinner designReviewSpinner;
-	private final JPanel codeEst = new JPanel();
+	private final JPanel codeEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblCode = new JLabel("Code");
 	private JSpinner codeSpinner = new JSpinner();
-	private final JPanel codeReviewEst = new JPanel();
+	private final JPanel codeReviewEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblCodeReview = new JLabel("Code Review");
 	private JSpinner codeReviewSpinner = new JSpinner();
-	private final JPanel compileEst = new JPanel();
+	private final JPanel compileEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblCompile = new JLabel("Compile");
-	private JSpinner compileSPinner = new JSpinner();
-	private final JPanel testEst = new JPanel();
+	private JSpinner compileSpinner = new JSpinner();
+	private final JPanel testEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblTest = new JLabel("Test");
 	private JSpinner testSpinner = new JSpinner();
-	private final JPanel postmortemEst = new JPanel();
+	private final JPanel postmortemEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblPostmortem = new JLabel("Postmortem");
 	private JSpinner postmortemSpinner = new JSpinner();
-	private final JPanel totalEst = new JPanel();
+	private final JPanel totalEst = new JPanel(new GridLayout(0, 2, 0, 0));
 	private final JLabel lblTotal = new JLabel("Total Est(hrs)");
 	private final JFormattedTextField totalEstTextField = new JFormattedTextField();
 	//components added 2/17/16
@@ -182,8 +188,13 @@ public class TaskDialog extends JDialog {
 	private final JLabel lblType = new JLabel("Type");
 	private int numDefects;
 	private DefaultTableModel model = new DefaultTableModel();
-	private int gitTest;
 	
+	/**
+	 * Constructor for class TasK Dialog
+	 * super from JDialog
+	 * @param frame - frame with contents to be displayed
+	 * @param title - string title of the taskDialog window
+	 */
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
         lineNumField.setText("");
@@ -201,6 +212,10 @@ public class TaskDialog extends JDialog {
         }
     }
     
+    /**
+     * Handles initialization of JFrame objects and components
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
 	void jbInit() throws Exception {
     	Dimension dim = new Dimension(846, 532);
@@ -209,7 +224,7 @@ public class TaskDialog extends JDialog {
         border2 = BorderFactory.createEtchedBorder(Color.white, 
             new Color(142, 142, 142));
         border3 = new TitledBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0), 
-        Local.getString("Task Name"), TitledBorder.LEFT, TitledBorder.BELOW_TOP);
+        Local.getString("Task Name"), TitledBorder.CENTER, TitledBorder.BELOW_TOP);
         border4 = BorderFactory.createEmptyBorder(0, 5, 0, 5);
 //        border5 = BorderFactory.createEmptyBorder();
 //        border6 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,
@@ -232,7 +247,7 @@ public class TaskDialog extends JDialog {
         GridBagConstraints gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
-        //gbCon = new GridBagConstraints();
+        gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
         gbCon.anchor = GridBagConstraints.WEST;
@@ -444,285 +459,14 @@ public class TaskDialog extends JDialog {
                         
                         priorityCB.setSelectedItem(Local.getString("Normal"));
                         
-                        tabbedPane.addTab("Phase Estimation", null, estimationTab, null);
-                        estimationTab.setLayout(new GridLayout(0, 2, 0, 0));
+                        //Refactored code. Replaced large chunks in initialization
+                        //process with these methods. Allows for each individual tab to be
+                        //refactored separately
+                        phaseTabInit();
                         
-                        estimationTab.add(planningEst);
-                        planningEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblPlanning.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        planningEst.add(lblPlanning);               
-                        planningSpinner = getSpinner(planningSpinner);
-                        planningEst.add(planningSpinner);
-                        planningSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst();
-                        	}
-                       	});
-                        
-                        estimationTab.add(designEst);
-                        designEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        designEst.add(lblDesign);
-                        designSpinner = getSpinner(designSpinner);
-                        designEst.add(designSpinner);
-                        designSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst(); 
-                        	}
-                        });
-                        
-                        estimationTab.add(designRevEsT);
-                        designRevEsT.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblDesignReview.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        designRevEsT.add(lblDesignReview);
-                        designReviewSpinner = getSpinner(designReviewSpinner);
-                        designRevEsT.add(designReviewSpinner);
-                        designReviewSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst(); 
-                        	}
-                        });
-                        //git edit
-                        estimationTab.add(codeEst);
-                        codeEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblCode.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        codeEst.add(lblCode);
-                        codeSpinner = getSpinner(codeSpinner);
-                        codeEst.add(codeSpinner);
-                        codeSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst(); 
-                        	}
-                        });
-                        
-                        estimationTab.add(codeReviewEst);
-                        codeReviewEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblCodeReview.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        codeReviewEst.add(lblCodeReview);
-                        codeReviewSpinner = getSpinner(codeReviewSpinner);
-                        codeReviewEst.add(codeReviewSpinner);
-                        codeReviewSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst(); 
-                        	}
-                        });
-                        
-                        estimationTab.add(compileEst);
-                        compileEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblCompile.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        compileEst.add(lblCompile);                       
-                        compileSPinner = getSpinner(compileSPinner);
-                        compileEst.add(compileSPinner);
-                        compileSPinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst();
-                        	}
-                        });
-                        
-                        estimationTab.add(testEst);
-                        testEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblTest.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        testEst.add(lblTest);
-                        testSpinner = getSpinner(testSpinner);
-                        testEst.add(testSpinner);
-                        testSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) { 
-                        		updateTotalEst();
-                        	}
-                        });
-                        
-                        estimationTab.add(postmortemEst);
-                        postmortemEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblPostmortem.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        postmortemEst.add(lblPostmortem);     
-                        postmortemSpinner = getSpinner(postmortemSpinner);
-                        postmortemEst.add(postmortemSpinner);
-                        postmortemSpinner.addChangeListener(new ChangeListener() {
-                        	public void stateChanged(ChangeEvent e) {
-                        		updateTotalEst();
-                        	}
-                        });
-                        
-                        
-                        estimationTab.add(totalEst);
-                        totalEst.setLayout(new GridLayout(0, 2, 0, 0));
-                        lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
-                        
-                        totalEst.add(lblTotal);
-                        totalEstTextField.setEditable(false);
-                        
-                        totalEst.add(totalEstTextField);
-                        
-                        
-                        tabbedPane.addTab("Timer", null, timerTab, null);
-                        timerTab.setLayout(null);
-                        
-                        
-                        lblStartTime.setBounds(10, 23, 60, 14);
-                        timerTab.add(lblStartTime);
-                        startTextField.setBackground(Color.WHITE);
-                        startTextField.setEditable(false);
-                        
-                        startTextField.setBounds(106, 20, 90, 20);
-                        timerTab.add(startTextField);
-                        btnStart.addMouseListener(new MouseAdapter() {
-                        	@Override
-                        	public void mousePressed(MouseEvent e) {
-                        		startTime = System.currentTimeMillis();
-                        		initialTime= System.nanoTime(); 
-                        		
-                        		startTextField.setText(convertMillitoHMS(startTime));
-                        	}
-                        });
-                        
-                        
-                        btnStart.setBounds(10, 48, 89, 23);
-                        timerTab.add(btnStart);
-                        
-                        
-                        lblEndTime.setBounds(10, 109, 55, 14);
-                        timerTab.add(lblEndTime);
-                        btnEnd.addActionListener(new ActionListener() {
-                        	public void actionPerformed(ActionEvent e) {
-                        	}
-                        });
-                        
-                        btnEnd.setBounds(10, 134, 89, 23);
-                        timerTab.add(btnEnd);
-                        btnEnd.addMouseListener(new MouseAdapter() {
-                        	@Override
-                        	public void mousePressed(MouseEvent e) {
-                        		endTime = System.currentTimeMillis();
-                        		
-                        		endTextField.setText(convertMillitoHMS(endTime));;
-                        		
-                        		long sessionTime = System.nanoTime() - initialTime;
-                        		sessionTime = (long) (sessionTime / 1000000.0);				//converts nanoseconds to milliseconds
-                        		//long difference = (long) ((1.8 * Math.pow(10, 7))/2);
-                        		String sessionString = convertTimertoHMS(sessionTime);
-                        		
-                        		/*try {
-                        			Writer output = new BufferedWriter(new FileWriter(fileLocation + "times.txt", true));
-                            		output.append("Date: " + new SimpleDateFormat("MM-dd-yy").format(new Date()) + " Start Time: " + convertMillitoHMS(startTime)
-                            				+ " End Time: " + convertMillitoHMS(endTime) + " Time Passed: " + sessionString + "\n");
-                            		output.close();
-                            		
-								} catch (IOException e1) {
-									e1.printStackTrace();
-								} */
-                        		
-                        		sessionTextField.setText(sessionString);
-              
-                        	}
-                        });
-                        endTextField.setBackground(Color.WHITE);
-                        
-                      
-                        endTextField.setEditable(false);
-                        endTextField.setBounds(106, 106, 90, 20);
-                        timerTab.add(endTextField);
-                        lblSession.setBounds(10, 181, 80, 14);
-                        
-                        timerTab.add(lblSession);
-                        sessionTextField.setBackground(Color.WHITE);
-                        sessionTextField.setEditable(false);
-                        sessionTextField.setBounds(10, 206, 90, 20);
-                        
-                        timerTab.add(sessionTextField);
+                        timerTabInit();
 
-                        tabbedPane.addTab("Defect Log", null, defectTab, null);
-                        defectTab.setLayout(null);
-                        
-                        JPanel panel = new JPanel();
-                        panel.setBounds(10, 11, 795, 81);
-                        defectTab.add(panel);
-                        panel.setLayout(null);
-                        lblClass.setBounds(10, 11, 46, 14);
-                        
-                        panel.add(lblClass);
-                        
-                        panel.add(classField);
-                        lblLine.setBounds(136, 11, 46, 14);
-                        
-                        panel.add(lblLine);
-                        
-                        panel.add(lineNumField);
-                        lblType.setBounds(261, 11, 46, 14);
-                        
-                        panel.add(lblType);
-                        
-                        JComboBox typeComboBox = new JComboBox();
-                        typeComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "UI", "Error Handling", "Syntax", "Control Flow"}));
-                        typeComboBox.setBounds(261, 39, 72, 20);
-                        panel.add(typeComboBox);
-                        
-                        JLabel lblStatus = new JLabel("Status");
-                        lblStatus.setBounds(378, 11, 46, 14);
-                        panel.add(lblStatus);
-                        
-                        JComboBox statusComboBox = new JComboBox();
-                        statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
-                        statusComboBox.setBounds(378, 39, 72, 20);
-                        panel.add(statusComboBox);
-                        numDefects = 0;		//Used to track how many defects have been added to the table
-                        JButton btnAdd = new JButton("Add");
-                        btnAdd.addMouseListener(new MouseAdapter() {
-                        	@Override
-                        	public void mouseClicked(MouseEvent e) {
-                        		int initialRows = 10;
-                        		int dateCol = 0;	//Integers mapped to column locations on table
-                                int classCol = 1;
-                                int lineCol = 2;
-                                int typeCol = 3;
-                                int statusCol = 4;
-                                
-                                //Takes values form GUI fields and inserts them into the jTable
-                        		String defectDate = new SimpleDateFormat("MM.dd.YYYY").format(new Date());
-                        		defectTable.setValueAt(defectDate, numDefects , dateCol);
-                        		defectTable.setValueAt(classField.getText(), numDefects, classCol);
-                        		defectTable.setValueAt(lineNumField.getText(), numDefects, lineCol);
-                        		defectTable.setValueAt(typeComboBox.getSelectedItem(), numDefects, typeCol);
-                        		defectTable.setValueAt(statusComboBox.getSelectedItem(), numDefects, statusCol);
-                        		
-                        		++numDefects;			//increments defect count
-                        		
-                        		if (numDefects >= initialRows)
-                        			model.addRow(new Object[]{null,null,null,null,null});
-                        	}
-                        });
-                        btnAdd.setBounds(523, 38, 89, 23);
-                        panel.add(btnAdd);
-                        
-                        JScrollPane scrollPane = new JScrollPane();
-                        scrollPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-                        scrollPane.setBounds(10, 103, 795, 148);
-                        defectTab.add(scrollPane);
-                        
-                        numDefects = 0;		//Used to track how many defects have been added to the table
-                        defectTable = new JTable();
-                        model = new DefaultTableModel(
-                            	new Object[][] {
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null},
-                            		{null, null, null, null, null}}, new String[] {"Date", "Class", "Line #", "Type", "Status"}
-                            );
-                        defectTable.setModel(model);
-                        scrollPane.setViewportView(defectTable);
+                        defectTabInit();
                  
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
         dialogTitlePanel.add(header, null);
@@ -743,7 +487,315 @@ public class TaskDialog extends JDialog {
         });
     }
     
-    public JSpinner getSpinner(JSpinner js){
+    /**
+     * @author Duncan MCQuarrie
+     * 
+     * this method handles defectTab initialization
+     * called in JbInit()
+     */
+    private void defectTabInit() {
+    	tabbedPane.addTab("Defect Log", null, defectTab, null);
+        defectTab.setLayout(null);
+        
+        JPanel panel = new JPanel();
+        panel.setBounds(10, 11, 795, 81);
+        defectTab.add(panel);
+        panel.setLayout(null);
+        lblClass.setBounds(10, 11, 46, 14);
+        
+        panel.add(lblClass);
+        
+        panel.add(classField);
+        lblLine.setBounds(136, 11, 46, 14);
+        
+        panel.add(lblLine);
+        
+        panel.add(lineNumField);
+        lblType.setBounds(261, 11, 46, 14);
+        
+        panel.add(lblType);
+        
+        JComboBox typeComboBox = new JComboBox();
+        typeComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "UI", "Error Handling", "Syntax", "Control Flow"}));
+        typeComboBox.setBounds(261, 39, 100, 20);
+        panel.add(typeComboBox);
+        
+        JLabel lblStatus = new JLabel("Status");
+        lblStatus.setBounds(378, 11, 46, 14);
+        panel.add(lblStatus);
+        
+        JComboBox statusComboBox = new JComboBox();
+        statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Open", "In Progress", "Closed"}));
+        statusComboBox.setBounds(378, 39, 100, 20);
+        panel.add(statusComboBox);
+        numDefects = 0;		//Used to track how many defects have been added to the table
+        JButton btnAdd = new JButton("Add");
+        btnAdd.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		int initialRows = 10;
+        		int dateCol = 0;	//Integers mapped to column locations on table
+                int classCol = 1;
+                int lineCol = 2;
+                int typeCol = 3;
+                int statusCol = 4;
+                
+                //Takes values form GUI fields and inserts them into the jTable
+        		String defectDate = new SimpleDateFormat("MM.dd.YYYY").format(new Date());
+        		defectTable.setValueAt(defectDate, numDefects , dateCol);
+        		defectTable.setValueAt(classField.getText(), numDefects, classCol);
+        		defectTable.setValueAt(lineNumField.getText(), numDefects, lineCol);
+        		defectTable.setValueAt(typeComboBox.getSelectedItem(), numDefects, typeCol);
+        		defectTable.setValueAt(statusComboBox.getSelectedItem(), numDefects, statusCol);
+        		
+        		++numDefects;			//increments defect count
+        		
+        		if (numDefects >= initialRows)
+        			model.addRow(new Object[]{null,null,null,null,null});
+        	}
+        });
+        btnAdd.setBounds(523, 38, 89, 23);
+        panel.add(btnAdd);
+        
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        scrollPane.setBounds(10, 103, 795, 148);
+        defectTab.add(scrollPane);
+        
+        numDefects = 0;		//Used to track how many defects have been added to the table
+        defectTable = new JTable();
+        model = new DefaultTableModel(
+            	new Object[][] {
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null},
+            		{null, null, null, null, null}}, new String[] {"Date", "Class", "Line #", "Type", "Status"}
+            );
+        defectTable.setModel(model);
+        scrollPane.setViewportView(defectTable);
+		
+	}
+    
+    /**
+     * @author Duncan McQuarrie
+     * This method handles initialization of timerTab components
+     * called in jbInit()
+     */
+    private void timerTabInit() {
+    	 tabbedPane.addTab("Timer", null, timerTab, null);
+         timerTab.setLayout(null);
+         
+         
+         lblStartTime.setBounds(10, 23, 60, 14);
+         timerTab.add(lblStartTime);
+         startTextField.setBackground(Color.WHITE);
+         startTextField.setEditable(false);
+         
+         startTextField.setBounds(106, 20, 90, 20);
+         timerTab.add(startTextField);
+         btnStart.addMouseListener(new MouseAdapter() {
+         	@Override
+         	public void mousePressed(MouseEvent e) {
+         		startTime = System.currentTimeMillis();
+         		initialTime= System.nanoTime(); 
+         		
+         		startTextField.setText(convertMillitoHMS(startTime));
+         	}
+         });
+         
+         
+         btnStart.setBounds(10, 48, 89, 23);
+         timerTab.add(btnStart);
+         
+         
+         lblEndTime.setBounds(10, 109, 55, 14);
+         timerTab.add(lblEndTime);
+         
+         btnEnd.setBounds(10, 134, 89, 23);
+         timerTab.add(btnEnd);
+         btnEnd.addMouseListener(new MouseAdapter() {
+         	@Override
+         	public void mousePressed(MouseEvent e) {
+         		endTime = System.currentTimeMillis();
+         		
+         		endTextField.setText(convertMillitoHMS(endTime));;
+         		
+         		long sessionTime = System.nanoTime() - initialTime;
+         		sessionTime = (long) (sessionTime / 1000000.0);				//converts nanoseconds to milliseconds
+         		
+         		String sessionString = convertTimertoHMS(sessionTime);
+         		
+         		try {
+         			Writer output = new BufferedWriter(new FileWriter(fileLocation + "times.txt", true));
+             		output.append("Date: " + new SimpleDateFormat("MM-dd-yy").format(new Date()) + " Start Time: " + convertMillitoHMS(startTime)
+             				+ " End Time: " + convertMillitoHMS(endTime) + " Time Passed: " + sessionString + "\n");
+             		output.close();
+             		
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} 
+         		
+         		sessionTextField.setText(sessionString);
+
+         	}
+         });
+         endTextField.setBackground(Color.WHITE);
+         
+       
+         endTextField.setEditable(false);
+         endTextField.setBounds(106, 106, 90, 20);
+         timerTab.add(endTextField);
+         lblSession.setBounds(10, 181, 80, 14);
+         
+         timerTab.add(lblSession);
+         sessionTextField.setBackground(Color.WHITE);
+         sessionTextField.setEditable(false);
+         sessionTextField.setBounds(10, 206, 90, 20);
+         
+         timerTab.add(sessionTextField);
+		
+	}
+    
+    /**
+     * @author Duncan McQuarrie
+     * This method handles initialization of phase estimation tab components
+     */
+	private void phaseTabInit() {
+    	tabbedPane.addTab("Phase Estimation", null, estimationTab, null);
+        GridLayout layout = new GridLayout(0, 2, 0, 0);
+        //estimationTab.setLayout(layout);
+        
+        estimationTab.add(planningEst);
+        //planningEst.setLayout(layout);
+        lblPlanning.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        planningEst.add(lblPlanning);               
+        planningSpinner = getSpinner(planningSpinner); 
+        planningEst.add(planningSpinner);
+        planningSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst();
+        	}
+       	});
+        
+        estimationTab.add(designEst);
+        //designEst.setLayout(layout);
+        lblDesign.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        designEst.add(lblDesign);
+        designSpinner = getSpinner(designSpinner);
+        designEst.add(designSpinner);
+        designSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst(); 
+        	}
+        });
+        
+        estimationTab.add(designRevEsT);
+        //designRevEsT.setLayout(layout);
+        lblDesignReview.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        designRevEsT.add(lblDesignReview);
+        designReviewSpinner = getSpinner(designReviewSpinner);
+        designRevEsT.add(designReviewSpinner);
+        designReviewSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst(); 
+        	}
+        });
+        
+        estimationTab.add(codeEst);
+        //codeEst.setLayout(layout);
+        lblCode.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        codeEst.add(lblCode);
+        codeSpinner = getSpinner(codeSpinner);
+        codeEst.add(codeSpinner);
+        codeSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst(); 
+        	}
+        });
+        
+        estimationTab.add(codeReviewEst);
+        //codeReviewEst.setLayout(layout);
+        lblCodeReview.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        codeReviewEst.add(lblCodeReview);
+        codeReviewSpinner = getSpinner(codeReviewSpinner);
+        codeReviewEst.add(codeReviewSpinner);
+        codeReviewSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst(); 
+        	}
+        });
+        
+        estimationTab.add(compileEst);
+        //compileEst.setLayout(layout);
+        lblCompile.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        compileEst.add(lblCompile);                       
+        compileSpinner = getSpinner(compileSpinner);
+        compileEst.add(compileSpinner);
+        compileSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst();
+        	}
+        });
+        
+        estimationTab.add(testEst);
+        //testEst.setLayout(layout);
+        lblTest.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        testEst.add(lblTest);
+        testSpinner = getSpinner(testSpinner);
+        testEst.add(testSpinner);
+        testSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) { 
+        		updateTotalEst();
+        	}
+        });
+        
+        estimationTab.add(postmortemEst);
+        //postmortemEst.setLayout(layout);
+        lblPostmortem.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        postmortemEst.add(lblPostmortem);     
+        postmortemSpinner = getSpinner(postmortemSpinner);
+        postmortemEst.add(postmortemSpinner);
+        postmortemSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		updateTotalEst();
+        	}
+        });
+        
+        
+        estimationTab.add(totalEst);
+        //totalEst.setLayout(layout);
+        lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        totalEst.add(lblTotal);
+        totalEstTextField.setEditable(false);
+        
+        totalEst.add(totalEstTextField);
+		
+	}
+	
+	/**
+	 * @author Zachary Jaros
+	 * 
+	 * This method takes a JSpinner js and sets it to the model
+	 * (double, min 0, max 5000, incr 0.5)
+	 * @param js - jspinner object
+	 * @return js - returns the same jSpinner but with a new model
+	 */
+	public JSpinner getSpinner(JSpinner js){
 		//Make the model that will be used for all estimation spinners//
 		SpinnerNumberModel model = new SpinnerNumberModel(0.0, 0.0, 5000.0, 0.50);
 		js = new JSpinner(model);
@@ -755,7 +807,9 @@ public class TaskDialog extends JDialog {
 		return js;
 	}
     
-    /*This method takes an time input in milliseconds, and converts it
+    /**
+     * @author Duncan McQuarrie
+     * This method takes an time input in milliseconds, and converts it
      * to a time formatted in hours:minutes:seconds
      * 
      * @param time - the time in milliseconds after UTC
@@ -769,7 +823,9 @@ public class TaskDialog extends JDialog {
 		
 		
 	}
-    /* There was a bug where elapsed time would always have a 5 hour time displayed
+    /**
+     * @author Chris Young
+     * There was a bug where elapsed time would always have a 5 hour time displayed
      * This is the easiest way to fix the 5 hour error
      * 
      * @param time - millisecond time value
@@ -781,14 +837,17 @@ public class TaskDialog extends JDialog {
     	int hours   = (int) ((time / (1000*60*60)) % 24);
     	return (hours + ":" + minutes + ":" + seconds);
 	}
-    /* Method called in event handlers for phase estimate spinners
+    
+    /**
+     * @author Duncan McQuarrie
+     * Method called in event handlers for phase estimate spinners
      * each time a spinner is incremented, the total of all spinners
      * is updated
      */
 	public void updateTotalEst(){
         		totalEstTextField.setText("" + ((double)planningSpinner.getValue() + (double)designSpinner.getValue() + 
         		(double)designReviewSpinner.getValue() + (double)codeSpinner.getValue() + (double)codeReviewSpinner.getValue() +
-        		(double)compileSPinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
+        		(double)compileSpinner.getValue() + (double)testSpinner.getValue() + (double)postmortemSpinner.getValue())); 
         	}
 
 	public void setStartDate(CalendarDate d) {
@@ -852,6 +911,12 @@ public class TaskDialog extends JDialog {
 			this.todoField.getText(), (Date)startDate.getModel().getValue(),(Date)endDate.getModel().getValue());
     }
     
+    /**
+     * @author Trent Ferree
+     * 
+     * Method sets the tab position using tabNumber
+     * @param tabNumber - integer representing position on the tabbed pane
+     */
     void setTab(int tabNumber){
     	tabbedPane.setSelectedIndex(tabNumber);
     }
