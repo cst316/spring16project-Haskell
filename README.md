@@ -21,7 +21,8 @@ Place the jar in the desired location
 Starting Up Memoranda:
 Run the Jar
 
-THE USER INTERFACE
+##THE USER INTERFACE
+There is a task bar on the left which allows the user to swich between windows. The first is Agenda which places the user on a display of all items on the agenda. The next is Event which places the user on the event page. The third is Tasks which lists all current tasks. Notes and Resources are after that with Stats of all of your items.
 
 ##PROJECTS
 
