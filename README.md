@@ -1,5 +1,5 @@
 #Team Haskell Memoranda README
-###Authors: Zach Jaros, Chris Young, Duncan McQuarrie, Trent Ferree, and Gabriel Waltrip
+#####Authors: Zach Jaros, Chris Young, Duncan McQuarrie, Trent Ferree, and Gabriel Waltrip
 
 
 ##INTRODUCTION
