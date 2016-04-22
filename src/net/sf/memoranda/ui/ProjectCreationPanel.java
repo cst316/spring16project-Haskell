@@ -87,8 +87,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
     private JButton fileButton;
     private JTextField fileField;
     private JFileChooser fileChooser;
-    	//Import PSP//
-    //private JButton importButton;
 		//Team Member Adding//
     private DefaultListModel listModel = new DefaultListModel();
     private JList list = new JList(listModel);
@@ -99,13 +97,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton addButton;
 	private JButton removeButton;
 	private int selected;
-    	//Base Lines of Code//
-	private JLabel LOClabel;
-	private JRadioButton LOCdefault;
-	private JRadioButton LOCanother;
-	private JSpinner LOCspinner;
-	private SpinnerNumberModel LOCspinnermodel;
-	private ButtonGroup radioButtons;
 	
 	//Bottom Panel and its components//
 	private JPanel bottomPanel;
@@ -141,6 +132,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 	private JButton estClearButton;
 	private JButton estBackButton;
 	private boolean estIsBuilt;
+	private JLabel estNote;
 	
 	public ProjectCreationPanel() {
 		this.setBounds(400, 100, 500, 650);
@@ -187,7 +179,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//Project Name Label and Field//
 		titleLabel = new JLabel("*Name");
-		titleLabel.setBounds(18, 22, 39, 14);
+		titleLabel.setBounds(15, 22, 39, 14);
 		centerPanel.add(titleLabel);
 		
 		prTitleField = new JTextField();
@@ -197,11 +189,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//Start Date Components//
 		sdLabel = new JLabel("Start Date");
-		sdLabel.setBounds(21, 53, 59, 14);
+		sdLabel.setBounds(18, 69, 59, 14);
 		centerPanel.add(sdLabel);
 		
     	startDate = new JSpinner(new SpinnerDateModel());
-    	startDate.setBounds(82, 50, 85, 20);
+    	startDate.setBounds(82, 66, 85, 20);
         startDate.setLocale(Local.getCurrentLocale());
 		//Added by (jcscoobyrs) on 17-Nov-2003 at 14:24:43 PM
 		//---------------------------------------------------
@@ -215,7 +207,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		//End Date Components//
         endDate = new JSpinner(new SpinnerDateModel());
         endDate.setEnabled(false);
-        endDate.setBounds(308, 53, 85, 20);
+        endDate.setBounds(308, 66, 85, 20);
         endDate.setLocale(Local.getCurrentLocale());
 		//Added by (jcscoobyrs) on 17-Nov-2003 at 14:24:43 PM
 		//---------------------------------------------------
@@ -226,30 +218,30 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
         centerPanel.add(endDate);
         
         endDateChB = new JCheckBox();
-        endDateChB.setBounds(224, 53, 20, 20);
+        endDateChB.setBounds(222, 66, 20, 20);
         endDateChB.setForeground(Color.gray);
         endDateChB.addActionListener(this);
         centerPanel.add(endDateChB);
         
         edButton = new JButton();
         edButton.setEnabled(false);
-        edButton.setBounds(397, 53, 20, 20);
+        edButton.setBounds(396, 66, 20, 20);
         edButton.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/calendar.png")));
         edButton.addActionListener(this);
         centerPanel.add(edButton);
         
 		endLabel = new JLabel(Local.getString("End Date"));
 		endLabel.setForeground(Color.gray);
-		endLabel.setBounds(250, 56, 59, 14);
+		endLabel.setBounds(248, 69, 59, 14);
 		centerPanel.add(endLabel);
 		
 		//Description Components//
 		descLabel = new JLabel("Description");
-		descLabel.setBounds(21, 78, 70, 14);
+		descLabel.setBounds(18, 103, 70, 14);
 		centerPanel.add(descLabel);
 		
 		descScrollPane = new JScrollPane();
-		descScrollPane.setBounds(21, 92, 416, 74);
+		descScrollPane.setBounds(21, 128, 416, 74);
 		descScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		centerPanel.add(descScrollPane);
 		
@@ -264,51 +256,45 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		//Customer Components//
 		customerLabel = new JLabel("Customer");
-		customerLabel.setBounds(265,235,70,25);
+		customerLabel.setBounds(262,218,70,25);
 		customerLabel.setForeground(Color.gray);
 		centerPanel.add(customerLabel);
 	
         customerChB = new JCheckBox();
-        customerChB.setBounds(240, 237, 20, 20);
+        customerChB.setBounds(241, 220, 20, 20);
         customerChB.addActionListener(this);
         centerPanel.add(customerChB);
 		
         customerField = new JTextField(" Optional");
-        customerField.setBounds(330, 237, 107, 20);
+        customerField.setBounds(330, 220, 107, 20);
         customerField.setForeground(Color.gray);
         centerPanel.add(customerField);
         
         //Status Components//
 		statusLabel = new JLabel("Priority");
-		statusLabel.setBounds(35, 235, 49, 25);
+		statusLabel.setBounds(31, 218, 49, 25);
 		centerPanel.add(statusLabel);
 		
 		statusComboBox = new JComboBox(new DefaultComboBoxModel(new String[] {"Very Low", "Low", "Medium", "High", "Very High"}));
 		statusComboBox.setBackground(new Color(255, 255, 255));
 		statusComboBox.setSelectedIndex(2);
-		statusComboBox.setBounds(82, 237, 109, 20);
+		statusComboBox.setBounds(82, 220, 109, 20);
 		centerPanel.add(statusComboBox);
 		
 		//File (Directory) Chooser Components//
 		fileButton = new JButton("*Choose Project File");
-		fileButton.setBounds(21, 275, 148, 20);
+		fileButton.setBounds(19, 266, 148, 20);
 		fileButton.addActionListener(this);
 		centerPanel.add(fileButton);
 		
 		fileField = new JTextField();
-		fileField.setBounds(173, 275, 261, 20);
+		fileField.setBounds(176, 266, 261, 20);
 		fileField.setBackground(Color.white);
 		fileField.setEditable(false);
 		centerPanel.add(fileField);
 		
 		fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
-		/*
-		importButton = new JButton("Import PSP Files");
-		importButton.setBounds(360, 275,125, 20);
-		centerPanel.add(importButton);
-		*/
 		
 		//Stage Components//
 		stageLabel = new JLabel("Stage");
@@ -351,38 +337,6 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		addMemberField.setBounds(244, 336, 191, 20);
 		addMemberField.setColumns(10);
 		centerPanel.add(addMemberField);
-		
-		//Lines of Code of Project Components//
-		LOClabel = new JLabel("Size of Current Code");
-		LOClabel.setBounds(21, 175, 120, 14);
-		centerPanel.add(LOClabel);
-		
-		LOCanother = new JRadioButton("Another Amount:");
-		LOCanother.setBounds(147, 195, 120, 20);
-		LOCanother.setForeground(Color.gray);
-		LOCanother.addActionListener(this);
-		LOCanother.setFocusable(false);
-	    centerPanel.add(LOCanother);
-		
-	    LOCdefault = new JRadioButton("(Default) 0");
-	    LOCdefault.setSelected(true);
-	    LOCdefault.setBounds(147, 173, 85, 19);
-	    LOCdefault.addActionListener(this);
-	    LOCdefault.setFocusable(false);
-		centerPanel.add(LOCdefault);
-	    
-		LOCspinnermodel = new SpinnerNumberModel();
-		LOCspinnermodel.setMinimum(0);
-		LOCspinnermodel.setStepSize(500);
-		
-		LOCspinner = new JSpinner(LOCspinnermodel);
-		LOCspinner.setBounds(271, 195, 107, 20);
-		LOCspinner.setEnabled(false);
-		centerPanel.add(LOCspinner);
-		
-		radioButtons = new ButtonGroup();
-		radioButtons.add(LOCdefault);
-		radioButtons.add(LOCanother);
 	}
 
 	public void buildBottomPanel(){
@@ -446,39 +400,38 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		estimationPanel.add(lblPlanning);
 		
 		lblDesign = new JLabel("Design");
-		lblDesign.setBounds(267, 45, 46, 14);
+		lblDesign.setBounds(263, 45, 46, 14);
 		estimationPanel.add(lblDesign);
 		
 		lblDesignReview = new JLabel("Design Review");
-		lblDesignReview.setBounds(13, 125, 97, 14);
+		lblDesignReview.setBounds(15, 125, 97, 14);
 		estimationPanel.add(lblDesignReview);
 		
 		lblCode = new JLabel("Code");
-		lblCode.setBounds(267, 125, 46, 14);
+		lblCode.setBounds(269, 125, 46, 14);
 		estimationPanel.add(lblCode);
 		
 		lblCodeReview = new JLabel("Code Review");
-		lblCodeReview.setBounds(21, 203, 89, 14);
+		lblCodeReview.setBounds(23, 203, 89, 14);
 		estimationPanel.add(lblCodeReview);
 		
 		lblCompile = new JLabel("Compile");
-		lblCompile.setBounds(250, 203, 46, 14);
+		lblCompile.setBounds(253, 203, 46, 14);
 		estimationPanel.add(lblCompile);
 		
 		lblTest = new JLabel("Test");
-		lblTest.setBounds(64, 278, 46, 14);
+		lblTest.setBounds(70, 278, 46, 14);
 		estimationPanel.add(lblTest);
 		
 		lblPostmortem = new JLabel("Postmortem");
-		lblPostmortem.setBounds(235, 278, 78, 14);
+		lblPostmortem.setBounds(230, 278, 78, 14);
 		estimationPanel.add(lblPostmortem);
 		
 		//Spinners//
-		planningSpinner = this.getSpinner(planningSpinner);
+		planningSpinner = getSpinner(planningSpinner);
 		planningSpinner.setBounds(114, 37, 89, 30);
 		planningSpinner.addChangeListener(this);
 		estimationPanel.add(planningSpinner);
-		
 		
 		designSpinner = getSpinner(designSpinner);
 		designSpinner.setBounds(314, 37, 89, 30);
@@ -527,6 +480,11 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		totalTextField.setBackground(Color.white);
 		totalTextField.setOpaque(true);
 		estimationPanel.add(totalTextField);
+		
+		//Note explaining this information is not required//
+		estNote = new JLabel("Note: This information is not required for completion.");
+		estNote.setBounds(10, 415, 350, 20);
+		estimationPanel.add(estNote);
 		
 		//Set flag for build to true//
 		estIsBuilt = true;
@@ -630,6 +588,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 		
 		
 		//Default Lines of Code Radio Button//
+		/*
 		if(o == LOCdefault){
 			//Blacken the text//
 			LOCdefault.setForeground(Color.black);
@@ -655,6 +614,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			LOCspinner.setEnabled(true);
 			
 		}
+		*/
 		
 		//Add Team Member Button//
 		if (o == addButton  && !addMemberField.getText().equals("")){
@@ -749,7 +709,7 @@ public class ProjectCreationPanel extends JFrame implements ActionListener, Chan
 			
 	        //New Add//
 			Project prj = ProjectManager.createProject(title, 
-													   description.toString(), 
+													   description.getText(), 
 													   startD, 
 													   endD,
 													   (String) stageComboBox.getSelectedItem(),

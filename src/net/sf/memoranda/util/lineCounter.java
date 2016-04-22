@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 
 public class lineCounter {
@@ -98,14 +99,17 @@ public class lineCounter {
 	public void updateLineFile() {
 		String fileLocation = Util.getEnvDir();
 		try {
-			FileReader fileReader = new FileReader(fileLocation + "lines.txt");
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			String loc = bufferedReader.readLine();
-			bufferedReader.close();
-			Writer output = new BufferedWriter(new FileWriter(fileLocation + "lines.txt", false));
-			output.write(loc);
-			output.close();
-			readDirectory(loc);
+			if(!(new File(fileLocation + "lines.txt")).exists()){
+				FileReader fileReader = new FileReader(fileLocation + "lines.txt");
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
+				String loc = bufferedReader.readLine();
+				bufferedReader.close();
+				//Writer output = new BufferedWriter(new FileWriter(fileLocation + "lines.txt", false));
+				PrintWriter output = new PrintWriter(fileLocation + "times.txt", "UTF-8");
+				output.write(loc);
+				output.close();
+				readDirectory(loc);
+			}
 		} catch (FileNotFoundException ex) {
 			System.out.println("Unable to open '" + fileLocation);
 		} catch (IOException ex) {

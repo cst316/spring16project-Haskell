@@ -1,15 +1,72 @@
-# spring16project
-This is the initial dump for the cst316 spring 2016 project. It is a slightly modified version of the Memoranda project from memoranda.sf.net
+#Team Haskell Memoranda README
+#####Authors: Zach Jaros, Chris Young, Duncan McQuarrie, Trent Ferree, and Gabriel Waltrip
 
-The purpose of this project is to enhance the Memoranda application to support Time Management for Software Engineers. In essence, to augment Memoranda with features that support the time management concepts in the Personal Software Process, which you learned some of last year in SER215.
 
-Memoranda is a project that has largely been dormant since 2007, so why are we using it? I have used this codebase in the past, it is of sufficient size and scope to challenge your skills in understanding a complete application (it has somewhere in the neighborhood of 25k lines of code). It also has features that just about anyone who has ever used a calendaring application can understand. Further, I have some documents from a former student project (one of the best ever done in my projects' classes) that we can leverage to help you bootstrap your Agile process.
+##INTRODUCTION
 
-In the docs directory are a few starting documents that may help you get going on your User Stories. The first is a Project Inception document. This short document describes the vision of the project, and can serve as a guide as you write your Sprint Goals. One is a SRS - Software Requirements Specification - which has 21 use cases that you can readily translate to stories. However you are not constrained to just use these nor are you required to use all of them. 
+###What is Memoranda?
+Memoranda is an open-source task scheduling application developed in 2003 that was designed to help people with multiple projects manage their time and effort in order to maximize success. It has now been refitted to also align with the Personal Software Process (PSP) often used in software-based work environments. Some of these new features include Lines of Code (LoC) tracking, task timers, defect logging, and stage estimation.
 
-Also in the docs directory is an initial set of analysis models - class diagrams and sequence diagrams in UML, that a previous team did as part of their solution process. These were included only in the event that you may want to use these as a head start on your design and implementation work. You are absolutely not required to use or implement anything in the analysis document!
+Requirements:
+Java 7 or newer
+1 MB of free disk space
+900 Mhz processor
+512 MB ram
 
-Your first steps should be to get your team set up with this code, ensure you can build it and run it. The ant script should work, and you should also be able to run it directly from within Eclipse or the command line or from the .bat/.sh scripts provided.
+Installation:
+Make sure you have Java installed
+Download the Jar
+Place the jar in the desired location
 
-Enjoy!
-Dr. Gary
+Starting Up Memoranda:
+Run the Jar
+
+##THE USER INTERFACE
+There is a task bar on the left which allows the user to swich between windows. The first is Agenda which places the user on a display of all items on the agenda. The next is Event which places the user on the event page. The third is Tasks which lists all current tasks. Notes and Resources are after that with Stats of all of your items.
+
+##PROJECTS
+
+Creating a project:
+There are two ways to begin making a project:
+Click on the “File” menu option at the top left corner of the window. Select “New Project”
+Click on the drop down button on the right of the light-blue region. This is the projects panel that will hold all your projects for easy access. Inside this area, right click anywhere and a menu will pop up with “New Project” as an option.
+This will take you to a wizard that will guide you through the process of entering key information for your project. The only required fields are:
+The title of the project
+The directory location (so that Memoranda can monitor your LoC)
+At least 1 person added to the team
+Once you have met these requirements, and filled out any other information that you would like to record, click “Next” to advance to the stage estimation section. In PSP, making time estimations for your work is a key way to develop understanding about your capabilities and show improvement. You can increment the estimation spinners for each stage of development (Planning, Design, Design Review, Code, Code Review, Compile, Test, Postmortem) using 30 minute intervals or enter a value manually (in the case of large quantities). Note that this section of the project creation isn’t mandatory. After you are satisfied with your estimations, click “Finish” to save your project.
+
+Editing a project:
+
+
+Deleting a project:
+Select a project other than the one to be deleted then right click on the project to be removed and select delete
+
+Changes to projects based on PSP:
+The addition of specifying the project directory helps with analyzing 
+
+##TASKS
+After a Project has been created, Memoranda provides functionality to add individual tasks to the project, for example “create ‘Add’ method”. The task creation contains separate tabs supporting many features of PSP; Phase Estimation, code Timer, and defect list. Creating a task as is follows
+Select ‘New Task’ from the Task Panel (Select ‘Tasks’ view on the left hand panel)
+Enter a Task name and description (optional)
+After the initial information has been given, the user is free to select ‘ok’ to close the window and complete the process, or choose from the following tabs; Phase Estimation, Timer, Defect.
+
+The Phase Estimation tab provides 8 jSpinner objects, each spinner represents a Phase in the PSP. Planning, Design, Design Review, Code, Code Review,  Compile, Test, and Postmortem. As each individual spinner is incremented, a running total is generated automatically, giving the user an estimated time of completion for the task.
+
+The Timer tab provides the simple functionality of a stopwatch, simply open the tab and press ‘Start’ The current time (in Hours:Minutes:Seconds) is displayed in the adjacent. When the user is ready, select ‘end’ and again, the current time will be displayed in the adjacent field. After pressing ‘End’ a Time difference, between the starting and ending periods, is displayed in the final field.
+
+The defect tab provides an interface to add individual defects found in a task. The date of the defect is automatically generated, all the users needs to provide is the following
+Class - Which class the defect is located
+Line # - the Line # the defect is located
+Type - UI, Control flow, Exception handling, Syntax are currently supported types of defects
+Status - Provide the status of the defect (Open, in Progress, or Closed)
+
+##EVENTS
+There are two ways to create a new event 
+1. The new event button in the toolbar
+2. Right click in the window and select “New event”
+When new event is selected a dialog box pops up and information related to the event can be added. Once the event data has been entered the “Ok” button is pressed to finish creating the event. 
+After the event has been created it can be edited through the edit button in the toolbar or the right click menu when the event is highlighted. The edit window is the same as the event creation window. Events can be deleted by selecting them and right clicking and clicking “Remove event” or by the toolbar button or by pressing the delete key.
+
+##STATS
+The stats panel is updated every time you click on it. There are two tabs at the top of the screen, the first tab contains the information from the timer. The next tab contains the line counts of all the java files in the directory specified for the project.
